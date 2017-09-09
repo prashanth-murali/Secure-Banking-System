@@ -6,7 +6,8 @@
 
 2. Install Vagrant
     https://www.vagrantup.com/downloads.html
-    
+
+3. Run These commands from your terminal, inside the project directory
 ```
 vagrant up
 vagrant ssh 

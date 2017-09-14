@@ -38,6 +38,25 @@ else
   exit 1
 fi
 
+# Wait until mongolog contains line
+#
+#https://stackoverflow.com/questions/1652680/how-to-get-the-pid-of-a-process-that-is-piped-to-another-process-in-bash
+#https://superuser.com/questions/270529/monitoring-a-file-until-a-string-is-found?newreg=9e4241da81b349aa8943a4d7755495e2
+#
+( sudo tail -f /var/log/mongodb/mongod.log & echo $! >&3 ) 3>pid | while read LOGLINE
+do
+   echo $LOGLINE
+   if [[ $LOGLINE == *"waiting for connections"* ]];
+   then
+    echo "killing"
+    kill $(<pid)
+   else
+    echo "keep looking"
+   fi
+
+
+done
+
 # stop running mongo
 sudo service mongod stop
 
@@ -46,6 +65,8 @@ cat /vagrant_data/mongo.conf > /etc/mongod.conf
 
 # start running mongo
 sudo service mongod start
+
+echo "Complete, Mongo listing on 192.168.33.10"
 
 # is successful but returns a non 0 status for some reason
 #if sudo service mongod start

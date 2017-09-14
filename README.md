@@ -10,5 +10,6 @@
 3. Run These commands from your terminal, inside the project directory
 ```
 vagrant up
-vagrant ssh 
 ```
+
+4. After vagrant up completes, you will be able to connect to your locally running MongoDB with this IP Adress: 192.168.33.10, Default port. You can use this tool if you like: https://robomongo.org/

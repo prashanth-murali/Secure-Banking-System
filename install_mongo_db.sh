@@ -80,6 +80,7 @@ echo "Complete, Mongo listing on 192.168.33.10"
 #install pip
 sudo apt-get update
 sudo apt-get install -y python-pip python-dev build-essential
+sudo apt-get install -y git
 sudo pip install --upgrade pip
 sudo pip install --upgrade virtualenv
 
@@ -97,3 +98,5 @@ pip install git+https://github.com/django-nonrel/django@nonrel-1.5
 pip install git+https://github.com/django-nonrel/djangotoolbox
 
 pip install git+https://github.com/django-nonrel/mongodb-engine
+
+nohup python /vagrant_data/secure_bank/manage.py runserver &

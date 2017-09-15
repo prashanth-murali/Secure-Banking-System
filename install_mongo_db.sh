@@ -77,3 +77,23 @@ echo "Complete, Mongo listing on 192.168.33.10"
 #  exit 1
 #fi
 
+#install pip
+sudo apt-get update
+sudo apt-get install -y python-pip python-dev build-essential
+sudo pip install --upgrade pip
+sudo pip install --upgrade virtualenv
+
+# configure virtual python environment
+mkdir ~/.virtualenvs
+virtualenv .virtualenvs/
+
+#activate python environment
+source .virtualenvs/bin/activate
+
+#install django
+#https://django-mongodb-engine.readthedocs.io/en/latest/topics/setup.html
+pip install git+https://github.com/django-nonrel/django@nonrel-1.5
+
+pip install git+https://github.com/django-nonrel/djangotoolbox
+
+pip install git+https://github.com/django-nonrel/mongodb-engine

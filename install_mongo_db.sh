@@ -77,29 +77,3 @@ echo "Complete, Mongo listing on 192.168.33.10"
 #  exit 1
 #fi
 
-
-# ===== INSTALL Python dependencies =======
-sudo apt-get install build-essential checkinstall
-sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-
-# Set python version to be installed
-PY_VERSION=2.7.13
-
-# Download Python
-wget https://www.python.org/ftp/python/$PY_VERSION/Python-$PY_VERSION.tgz
-
-# Uncompress
-tar -xvf Python-$PY_VERSION.tgz
-
-# enter python directory
-cd Python-$PY_VERSION
-
-# install python version
-./configure
-make
-
-echo "Python version: $PY_VERSION was successfully installed"
-
-
-
-

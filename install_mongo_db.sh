@@ -99,6 +99,8 @@ pip install git+https://github.com/django-nonrel/djangotoolbox
 
 pip install git+https://github.com/django-nonrel/mongodb-engine
 
+pip install 'djangorestframework<3.3'
+
 nohup python /vagrant_data/secure_bank/manage.py runserver 0.0.0.0:8000 > application-log-file.log &
 
 echo "Complete, Mongo listing on 192.168.33.10:27017"

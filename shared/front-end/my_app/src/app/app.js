@@ -35,6 +35,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: '../views/internal_users/dashboard_admin.html'
         })
 
+        .state('manage_employee', {
+            url: '/manage_employee',
+            templateUrl: '../views/internal_users/manage_employee.html'
+        })
+
         .state('about', {
             // we'll get to this in a bit
         });

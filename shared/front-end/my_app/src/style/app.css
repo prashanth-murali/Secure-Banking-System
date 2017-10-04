@@ -1,13 +1,13 @@
 /* styles in src/style directory are applied to the whole page */
 body,html {
-  padding: 0;
-  margin: 0;
+  padding: 2em;
+  margin: 1em;
   height: 100%;
   width: 100%;
+  background-color: aliceblue;
 }
 
 .login-wrap{
-  background-color: #eee;
   height: 100%;
 }
 

@@ -16,6 +16,15 @@ app.directive('app', function(){
     }
 });
 
+app.directive('sideBar', function(){
+    return {
+        templateUrl: '../views/side_bar.html'
+    }
+});
+
+
+
+
 app.controller('AppCtrl', function(){
     this.url = 'https://github.com/preboot/angular-webpack';
 });
@@ -110,13 +119,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: '../views/internal_users/pending_requests.html'
         })
 
-        .state('Request_admin', {
-            url: '/Request_admin',
+        .state('request_admin', {
+            url: '/request_admin',
             templateUrl: '../views/internal_users/Request_admin.html'
         })
 
-        .state('Request_manager', {
-            url: '/Request_manager',
+        .state('request_manager', {
+            url: '/request_manager',
             templateUrl: '../views/internal_users/Request_manager.html'
         })
 

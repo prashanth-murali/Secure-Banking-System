@@ -18,12 +18,33 @@ app.directive('app', function(){
 
 app.directive('sideBar', function(){
     return {
-        templateUrl: '../views/side_bar.html'
+        templateUrl: '../views/side_bar_internal_employee.html'
     }
 });
 
+app.directive('sideBarAdmin', function(){
+    return {
+        templateUrl: '../views/side_bar_internal_admin.html'
+    }
+});
 
+app.directive('sideBarManager', function(){
+    return {
+        templateUrl: '../views/side_bar_internal_manager.html'
+    }
+});
 
+app.directive('sideBarCustomer', function(){
+    return {
+        templateUrl: '../views/side_bar_external_customer.html'
+    }
+});
+
+app.directive('sideBarMerchant', function(){
+    return {
+        templateUrl: '../views/side_bar_external_merchant.html'
+    }
+});
 
 app.controller('AppCtrl', function(){
     this.url = 'https://github.com/preboot/angular-webpack';

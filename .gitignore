@@ -1,2 +1,4 @@
 .vagrant
 .idea
+!.idea/runConfigurations/Run.xml
+!.idea/runConfigurations/server.xml

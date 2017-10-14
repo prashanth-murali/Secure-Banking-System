@@ -1,0 +1,75 @@
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <side-bar></side-bar>
+
+        <div class="col-sm-9 col-md-10 main">
+
+            <div class="page-header">
+                <h1>SBS - Welcome Jack Doe </h1>
+            </div>
+
+            <h2>Add Transactions:</h2>
+            <br>
+
+            <div id="fund-transfer">
+                <div class="modal-body">
+                    <p>
+                        <label>Account Details:</label>
+                        <select class="form-control">
+                            <option>Select an Account</option>
+                            <option>Checking Account (*1234)</option>
+                            <option>Savings Account (*5678)</option>
+                        </select>
+                    </p>
+                    <hr>
+                    <p>
+                        <label>Current Balance:</label>
+                    <p><i> $200.56 </i></p>
+                    </p>
+                    <hr>
+                    <div>
+                        <label>Transfer Type:</label><br>
+                        <div class="btn-group" role="group">
+                            <button title="Transfer to User's another account within the bank" type="button" class="internal-transfer transfer-option-btn btn btn-default">Internal Transfer</button>
+                            <button title="Transfer to another User's account within the bank" type="button" class="external-transfer transfer-option-btn btn btn-default">External Transfer</button>
+                        </div>
+                    </div>
+                    <div class="transfer-account-details">
+                        <div id="internal-transfer" class="hidden">
+                            <select class="form-control">
+                                <option>Select credit account</option>
+                                <option>${User}'s Checking Account (*1234)</option>
+                                <option>${User}'s Savings Account (*5678)</option>
+                            </select>
+                        </div>
+
+                        <div id="external-transfer" class="hidden">
+                            <p>
+                                <label>User's Name:</label>
+                                <input type="text" class="form-control" placeholder="ex: James">
+                            </p>
+                            <p>
+                                <label>Account No.:</label>
+                                <input type="text" class="form-control" placeholder="ex: 123456789">
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <p>
+                        <label>Amount to Transfer:</label>
+                        <input type="text" class="form-control" placeholder="ex: 0.00">
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success">Add Transaction</button>
+                </div>
+            </div><!-- /. -->
+
+        </div> <!-- /main -->
+
+    </div> <!-- /row -->
+
+</div> <!-- /container -->
+

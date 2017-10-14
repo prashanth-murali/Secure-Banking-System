@@ -1,0 +1,84 @@
+
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <side-bar></side-bar>
+
+        <div class="col-sm-9 col-md-10 main">
+
+            <div class="page-header">
+                <h1>SBS Fund Transfer</h1>
+            </div>
+
+            <h2>Transfer Funds:</h2>
+
+            <div id="fund-transfer">
+                <div class="modal-body">
+                    <p>
+                        <label>Debit Account:</label>
+                        <select class="form-control">
+                            <option>Select an Account</option>
+                            <option>${User}'s Checking Account (*1234)</option>
+                            <option>${User}'s Savings Account (*5678)</option>
+                        </select>
+                    </p>
+                    <hr>
+                    <p>
+                        <label>Current Balance:</label>
+                    <p><i> Please select an account </i></p>
+                    </p>
+                    <hr>
+                    <div>
+                        <label>Transfer Type:</label><br>
+                        <div class="btn-group" role="group">
+                            <button title="Transfer to another account of yours within our bank" type="button" class="internal-transfer transfer-option-btn btn btn-default">Internal Transfer</button>
+                            <button title="Transfer to another user's account within our bank" type="button" class="external-transfer transfer-option-btn btn btn-default">External Transfer</button>
+                        </div>
+                    </div>
+                    <div class="transfer-account-details">
+                        <div id="internal-transfer" class="hidden">
+                            <select class="form-control">
+                                <option>Select credit account</option>
+                                <option>${User}'s Checking Account (*1234)</option>
+                                <option>${User}'s Savings Account (*5678)</option>
+                            </select>
+                        </div>
+
+                        <div id="external-transfer" class="hidden">
+                            <p>
+                                <label>Account Holder's Name:</label>
+                                <input type="text" class="form-control" placeholder="eg: Rahul Parekh">
+                            </p>
+                            <p>
+                                <label>Account Number:</label>
+                                <input type="text" class="form-control" placeholder="123456789">
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <p>
+                        <label>Amount to be Transferred:</label>
+                        <input type="text" class="form-control" placeholder="0.00">
+                    </p>
+                    <hr>
+                    <p>
+                        <label>Upload Security Token :</label>
+                        <input type="file" class="form-control">
+                    </p>
+                    <p>
+                        <label>One time password: <a href="" class="btn btn-xs btn-info">Generate OTP</a></label>
+                        <input type="text" class="form-control">
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success">Transfer Funds</button>
+                </div>
+            </div><!-- /. -->
+
+        </div> <!-- /main -->
+
+    </div> <!-- /row -->
+
+</div> <!-- /container -->
+

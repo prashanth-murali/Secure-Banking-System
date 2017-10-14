@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
+from usermanagement.models import SecureUser
 from usermanagement.serializers import UserSerializer
 from rest_framework import viewsets
 
 # ViewSets define the view behavior.
 class UserViewSet(viewsets.ModelViewSet):
-	queryset = User.objects.all()
+	queryset = SecureUser.objects.all()
 	serializer_class = UserSerializer

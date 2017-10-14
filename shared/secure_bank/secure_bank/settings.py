@@ -26,6 +26,11 @@ SECRET_KEY = 'bh1^lvjb2phne_7sw^!!6j6*4**olvv)&ucsi6pw#9eaa4(7)k'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = 'usermanagement.User'
+
+AUTHENTICATION_BACKENDS = (
+    'permission_backend_nonrel.backends.NonrelPermissionBackend',
+)
 
 
 # Application definition
@@ -37,7 +42,10 @@ INSTALLED_APPS = [
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	'djangotoolbox',
+	'permission_backend_nonrel',
 	'rest_framework',
+	'rest_framework_mongoengine',
 	'usermanagement'
 ]
 

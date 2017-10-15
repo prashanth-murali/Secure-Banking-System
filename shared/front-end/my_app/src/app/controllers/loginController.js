@@ -1,8 +1,21 @@
-module.exports = ['$scope','$http', function($scope, $http) {
+module.exports = ['$scope','$http','$mdToast','$timeout', function($scope, $http, $mdToast, $timeout) {
     console.log('controller here');
+
+    $timeout(function(){
+        $mdToast.show(
+            $mdToast.simple()
+                .textContent('Simple Toast!')
+                .position('bottom right')
+                .hideDelay(3000)
+        );
+
+    }, 1000);
+
+
     $scope.greeting = 'Hola!';
     $scope.onLoginSubmit = function(){
         console.log('onLoginSubmit', $scope);
+
 
         $http({
             method: 'POST',
@@ -10,6 +23,9 @@ module.exports = ['$scope','$http', function($scope, $http) {
             data:{
                 username: $scope.email,
                 password: $scope.password
+            },
+            headers:{
+                "Content-Type":"application/json"
             }
         }).then(function successCallback(response) {
             // this callback will be called asynchronously

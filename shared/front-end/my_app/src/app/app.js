@@ -13,7 +13,7 @@ import loginController from './controllers/loginController.js';
 
 const MODULE_NAME = 'app';
 
-let app = angular.module(MODULE_NAME, ['ui.router']);
+let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial']);
 
 app.directive('app', function(){
     return {

@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 
 
-USER_TYPES = ["tier2", "tier1", "external"]
+USER_TYPES = ["tier2", "tier1", "administrator", "external", "merchant"]
 
 
 class CanCreateOrEditUser(permissions.BasePermission):

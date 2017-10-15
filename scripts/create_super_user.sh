@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python manage.py createsuperuser
+python ../shared/secure_bank/manage.py createsuperuser

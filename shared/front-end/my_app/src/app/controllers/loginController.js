@@ -1,38 +1,32 @@
-module.exports = ['$scope','$http','$mdToast','$timeout', function($scope, $http, $mdToast, $timeout) {
+module.exports = ['$scope','$http','$mdToast', function($scope, $http, $mdToast) {
     console.log('controller here');
 
-    $timeout(function(){
+    $scope.greeting = 'Hola!';
+
+    function toast(msg) {
         $mdToast.show(
             $mdToast.simple()
-                .textContent('Simple Toast!')
+                .textContent(msg)
                 .position('bottom right')
                 .hideDelay(3000)
         );
+    }
 
-    }, 1000);
-
-
-    $scope.greeting = 'Hola!';
     $scope.onLoginSubmit = function(){
         console.log('onLoginSubmit', $scope);
 
 
-        $http({
-            method: 'POST',
-            url: BACKEND_URL+'/api-token-auth/',
-            data:{
-                username: $scope.email,
-                password: $scope.password
-            },
+        $http.post(BACKEND_URL+'/api-token-auth/', {
+            username: $scope.email,
+            password: $scope.password
+        },{
             headers:{
                 "Content-Type":"application/json"
             }
         }).then(function successCallback(response) {
-            // this callback will be called asynchronously
-            // when the response is available
+            toast('JWT token: ' + response.data);
         }, function errorCallback(response) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
+            toast('Invalid Username or Password');
         });
     };
 }];

@@ -167,6 +167,9 @@ module.exports = function makeWebpackConfig() {
           plugins: [autoprefixer]
         }
       }
+    }),
+    new webpack.DefinePlugin({
+        BACKEND_URL: JSON.stringify("http://localhost:8000"),
     })
   ];
 

@@ -2,7 +2,14 @@ import angular from 'angular';
 import '@uirouter/angularjs';
 
 import '../style/app.css';
+import 'angular-material/angular-material.css'
 
+import 'angular-aria';
+import 'angular-animate';
+import 'angular-material';
+
+
+import loginController from './controllers/loginController.js';
 
 const MODULE_NAME = 'app';
 
@@ -57,7 +64,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: '../views/login_page.html'
+            templateUrl: '../views/login_page.html',
+            controller:loginController
         })
 
         .state('credit_debit', {

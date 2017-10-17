@@ -1,10 +1,14 @@
-from usermanagement.models import User
+from usermanagement.models import User, Account
 from usermanagement.serializers import UserSerializer
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.decorators import detail_route
+from rest_framework.response import Response
+import json
 
 
 USER_TYPES = ["tier2", "tier1", "administrator", "external", "merchant"]
+ACC_TYPES = ["current", "savings", "credit"]
 
 
 class CanCreateOrEditUser(permissions.BasePermission):
@@ -46,3 +50,18 @@ class UserViewSet(viewsets.ModelViewSet):
 			u = User.objects.get(username__exact=obj.username)
 			u.set_password(obj.password)
 			u.save()
+
+
+	@detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated])
+	def open_account(self, request, pk=None, aType=ACC_TYPES[0]):
+		if not aType in ACC_TYPES:
+			aType = ACC_TYPES[0]
+		
+		acc = Account.objects.create(amount=0.0, aType=aType)
+		acc.save()
+
+		u = User.objects.get(id__exact=pk)
+		u.accounts.extend([acc.id])
+		u.save()
+
+		return Response({'status': 'ok'})

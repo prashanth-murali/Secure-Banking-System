@@ -5,8 +5,9 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = User
-		fields = ('url', 'username', 'email', 'password', 'first_name', 'last_name', 'is_staff', 'uType')
+		fields = ('url', 'username', 'email', 'password', 'first_name', 'last_name', 'is_staff', 'uType', 'accounts')
 		write_only_fields = ('password',)
+		read_only_fields = ('accounts',)
 
 	# def restore_object(self, attrs, instance=None):
 	# 	"""

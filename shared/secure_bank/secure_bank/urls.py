@@ -16,12 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from rest_framework.response import Response
 
+from secure_bank.views import MyOwnView
 from usermanagement import views as userviews
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from rest_framework_jwt.views import verify_jwt_token
-
-from secure_bank.views import MyOwnView
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()

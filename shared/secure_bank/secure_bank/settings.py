@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,11 +26,26 @@ SECRET_KEY = 'bh1^lvjb2phne_7sw^!!6j6*4**olvv)&ucsi6pw#9eaa4(7)k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+if DEBUG:
+	# will output to your console
+	logging.basicConfig(
+		level = logging.DEBUG,
+		format = '%(asctime)s %(levelname)s %(message)s',
+	)
+else:
+	# will output to logging file
+	logging.basicConfig(
+		level = logging.DEBUG,
+		format = '%(asctime)s %(levelname)s %(message)s',
+		filename = '/my_log_file.log',
+		filemode = 'a'
+	)
+
 ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'usermanagement.User'
 
 AUTHENTICATION_BACKENDS = (
-    'permission_backend_nonrel.backends.NonrelPermissionBackend',
+	'permission_backend_nonrel.backends.NonrelPermissionBackend',
 )
 
 
@@ -134,8 +150,8 @@ STATIC_URL = '/static/'
 
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+	# Use Django's standard `django.contrib.auth` permissions,
+	# or allow read-only access for unauthenticated users.
 	'DEFAULT_PERMISSION_CLASSES': (
 		'rest_framework.permissions.IsAuthenticated',
 	),

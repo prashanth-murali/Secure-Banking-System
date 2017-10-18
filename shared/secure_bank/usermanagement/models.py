@@ -18,6 +18,35 @@ class User(AbstractUser):
 
 
 class Account(models.Model):
-	# account# will be _id
+	# account# will be id
 	amount = models.FloatField()
-	aType = models.CharField(max_length=50)
+	aType = models.CharField(
+		max_length=20,
+		choices=(
+			("current", "current"),
+			("savings", "savings"),
+			("credit", "credit"),
+		)
+	)
+
+
+class Transaction(models.Model):
+	amount = models.FloatField()
+	source = models.CharField(max_length=24, blank=True)
+	destination = models.CharField(max_length=24, blank=True)
+	ttype = models.CharField(
+		max_length=10,
+		choices=(
+			('credit', 'credit'),
+			('debit', 'debit'),
+			('transfer', 'transfer')
+		)
+	)
+	status = models.CharField(
+		max_length=10,
+		choices=(
+			('approved', 'approved'),
+			('pending', 'pending'),
+			('rejected', 'rejected')
+		)
+	)

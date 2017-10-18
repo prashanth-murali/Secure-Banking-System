@@ -1,14 +1,23 @@
-from usermanagement.models import User, Account
-from usermanagement.serializers import UserSerializer
+from usermanagement.models import User, Account, Transaction
+from usermanagement.serializers import UserSerializer, AccountSerializer, TransactionSerializer
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.views import APIView
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 import json
+import logging
 
 
 USER_TYPES = ["tier2", "tier1", "administrator", "external"]
 ACC_TYPES = ["current", "savings", "credit"]
+
+
+
+def getCriticalLimit():
+	return 0
+
 
 
 class CanCreateOrEditUser(permissions.BasePermission):
@@ -24,6 +33,58 @@ class CanCreateOrEditUser(permissions.BasePermission):
 			return obj.username == request.user.username
 
 		return False
+
+
+class CanCreateAccount(permissions.BasePermission):
+	def has_permission(self, request, view):
+		u = User.objects.get(id__exact=request.user.id)
+
+		if u.uType == "":
+			return False
+
+		if u.uType == "external":
+			return view.kwargs.get('pk') == request.user.id
+
+		return True
+
+
+class CanEditOrDeleteAccount(permissions.BasePermission):
+	def has_object_permission(self, request, view, obj):
+		if request.method in permissions.SAFE_METHODS:
+			return True
+
+		u = User.objects.get(id__exact=request.user.id)
+
+		if u.uType == "" or u.uType == "external":
+			return False
+
+		return True
+
+
+class CanEditTransaction(permissions.BasePermission):
+	def has_object_permission(self, request, view, obj):
+		if request.method in permissions.SAFE_METHODS:
+			return True
+
+		u = User.objects.get(id__exact=request.user.id)
+
+		if u.uType == "" or u.uType == "external":
+			return False
+
+		return True
+
+	def has_permission(self, request, view):
+		return request.method != 'POST'
+
+
+class CanCreditOrDebitAccount(permissions.BasePermission):
+	def has_permission(self, request, view):
+		u = User.objects.get(id__exact=request.user.id)
+
+		if u.uType == "" or u.uType == "external":
+			return (view.kwargs.get('pk') in u.accounts)
+
+		return True
 
 
 # ViewSets define the view behavior.
@@ -46,14 +107,15 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 	def post_save(self, obj, created=False):
-		if created:
-			u = User.objects.get(username__exact=obj.username)
-			u.set_password(obj.password)
-			u.save()
+		u = User.objects.get(username__exact=obj.username)
+		u.set_password(obj.password)
+		u.save()
 
 
-	@detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated])
-	def open_account(self, request, pk=None, aType=ACC_TYPES[0]):
+	@detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated, CanCreateAccount])
+	def open_account(self, request, pk=None):
+		aType = request.POST['atype']
+
 		if not aType in ACC_TYPES:
 			aType = ACC_TYPES[0]
 
@@ -65,3 +127,102 @@ class UserViewSet(viewsets.ModelViewSet):
 		u.save()
 
 		return Response({'status': 'ok'})
+
+
+class AccountViewSet(viewsets.ModelViewSet):
+
+	model = Account
+	serializer_class = AccountSerializer
+	permission_classes = (permissions.IsAuthenticated, CanEditOrDeleteAccount)
+
+	def get_queryset(self):
+		u = User.objects.get(id__exact=self.request.user.id)
+
+		if u.uType == "external":
+			return Account.objects.filter(id__in=u.accounts)
+
+		return Account.objects.all()
+
+
+	def creditAccount(accID, amount):
+		amount = max(amount, 0.0)
+		acc = Account.objects.get(id__exact=accID)
+		acc.amount = acc.amount + amount
+		acc.save()
+
+	def debitAccount(accID, amount):
+		amount = max(amount, 0.0)
+		acc = Account.objects.get(id__exact=accID)
+
+		if acc.amount > amount:
+			acc.amount = acc.amount - amount
+			acc.save()
+			return True
+
+		return False
+
+
+	@detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated, CanCreditOrDebitAccount])
+	def credit(self, request, pk=None):
+		if 'amount' in request.POST:
+			amount = float(request.POST['amount'])
+			self.creditAccount(pk, amount)
+
+			# save transaction
+			t = Transaction.objects.create(amount=amount, destination=pk, status='approved', ttype='credit')
+			t.save()
+			
+			return Response({'status': 'ok'})
+
+		return Response({'status': 'need amount'})
+
+
+	@detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated, CanCreditOrDebitAccount])
+	def debit(self, request, pk=None):
+		if 'amount' in request.POST:
+			amount = float(request.POST['amount'])
+			if self.debitAccount(pk, amount):
+				
+				# save transaction
+				t = Transaction.objects.create(amount=amount, source=pk, status='approved', ttype='debit')
+				t.save()
+
+				return Response({'status': 'ok'})
+			else:
+				return Response({'status': 'not enough money'})
+
+		return Response({'status': 'need amount'})
+
+
+	@detail_route(methods=['post'], permission_classes=[permissions.IsAuthenticated, CanCreditOrDebitAccount])
+	def transfer(self, request, pk=None):
+		if 'amount' in request.POST and 'to' in request.POST:
+			if pk != request.POST['to']:
+				amount = float(request.POST['amount'])
+				if self.debitAccount(pk, amount):
+					self.creditAccount(request.POST['to'], amount)
+
+					# save transaction
+					t = Transaction.objects.create(amount=amount, source=pk, destination=request.POST['to'], status='approved', ttype='transfer')
+					t.save()
+
+					return Response({'status': 'ok'})
+				else:
+					return Response({'status': 'not enough money'})
+
+		return Response({'status': 'not enough info'})
+
+
+class TransactionViewSet(viewsets.ModelViewSet):
+
+	model = Transaction
+	serializer_class = TransactionSerializer
+	permission_classes = (permissions.IsAuthenticated, CanEditTransaction)
+
+	def get_queryset(self):
+		u = User.objects.get(id__exact=self.request.user.id)
+
+		if u.uType == "external":
+			return Transaction.objects.filter(Q(source=u.id) | Q(destination=u.id))
+
+		return Transaction.objects.all()

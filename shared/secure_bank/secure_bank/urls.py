@@ -25,11 +25,13 @@ from rest_framework_jwt.views import verify_jwt_token
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', userviews.UserViewSet)
+router.register(r'accounts', userviews.AccountViewSet)
+router.register(r'transactions', userviews.TransactionViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browseable API.
 urlpatterns = [
-    url(r'^', include(router.urls)),
-    url(r'^login/', Login.as_view()),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+	url(r'^', include(router.urls)),
+	url(r'^login/', Login.as_view()),
+	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 import json
 
 
-USER_TYPES = ["tier2", "tier1", "administrator", "external", "merchant"]
+USER_TYPES = ["tier2", "tier1", "administrator", "external"]
 ACC_TYPES = ["current", "savings", "credit"]
 
 

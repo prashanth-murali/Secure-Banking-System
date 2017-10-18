@@ -4,8 +4,17 @@ from djangotoolbox.fields import ListField
 
 # Create your models here.
 class User(AbstractUser):
-	uType = models.CharField(max_length=10)
+	uType = models.CharField(
+		max_length=20,
+		choices=(
+			('administrator', 'administrator'),
+			("tier2", "tier2"),
+			("tier1", "tier1"),
+			("external", "external")
+		)
+	)
 	accounts = ListField()
+	isMerchant = models.BooleanField()
 
 
 class Account(models.Model):

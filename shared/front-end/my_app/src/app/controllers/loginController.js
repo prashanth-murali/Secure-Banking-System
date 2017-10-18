@@ -1,4 +1,4 @@
-module.exports = ['$scope','$http','$mdToast', 'jwtService', '$state', '$base64', function($scope, $http, $mdToast, jwtService, $state, $base64) {
+module.exports = ['$scope','$http','$mdToast', 'authService', '$state', '$base64', function($scope, $http, $mdToast, authService, $state, $base64) {
     console.log('controller here');
 
     $scope.email = 'james.kieley';
@@ -14,18 +14,17 @@ module.exports = ['$scope','$http','$mdToast', 'jwtService', '$state', '$base64'
     }
 
     $scope.onLoginSubmit = function(){
+        var auth = "Basic " +$base64.encode($scope.email + ":" + $scope.password);
         console.log('onLoginSubmit', $scope);
-        console.log($base64.encode($scope.email+":"+$scope.password));
-
-
+        console.log(auth);
         $http.get(BACKEND_URL+'/api/login/',{
             headers:{
-                "authorization": "Basic " +$base64.encode($scope.email+":"+$scope.password)
+                "authorization": auth
             }
         }).then(function successCallback(response) {
             toast('Success');
-            jwtService.setJwt(response.data.token);
-            $state.transitionTo('my.state', {arg:'arg'});
+            authService.setAuth(auth);
+            $state.transitionTo('my.state');
         }, function errorCallback(response) {
             toast('Invalid Username or Password');
         });

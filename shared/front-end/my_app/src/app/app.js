@@ -12,7 +12,7 @@ import 'angular-base64';
 
 
 import loginController from './controllers/loginController.js';
-import jwtService from './services/jwtService';
+import authService from './services/authService';
 
 const MODULE_NAME = 'app';
 
@@ -60,7 +60,7 @@ app.controller('AppCtrl', function(){
     this.url = 'https://github.com/preboot/angular-webpack';
 });
 
-app.factory('jwtService', jwtService);
+app.factory('authService', authService);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 

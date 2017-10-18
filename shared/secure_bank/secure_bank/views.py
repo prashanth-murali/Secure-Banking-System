@@ -6,4 +6,4 @@ from rest_framework.views import APIView
 
 class MyOwnView(APIView):
     def get(self, request):
-        return Response({'some': request.user.id})
+        return Response({'userId': request.user.id})

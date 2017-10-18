@@ -32,7 +32,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	serializer_class = UserSerializer
 	permission_classes = (permissions.IsAuthenticated, CanCreateOrEditUser,)
 
-	
+
 	def pre_save(self, obj):
 		# set the use type
 		if self.request.user.is_superuser:
@@ -44,7 +44,7 @@ class UserViewSet(viewsets.ModelViewSet):
 		else:
 			obj.uType = 'external'
 
-	
+
 	def post_save(self, obj, created=False):
 		if created:
 			u = User.objects.get(username__exact=obj.username)
@@ -56,7 +56,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	def open_account(self, request, pk=None, aType=ACC_TYPES[0]):
 		if not aType in ACC_TYPES:
 			aType = ACC_TYPES[0]
-		
+
 		acc = Account.objects.create(amount=0.0, aType=aType)
 		acc.save()
 

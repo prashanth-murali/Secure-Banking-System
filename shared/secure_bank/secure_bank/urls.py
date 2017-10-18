@@ -30,6 +30,6 @@ router.register(r'users', userviews.UserViewSet)
 # Additionally, we include login URLs for the browseable API.
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^user-id/', MyOwnView.as_view()),
+    url(r'^login/', Login.as_view()),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

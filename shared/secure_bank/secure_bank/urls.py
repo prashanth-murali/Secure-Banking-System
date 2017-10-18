@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from rest_framework.response import Response
 
-from secure_bank.views import MyOwnView
+from secure_bank.views import Login
 from usermanagement import views as userviews
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token

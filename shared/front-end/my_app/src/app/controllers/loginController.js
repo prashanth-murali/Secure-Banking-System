@@ -1,7 +1,8 @@
-module.exports = ['$scope','$http','$mdToast', function($scope, $http, $mdToast) {
+module.exports = ['$scope','$http','$mdToast', 'jwtService', '$state', '$base64', function($scope, $http, $mdToast, jwtService, $state, $base64) {
     console.log('controller here');
 
-    $scope.greeting = 'Hola!';
+    $scope.email = 'james.kieley';
+    $scope.password = 'asdf1234';
 
     function toast(msg) {
         $mdToast.show(
@@ -14,17 +15,17 @@ module.exports = ['$scope','$http','$mdToast', function($scope, $http, $mdToast)
 
     $scope.onLoginSubmit = function(){
         console.log('onLoginSubmit', $scope);
+        console.log($base64.encode($scope.email+":"+$scope.password));
 
 
-        $http.post(BACKEND_URL+'/api-token-auth/', {
-            username: $scope.email,
-            password: $scope.password
-        },{
+        $http.get(BACKEND_URL+'/api/login/',{
             headers:{
-                "Content-Type":"application/json"
+                "authorization": "Basic " +$base64.encode($scope.email+":"+$scope.password)
             }
         }).then(function successCallback(response) {
-            toast('JWT token: ' + response.data);
+            toast('Success');
+            jwtService.setJwt(response.data.token);
+            $state.transitionTo('my.state', {arg:'arg'});
         }, function errorCallback(response) {
             toast('Invalid Username or Password');
         });

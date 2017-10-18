@@ -169,7 +169,7 @@ module.exports = function makeWebpackConfig() {
       }
     }),
     new webpack.DefinePlugin({
-        BACKEND_URL: JSON.stringify("http://localhost:9000"),
+        BACKEND_URL: JSON.stringify("http://localhost:8080"),
     })
   ];
 
@@ -220,7 +220,13 @@ module.exports = function makeWebpackConfig() {
    */
   config.devServer = {
     contentBase: './src/public',
-    stats: 'minimal'
+    stats: 'minimal',
+    proxy: {
+        "/api": {
+            target: "http://localhost:8000",
+            pathRewrite: {"^/api" : ""}
+        }
+    }
   };
 
   return config;

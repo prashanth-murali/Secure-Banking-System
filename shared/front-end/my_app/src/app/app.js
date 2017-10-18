@@ -8,12 +8,15 @@ import 'angular-aria';
 import 'angular-animate';
 import 'angular-material';
 
+import 'angular-base64';
+
 
 import loginController from './controllers/loginController.js';
+import jwtService from './services/jwtService';
 
 const MODULE_NAME = 'app';
 
-let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial']);
+let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64']);
 
 app.directive('app', function(){
     return {
@@ -56,6 +59,8 @@ app.directive('sideBarMerchant', function(){
 app.controller('AppCtrl', function(){
     this.url = 'https://github.com/preboot/angular-webpack';
 });
+
+app.factory('jwtService', jwtService);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 

@@ -78,11 +78,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: '../views/external_users/credit_debit_external.html'
         })
 
-        .state('dashboard_external_user', {
-            url: '/dashboard_external_user',
-            templateUrl: '../views/external_users/dashboard_external_user.html'
-        })
-
         .state('fund_transfer_external_user', {
             url: '/fund_transfer_external_user',
             templateUrl: '../views/external_users/fund_transfer_external_user.html'
@@ -115,7 +110,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
         .state('dashboard_admin', {
             url: '/dashboard_admin',
-            templateUrl: '../views/internal_users/dashboard_admin.html'
+            templateUrl: '../views/internal_users/dashboard_admin.html',
+            controller: ['$scope', '$http', 'authService', function($scope, $http, authService){
+                $http.get(BACKEND_URL+'/api/users/',{
+                    headers:{
+                        "authorization": authService.getAuth()
+                    }
+                }).then(function successCallback(response) {
+                    $scope.users = response.data;
+                }, function errorCallback(response) {
+                    toast('Error loading users');
+                })
+            }]
         })
 
         .state('dashboard_internal_employee', {
@@ -126,6 +132,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('dashboard_internal_manager', {
             url: '/dashboard_internal_manager',
             templateUrl: '../views/internal_users/dashboard_internal_manager.html'
+        })
+
+        .state('dashboard_external_user', {
+            url: '/dashboard_external_user',
+            templateUrl: '../views/external_users/dashboard_external_user.html'
         })
 
         .state('edit_users', {

@@ -111,7 +111,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('dashboard_admin', {
             url: '/dashboard_admin',
             templateUrl: '../views/internal_users/dashboard_admin.html',
-            controller: ['$scope', '$http', 'authService', function($scope, $http, authService){
+            controller: ['$scope', '$http', 'authService', '$mdToast', function($scope, $http, authService, $mdToast){
+                function toast(msg) {
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent(msg)
+                            .position('bottom right')
+                            .hideDelay(3000)
+                    );
+                }
+
                 $http.get(BACKEND_URL+'/api/users/',{
                     headers:{
                         "authorization": authService.getAuth()
@@ -120,7 +129,31 @@ app.config(function($stateProvider, $urlRouterProvider) {
                     $scope.users = response.data;
                 }, function errorCallback(response) {
                     toast('Error loading users');
-                })
+                });
+
+                $scope.submit = function(){
+                    console.log($scope.create);
+                    debugger;
+//"username":"username","email":"username@username","password":"username","firstName":"username","lastName":"username","uType":"tier1","isMerchant":false
+                    $http.post(BACKEND_URL+'/api/users/',{
+                        "username":$scope.create.username,
+                        "email":$scope.create.email,
+                        "password":$scope.create.password,
+                        "first_name":$scope.create.firstName,
+                        "last_name":$scope.create.lastName,
+                        "uType":$scope.create.uType,
+                        "isMerchant": $scope.create.uType === true ? true : false,
+                        "accounts":[]
+                    },{
+                        headers:{
+                            "authorization": authService.getAuth()
+                        }
+                    }).then(function successCallback(response) {
+                        $scope.users = response.data;
+                    }, function errorCallback(response) {
+                        toast('Error loading users');
+                    });
+                }
             }]
         })
 

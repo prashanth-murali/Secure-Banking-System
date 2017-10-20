@@ -19,6 +19,7 @@ class User(AbstractUser):
 
 class Account(models.Model):
 	# account# will be id
+	user_id = models.CharField(max_length=100)
 	amount = models.FloatField()
 	aType = models.CharField(
 		max_length=20,

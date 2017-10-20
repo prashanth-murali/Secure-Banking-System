@@ -1,3 +1,5 @@
+from bson import ObjectId
+
 from usermanagement.models import User, Account, Transaction
 from usermanagement.serializers import UserSerializer, AccountSerializer, TransactionSerializer
 from django.db.models import Q
@@ -142,6 +144,12 @@ class AccountViewSet(viewsets.ModelViewSet):
 			return Account.objects.filter(id__in=u.accounts)
 
 		return Account.objects.all()
+
+	def pre_save(self, obj):
+		#validate that the object user_id is a valid user
+		u = User.objects.get(id__exact=ObjectId(obj.user_id))
+		if u is None:
+			raise Exception('user with id :'+obj.user_id+'does not exist')
 
 
 	def creditAccount(accID, amount):

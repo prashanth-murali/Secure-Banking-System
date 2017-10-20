@@ -7,14 +7,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		model = User
 		fields = ('url', 'username', 'email', 'password', 'first_name', 'last_name', 'is_staff', 'uType', 'accounts', 'isMerchant')
 		write_only_fields = ('password',)
-		read_only_fields = ('accounts',)
 
 
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Account
-		fields = ('url', 'id', 'amount', 'aType')
-		read_only_fields = ('id', 'amount')
+		fields = ('url', 'id','user_id' ,'amount', 'aType')
+		read_only_fields = ('id',)
 
 
 class TransactionSerializer(serializers.HyperlinkedModelSerializer):

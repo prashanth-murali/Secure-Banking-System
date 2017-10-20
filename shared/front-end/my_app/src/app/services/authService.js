@@ -1,19 +1,15 @@
-module.exports = function(){
-    var auth;
-    var userId;
-    var user;
+module.exports = ['$sessionStorage', function($sessionStorage){
     return {
         getAuth: function(){
-            return auth;
+            return $sessionStorage.auth;
         },
         setAuth: function(nAuth){
-            console.log('setting auth: ', nAuth);
-            auth = nAuth;
+            $sessionStorage.auth = nAuth;
         },
-        getUserId: function(){ return userId; },
-        setUserId: function(nUserId){ userId = nUserId;},
+        getUserId: function(){ return $sessionStorage.userId; },
+        setUserId: function(nUserId){ $sessionStorage.userId = nUserId;},
 
-        getUser: function(){ return user; },
-        setUser: function(nUser){ user = nUser;}
+        getUser: function(){ return $sessionStorage.user; },
+        setUser: function(nUser){ $sessionStorage.user = nUser;}
     };
-};
+}];

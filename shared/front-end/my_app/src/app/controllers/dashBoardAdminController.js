@@ -1,4 +1,4 @@
-module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSerializerJQLike', function ($scope, $http, authService, $mdToast, $httpParamSerializerJQLike) {
+module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSerializerJQLike', '$state', function ($scope, $http, authService, $mdToast, $httpParamSerializerJQLike, $state) {
     function toast(msg) {
         $mdToast.show(
             $mdToast.simple()
@@ -18,6 +18,19 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
                 "authorization": authService.getAuth()
             }
         });
+    }
+
+    function setRandomCreateData() {
+        $scope.create = {
+            "username": randomString(),
+            "email": randomString()+"@abc.com",
+            "password": "password",
+            "firstName": randomString(),
+            "lastName": randomString(),
+            "is_staff": false,
+            "uType": "tier1",
+            "isMerchant": false,
+        };
     }
 
     function createUser(){
@@ -56,9 +69,32 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             console.log(response.data);
             toast('Successfully created User');
             fetchUsers();
+            delete $scope.create; //clear inputted data
         }, function errorCallback(response) {
             toast('Error loading users');
         });
+    };
+
+    $scope.setRandomData = function () {
+        setRandomCreateData();
+    };
+
+    $scope.editUser = function (user) {
+        console.log('editUser',user);
+        $state.transitionTo('dashboard_admin_edit_user',{user:user});
+    };
+
+    $scope.deleteUser = function (user) {
+        console.log('delete user: ', user);
+        $http.delete(user.url,{
+            headers: {
+                "authorization": authService.getAuth(),
+            }
+        }).then(function success(){
+           fetchUsers();
+        }, function errorCallback(){
+           toast('Failed to delete User');
+        })
     };
 
     fetchUsers();

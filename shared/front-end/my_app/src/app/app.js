@@ -15,6 +15,7 @@ import 'ngstorage';
 import loginController from './controllers/loginController.js';
 import authService from './services/authService';
 import dashboardAdminController from './controllers/dashBoardAdminController';
+import dashboardAdminEditUser from './controllers/dashBoardAdminEditUserController';
 
 const MODULE_NAME = 'app';
 
@@ -28,9 +29,25 @@ app.directive('app', function(){
     }
 });
 
+function addDirective(name,url) {
+    app.directive(name, function(){
+        return {
+            templateUrl: url
+        }
+    });
+}
+
+addDirective('dashboardAdminEditUser','../views/internal_users/dashboard_admin_edit_user_c.html');
+
 app.directive('sideBar', function(){
     return {
         templateUrl: '../views/side_bar_internal_employee.html'
+    }
+});
+
+app.directive('dashboardAdminUsers', function(){
+    return {
+        templateUrl: '../views/internal_users/dashboard_admin_users.html'
     }
 });
 
@@ -114,6 +131,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
             url: '/dashboard_admin',
             templateUrl: '../views/internal_users/dashboard_admin.html',
             controller: dashboardAdminController
+        })
+
+        .state('dashboard_admin_edit_user', {
+            url: '/dashboard_admin_edit_user',
+            templateUrl: '../views/internal_users/dashboard_admin_edit_user.html',
+            controller: dashboardAdminEditUser, // change
+            params:{user:null}
         })
 
         .state('dashboard_internal_employee', {

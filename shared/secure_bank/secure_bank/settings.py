@@ -161,3 +161,8 @@ REST_FRAMEWORK = {
 		'rest_framework.authentication.BasicAuthentication',
 	),
 }
+
+
+
+# APP config
+CRITICAL_TRANSACTION_LIMIT = 1000

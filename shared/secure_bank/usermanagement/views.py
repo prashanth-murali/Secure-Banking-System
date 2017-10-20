@@ -1,6 +1,7 @@
 from bson import ObjectId
+from django.conf import settings
 
-from usermanagement.models import User, Account, Transaction
+from usermanagement.models import User, Account, Transaction, Config
 from usermanagement.serializers import UserSerializer, AccountSerializer, TransactionSerializer
 from django.db.models import Q
 from rest_framework import viewsets
@@ -13,16 +14,27 @@ import logging
 
 
 USER_TYPES = ["tier2", "tier1", "administrator", "external"]
+USER_RANK = {"tier2": 2, "tier1": 1, "administrator": 3, "external": 0}
 ACC_TYPES = ["current", "savings", "credit"]
 
 
 
 def getCriticalLimit():
-	return 0
+	conf = Config.objects.get(key__exact="critical_transaction_limit")
+	if not conf:
+		conf = Config(
+			key="critical_transaction_limit",
+			val=settings.CRITICAL_TRANSACTION_LIMIT,
+			valType="float"
+		)
+
+		conf.save()
+
+	return conf.val
 
 
 
-class CanCreateOrEditUser(permissions.BasePermission):
+class CanCreateEditDeleteUser(permissions.BasePermission):
 	"""
 	Custom permission that allow admin or only user to update their profile
 	"""
@@ -33,6 +45,15 @@ class CanCreateOrEditUser(permissions.BasePermission):
 
 		if request.method == 'PUT':
 			return obj.username == request.user.username
+
+		if request.method == 'DELETE':
+			cu = User.objects.get(id__exact=request.user.id)
+			if cu.uType == 'external' or cu.uType == '':
+				return False
+			elif obj.uType == '':
+				return True
+			else:
+				return USER_RANK[cu.uType] > USER_RANK[obj.uType]
 
 		return False
 
@@ -93,7 +114,7 @@ class CanCreditOrDebitAccount(permissions.BasePermission):
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
-	permission_classes = (permissions.IsAuthenticated, CanCreateOrEditUser,)
+	permission_classes = (permissions.IsAuthenticated, CanCreateEditDeleteUser,)
 
 
 	def pre_save(self, obj):

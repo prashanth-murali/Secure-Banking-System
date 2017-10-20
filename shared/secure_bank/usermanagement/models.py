@@ -51,3 +51,16 @@ class Transaction(models.Model):
 			('rejected', 'rejected')
 		)
 	)
+
+
+class Config(models.Model):
+	key = models.CharField(max_length=50)
+	val = models.CharField(max_length=50)
+	valType = models.CharField(
+		max_length=10,
+		choices=(
+			('float', 'float'),
+			('int', 'int'),
+			('string', 'string')
+		)
+	)

@@ -55,21 +55,27 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
+    function fetchUsers() {
+        getUsers().then(function successCallback(response) {
+            $scope.users = response.data;
+        }, function errorCallback(response) {
+            toast('Error loading users');
+        });
+    }
+
     $scope.submit = function () {
         console.log($scope.create);
         createUser().then(function successCallback(response) {
             console.log(response.data);
+            toast('Successfully created User');
+            setRandomCreateData();
+            fetchUsers();
         }, function errorCallback(response) {
             toast('Error loading users');
         });
     };
 
-    getUsers().then(function successCallback(response) {
-        $scope.users = response.data;
-    }, function errorCallback(response) {
-        toast('Error loading users');
-    });
-
+    fetchUsers();
     setRandomCreateData();
 
 }];

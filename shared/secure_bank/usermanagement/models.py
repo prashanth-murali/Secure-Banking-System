@@ -23,7 +23,7 @@ class Account(models.Model):
 	aType = models.CharField(
 		max_length=20,
 		choices=(
-			("current", "current"),
+			("checking", "checking"),
 			("savings", "savings"),
 			("credit", "credit"),
 		)

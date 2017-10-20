@@ -20,19 +20,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    function setRandomCreateData() {
-        $scope.create = {
-            "username": randomString(),
-            "email": randomString()+"@abc.com",
-            "password": "password",
-            "firstName": randomString(),
-            "lastName": randomString(),
-            "is_staff": false,
-            "uType": "tier1",
-            "isMerchant": false,
-        };
-    }
-
     function createUser(){
         return $http({
             url:BACKEND_URL + '/api/users/',
@@ -68,7 +55,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         createUser().then(function successCallback(response) {
             console.log(response.data);
             toast('Successfully created User');
-            setRandomCreateData();
             fetchUsers();
         }, function errorCallback(response) {
             toast('Error loading users');
@@ -76,7 +62,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     };
 
     fetchUsers();
-    setRandomCreateData();
 
 }];
 

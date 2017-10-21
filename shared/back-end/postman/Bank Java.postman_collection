@@ -1,0 +1,82 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Bank Java",
+		"_postman_id": "0cb2914f-8ed8-1757-fc14-b5258e89f0c4",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Users",
+			"request": {
+				"url": "http://localhost:8080/users",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get user",
+			"request": {
+				"url": "http://localhost:8080/users/59ebb20cf832aa27410af181",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"administrator\",\n  \"name\": \"ZhExlbzMS2\",\n  \"address\": \"b_bEBatDx3\",\n  \"phoneNumber\": \"SxJRdj631Q\",\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "create user",
+			"request": {
+				"url": "http://localhost:8080/users",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"administrator\",\n    \"name\": \"James_{{$timestamp}}\",\n    \"address\": \"b_bEBatDx3\",\n    \"phoneNumber\": \"SxJRdj631Q\",\n    \"username\": \"admin_{{$timestamp}}\",\n    \"password\": \"admin\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "delete user",
+			"request": {
+				"url": "http://localhost:8080/users/59ebb4c5c8a96c2a286732d2",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"administrator\",\n    \"name\": \"James_{{$timestamp}}\",\n    \"address\": \"b_bEBatDx3\",\n    \"phoneNumber\": \"SxJRdj631Q\",\n    \"username\": \"admin_{{$timestamp}}\",\n    \"password\": \"admin\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

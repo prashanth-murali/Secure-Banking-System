@@ -13,11 +13,12 @@ public class User {
 
     private String username;
     private String password;
+    private String uType; // "administrator", "tier1", "tier2", "merchant", "consumer"
 
 
     public User() {}
 
-    public User(String id, String type, String name, String address, String phoneNumber, String username, String password) {
+    public User(String id, String type, String name, String address, String phoneNumber, String username, String password, String uType) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -25,6 +26,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.username = username;
         this.password = password;
+        this.uType = uType;
     }
 
     public String getId() {
@@ -81,5 +83,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getuType() {
+        return uType;
+    }
+
+    public void setuType(String uType) {
+        this.uType = uType;
     }
 }

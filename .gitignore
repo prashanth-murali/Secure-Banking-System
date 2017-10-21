@@ -3,3 +3,4 @@
 *.pyc
 !.idea/runConfigurations/Run.xml
 !.idea/runConfigurations/server.xml
+/shared/back-end/target

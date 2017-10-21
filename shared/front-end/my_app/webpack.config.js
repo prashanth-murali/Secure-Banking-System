@@ -49,7 +49,7 @@ module.exports = function makeWebpackConfig() {
 
     // Output path from the view of the page
     // Uses webpack-dev-server in development
-    publicPath: isProd ? '/' : 'http://localhost:8080/',
+    publicPath: isProd ? '/' : 'http://localhost:8081/',
 
     // Filename for entry points
     // Only adds hash in build mode
@@ -173,7 +173,7 @@ module.exports = function makeWebpackConfig() {
       }
     }),
     new webpack.DefinePlugin({
-        BACKEND_URL: JSON.stringify("http://localhost:8080"),
+        BACKEND_URL: JSON.stringify("http://localhost:8081"),
     })
   ];
 
@@ -227,7 +227,7 @@ module.exports = function makeWebpackConfig() {
     stats: 'minimal',
     proxy: {
         "/api": {
-            target: "http://localhost:8000",
+            target: "http://localhost:8080",
             pathRewrite: {"^/api" : ""}
         }
     }

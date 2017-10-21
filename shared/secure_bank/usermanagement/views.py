@@ -43,11 +43,27 @@ class CanCreateEditDeleteUser(permissions.BasePermission):
 		if request.method in permissions.SAFE_METHODS:
 			return True
 
-		if request.method == 'PUT':
-			return obj.username == request.user.username
 
+		# admin puo fare come cazzo pare
+		# lo so che non usato accento
+		# django da errore per accento - scherzo
+		cu = User.objects.get(id__exact=request.user.id)
+		if cu.uType != '' and cu.uType == 'administrator':
+			return True
+
+
+		# handles edit
+		if request.method == 'PUT':
+			if cu.uType == 'external' or cu.uType == '':
+				return obj.username == request.user.username
+			elif obj.uType == '':
+				return True
+			else:
+				return USER_RANK[cu.uType] >= USER_RANK[obj.uType]
+
+
+		# handles delete
 		if request.method == 'DELETE':
-			cu = User.objects.get(id__exact=request.user.id)
 			if cu.uType == 'external' or cu.uType == '':
 				return False
 			elif obj.uType == '':
@@ -118,14 +134,12 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 	def pre_save(self, obj):
-		# set the use type
-		if self.request.user.is_superuser:
-			if not hasattr(self.request.user, "uType") or self.request.user.uType not in USER_TYPES:
-				obj.uType = 'tier2'
-		elif hasattr(self.request.user, "uType") and self.request.user.uType == "tier2":
-			if not hasattr(self.request.user, "uType") or self.request.user.uType not in USER_TYPES[1:]:
-				obj.uType = 'tier1'
-		else:
+		cu = User.objects.get(id__exact=self.request.user.id)
+		
+		# set the user type
+		if obj.username == cu.username:
+			obj.uType = cu.uType
+		elif not hasattr(obj, "uType") or obj.uType not in [ k for k, v in USER_RANK.iteritems() if v <= USER_RANK[cu.uType] ]:
 			obj.uType = 'external'
 
 

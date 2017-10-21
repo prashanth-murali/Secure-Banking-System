@@ -8,6 +8,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		fields = ('url', 'username', 'email', 'password', 'first_name', 'last_name', 'is_staff', 'uType', 'accounts', 'isMerchant')
 		write_only_fields = ('password',)
 
+	def __init__(self, *args, **kwargs):
+		# initialize fields
+		super(UserSerializer, self).__init__(*args, **kwargs)
+		
+		# password is not required during update
+		request = self.context.get("request")
+		self.fields['password'].allow_none = True
+		self.fields['password'].required = (request.method != 'PUT')
+
 
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:

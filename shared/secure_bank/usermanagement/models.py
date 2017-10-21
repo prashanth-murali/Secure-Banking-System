@@ -13,7 +13,7 @@ class User(AbstractUser):
 			("external", "external")
 		)
 	)
-	accounts = ListField()
+	accounts = ListField(blank=True)
 	isMerchant = models.BooleanField()
 
 

@@ -1,0 +1,7 @@
+com/securebank/bank/resources/UserResource.class
+com/securebank/bank/model/User.class
+com/securebank/bank/services/Service.class
+com/securebank/bank/model/Account.class
+com/securebank/bank/BankApplication.class
+com/securebank/bank/JerseyConfig.class
+com/securebank/bank/services/UserRepository.class

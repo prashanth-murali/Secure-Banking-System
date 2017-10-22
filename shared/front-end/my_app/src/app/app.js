@@ -14,6 +14,7 @@ import 'ngstorage';
 
 import loginController from './controllers/loginController.js';
 import authService from './services/authService';
+import common from './services/common';
 import dashboardAdminController from './controllers/dashBoardAdminController';
 import dashboardAdminEditUser from './controllers/dashBoardAdminEditUserController';
 
@@ -80,6 +81,7 @@ app.controller('AppCtrl', function(){
 });
 
 app.factory('authService', authService);
+app.factory('common', common);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
@@ -177,7 +179,10 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
         .state('manage_employee', {
             url: '/manage_employee',
-            templateUrl: '../views/internal_users/manage_employee.html'
+            templateUrl: '../views/internal_users/manage_employee.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('pending_requests', {

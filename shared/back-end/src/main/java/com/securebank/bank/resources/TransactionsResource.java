@@ -1,11 +1,10 @@
 package com.securebank.bank.resources;
 
+import com.securebank.bank.model.Account;
 import com.securebank.bank.model.Transaction;
+import com.securebank.bank.services.AccountRepository;
 import com.securebank.bank.services.TransactionsRepository;
 import com.securebank.bank.services.UserRepository;
-import com.securebank.bank.services.AccountRepository;
-import com.securebank.bank.services.LoggedInService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +33,7 @@ public class TransactionsResource {
 
     @Autowired
     UserRepository userRepository;
-    
+
     @GET// need to give some validation to only for administrator or external only can see their own transaction history
     public List<Transaction> getTransactions() {
         return transactionsRepository.findAll();
@@ -51,9 +50,9 @@ public class TransactionsResource {
     @POST
     public Transaction createTransaction(Transaction trans){
         //all of this validation function could be refactored into XXservice
-        Account target_account = accountRepository.findById(trans.getToAccountId());
+        Account target_account = accountRepository.findById(trans.getToAcccountId());
         Account my_account = accountRepository.findById(trans.getFromAccountId());
-        //make sure the target account is exist 
+        //make sure the target account is exist
         //if (target_account == null) bad request
 
         //make sure my_account money is enough for trasaction
@@ -61,14 +60,14 @@ public class TransactionsResource {
 
         //define the critical transaction: if per transaction > 5000 -> critical transaciotn
         if (trans.getAmount() > 5000) trans.setCritical(true);
-        
+
         // Do create the transaction
         if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
             trans.setStatus("pending");
             trans.setCreatedDate(new Date());
             trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
             return transactionsRepository.save(trans);
-        } 
+        }
         else {
             trans.setStatus("approved");
             double my_remain = my_account.getAmount() - trans.getAmount();
@@ -86,8 +85,8 @@ public class TransactionsResource {
         return transactionsRepository.findByFromAccountIdEqualsOrToAcccountIdEquals(accountId,accountId);
     }
 
-    
-    
+
+
     // update transaction
     @PUT
     @Path("/{transactionId}")

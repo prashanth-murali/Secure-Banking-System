@@ -14,6 +14,7 @@ import java.util.Date;
     private String type;
     private Double amount;
     private String status; // "pending", "approved", "denied"
+    private Boolean isCritical;
 
     public Transaction() {}
 
@@ -24,7 +25,7 @@ import java.util.Date;
          this.createdDate = createdDate;
          this.type = type;
          this.amount = amount;
-         this.status = status; 
+         this.status = status;
          this.isCritical = false;
      }
 
@@ -84,5 +85,13 @@ import java.util.Date;
 
      public void setStatus(String status) {
          this.status = status;
+     }
+
+     public Boolean getCritical() {
+         return isCritical;
+     }
+
+     public void setCritical(Boolean critical) {
+         isCritical = critical;
      }
  }

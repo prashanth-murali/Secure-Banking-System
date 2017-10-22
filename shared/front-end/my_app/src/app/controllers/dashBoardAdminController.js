@@ -84,6 +84,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         $state.transitionTo('dashboard_admin_edit_user',{user:user});
     };
 
+    $scope.userData = function (user) {
+        console.log('userData',user);
+        $state.transitionTo('dashboard_admin',{user:user});
+    };
+
     $scope.deleteUser = function (user) {
         console.log('delete user: ', user);
         $http.delete(user.url,{

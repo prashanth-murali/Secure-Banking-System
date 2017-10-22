@@ -2,6 +2,8 @@ package com.securebank.bank.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.List;
+
 public class User {
 
     @Id
@@ -13,11 +15,14 @@ public class User {
 
     private String username;
     private String password;
+    private String email;
+
+    private List<Account> accounts;
 
 
     public User() {}
 
-    public User(String id, String type, String name, String address, String phoneNumber, String username, String password) {
+    public User(String id, String type, String name, String address, String phoneNumber, String username, String password, String email, List<Account> accounts) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -25,6 +30,8 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.accounts = accounts;
     }
 
     public String getId() {
@@ -81,5 +88,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 }

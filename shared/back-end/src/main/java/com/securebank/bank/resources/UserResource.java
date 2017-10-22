@@ -5,6 +5,7 @@ import com.securebank.bank.model.User;
 import com.securebank.bank.services.LoggedInService;
 import com.securebank.bank.services.UserRepository;
 import com.securebank.bank.services.errors.ApplicationValidationError;
+import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
+    Logger logger = Logger.getLogger(UserRepository.class);
 
     @Autowired
     UserRepository userRepository;
@@ -40,11 +42,11 @@ public class UserResource {
     public List<User> getUsers(@HeaderParam("Authorization") String authorization) {
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
         if(!loggedInUser.getType().equals("administrator")){
+            logger.error("getUser call rejected, must be administrator user type was: " +loggedInUser.getType());
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }else{
             return userRepository.findAll();
         }
-
     }
 
     @GET

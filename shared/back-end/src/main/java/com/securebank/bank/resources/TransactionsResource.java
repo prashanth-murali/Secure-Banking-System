@@ -59,10 +59,10 @@ public class TransactionsResource {
         //if (my_account.amount <= 0.0 || my_account.amount < trans.amount) bad request
 
         //define the critical transaction: if per transaction > 50000 -> critical transaciotn
-        if (trans.amount > 50000) trans.isCritical = true;
+        if (trans.amount > 5000) trans.setCritical(true);
         
         // Do create the transaction
-        if (trans.isCritical) {// if is critical, put it in pending and do updated later by administrator
+        if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
             trans.setStatus("pending");
             trans.setCreatedDate(new Date());
             trans.setTransactionId(null);// ensure the user does not pass their own id to mongo

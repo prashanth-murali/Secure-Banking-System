@@ -37,6 +37,11 @@ public class TransactionsResource {
         return transactionsRepository.findByTransactionId(transId);
     }
 
+    @GET
+    @Path("/account/{accountId}")
+    public List<Transaction> getAllTransactionsByAccount(@PathParam("accountId") String accountId){
+        return transactionsRepository.findByFromAccountIdEqualsOrToAcccountIdEquals(accountId,accountId);
+    }
 
     @POST
     public Transaction createTransaction(Transaction trans){

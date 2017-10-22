@@ -23,7 +23,7 @@ public class LoginResource {
     UserRepository userRepository;
 
     @POST
-    public Response createAccount(Login login){
+    public Response login(Login login){
         User byUsername = userRepository.findByUsername(login.getUsername());
         if(byUsername == null){
             return Response.status(Response.Status.UNAUTHORIZED).build();

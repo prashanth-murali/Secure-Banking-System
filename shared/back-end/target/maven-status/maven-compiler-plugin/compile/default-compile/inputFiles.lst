@@ -1,9 +1,0 @@
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/BankApplication.java
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/resources/UserResource.java
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/model/User.java
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/JerseyConfig.java
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/services/Service.java
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/model/Login.java
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/resources/LoginResource.java
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/services/UserRepository.java
-/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/model/Account.java

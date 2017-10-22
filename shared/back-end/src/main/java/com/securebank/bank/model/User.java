@@ -1,5 +1,6 @@
 package com.securebank.bank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
@@ -82,6 +83,7 @@ public class User {
         this.username = username;
     }
 
+    @JsonIgnore // do not display password back to clients
     public String getPassword() {
         return password;
     }

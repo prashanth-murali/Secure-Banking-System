@@ -9,7 +9,7 @@ public class Account {
 
     private String userId;
     private Double amount;
-    private String accountType; // "checking"/"savings"/"cred"
+    private String accountType; // "checking"/"savings"/"credit"
 
     public Account(String id, String userId, Double amount, String accountType) {
         this.id = id;

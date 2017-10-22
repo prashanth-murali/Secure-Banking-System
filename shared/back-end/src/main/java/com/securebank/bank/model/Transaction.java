@@ -24,7 +24,7 @@ import java.util.Date;
          this.createdDate = createdDate;
          this.type = type;
          this.amount = amount;
-         this.status = status; //accept, pending
+         this.status = status; 
          this.isCritical = false;
      }
 

@@ -8,5 +8,6 @@ import java.util.List;
 public interface AccountRepository extends MongoRepository<Account, String> {
 
     public Account findById(String id);
+    public void deleteById(String id);
     public List<Account> findAll();
 }

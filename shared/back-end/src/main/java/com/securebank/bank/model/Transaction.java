@@ -17,14 +17,15 @@ import java.util.Date;
 
     public Transaction() {}
 
-     public Transaction(String transactionId, String fromAccountId, String toAcccountId, Date createdDate, String type, Double amount, String status) {
+     public Transaction(String transactionId, String fromAccountId, String toAcccountId, Date createdDate, String type, Double amount, String status, boolean isCritical) {
          this.transactionId = transactionId;
          this.fromAccountId = fromAccountId;
          this.toAcccountId = toAcccountId;
          this.createdDate = createdDate;
          this.type = type;
          this.amount = amount;
-         this.status = status;
+         this.status = status; //accept, pending
+         this.isCritical = false;
      }
 
 

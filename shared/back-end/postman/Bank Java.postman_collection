@@ -8,72 +8,522 @@
 	},
 	"item": [
 		{
-			"name": "Get Users",
+			"name": "User",
+			"description": "",
+			"item": [
+				{
+					"name": "Get Users",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin_1508619451",
+								"password": "admin",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost:8080/users",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"request": {
+						"url": "http://localhost:8080/users/59ebb20cf832aa27410af181",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"administrator\",\n  \"name\": \"ZhExlbzMS2\",\n  \"address\": \"b_bEBatDx3\",\n  \"phoneNumber\": \"SxJRdj631Q\",\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "create user",
+					"request": {
+						"url": "http://localhost:8080/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"administrator\",\n    \"name\": \"James_{{$timestamp}}\",\n    \"address\": \"b_bEBatDx3\",\n    \"phoneNumber\": \"SxJRdj631Q\",\n    \"username\": \"admin_{{$timestamp}}\",\n    \"password\": \"admin\",\n    \"uType\": \"administrator\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"url": "http://localhost:8080/users/59ebb6d0c8a96c2a838225b0",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"administrator\",\n    \"name\": \"James_{{$timestamp}}\",\n    \"address\": \"b_bEBatDx3\",\n    \"phoneNumber\": \"SxJRdj631Q\",\n    \"username\": \"admin_{{$timestamp}}\",\n    \"password\": \"admin\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"description": "",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"url": "http://localhost:8080/login",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin_1508619983\",\n  \"password\": \"admin\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Accounts",
+			"description": "",
+			"item": [
+				{
+					"name": "Get Accounts",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin_1508619451",
+								"password": "admin",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost:8080/accounts",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": [
+						{
+							"id": "44f9ef9e-75d3-416f-b044-a515038e352c",
+							"name": "Get Accounts",
+							"originalRequest": {
+								"url": "http://localhost:8080/accounts",
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"name": "Authorization",
+										"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+										"description": ""
+									}
+								],
+								"body": {}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"_postman_previewtype": "text",
+							"header": [
+								{
+									"name": "content-length",
+									"key": "content-length",
+									"value": "552",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"name": "content-type",
+									"key": "content-type",
+									"value": "application/json",
+									"description": "The mime type of this content"
+								},
+								{
+									"name": "date",
+									"key": "date",
+									"value": "Sun, 22 Oct 2017 18:56:50 GMT",
+									"description": "The date and time that the message was sent"
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Sat Nov 04 2017 10:29:40 GMT-0700 (MST)",
+									"hostOnly": true,
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"session": false,
+									"value": "d8fhyl5d1xefs2awzp89mbjjtowl8b4v",
+									"key": "sessionid"
+								},
+								{
+									"expires": "Sat Oct 20 2018 12:58:11 GMT-0700 (MST)",
+									"hostOnly": true,
+									"httpOnly": false,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"session": false,
+									"value": "5kJOJxbIOutxU4baOV7nSKrTEtotwJHk",
+									"key": "csrftoken"
+								}
+							],
+							"responseTime": 766,
+							"body": "[{\"id\":\"59ece3f694939b745efeab26\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":2000.0,\"accountType\":\"checking\"},{\"id\":\"59ece40894939b745efeab27\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":100.0,\"accountType\":\"checking\"},{\"id\":\"59ece40894939b745efeab28\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":100.0,\"accountType\":\"checking\"},{\"id\":\"59ece40894939b745efeab29\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":100.0,\"accountType\":\"checking\"},{\"id\":\"59ece40894939b745efeab2a\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":100.0,\"accountType\":\"checking\"}]"
+						}
+					]
+				},
+				{
+					"name": "Create Account",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin_1508619451",
+								"password": "admin",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost:8080/accounts",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"59ebb4bac8a96c2a286732d1\",\n  \"amount\": 100.00,\n  \"accountType\": \"checking\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Account",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin_1508619451",
+								"password": "admin",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost:8080/accounts/59ece44494939b745efeab2b",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Account",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin_1508619451",
+								"password": "admin",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost:8080/accounts/59ece3f694939b745efeab26",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 2000\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Accounts for User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin_1508619451",
+								"password": "admin",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost:8080/accounts/user/59ebb4bac8a96c2a286732d1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Account",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin_1508619451",
+								"password": "admin",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost:8080/accounts/59ece3f694939b745efeab26",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": [
+						{
+							"id": "f7ad1fcc-a7e1-4c8c-85ea-6a9a2b7780e5",
+							"name": "Get Accounts",
+							"originalRequest": {
+								"url": "http://localhost:8080/accounts",
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"name": "Authorization",
+										"value": "Basic YWRtaW5fMTUwODYxOTQ1MTphZG1pbg==",
+										"description": ""
+									}
+								],
+								"body": {}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"_postman_previewtype": "text",
+							"header": [
+								{
+									"name": "content-length",
+									"key": "content-length",
+									"value": "552",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"name": "content-type",
+									"key": "content-type",
+									"value": "application/json",
+									"description": "The mime type of this content"
+								},
+								{
+									"name": "date",
+									"key": "date",
+									"value": "Sun, 22 Oct 2017 18:56:50 GMT",
+									"description": "The date and time that the message was sent"
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Sat Nov 04 2017 10:29:40 GMT-0700 (MST)",
+									"hostOnly": true,
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"session": false,
+									"value": "d8fhyl5d1xefs2awzp89mbjjtowl8b4v",
+									"key": "sessionid"
+								},
+								{
+									"expires": "Sat Oct 20 2018 12:58:11 GMT-0700 (MST)",
+									"hostOnly": true,
+									"httpOnly": false,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"session": false,
+									"value": "5kJOJxbIOutxU4baOV7nSKrTEtotwJHk",
+									"key": "csrftoken"
+								}
+							],
+							"responseTime": 766,
+							"body": "[{\"id\":\"59ece3f694939b745efeab26\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":2000.0,\"accountType\":\"checking\"},{\"id\":\"59ece40894939b745efeab27\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":100.0,\"accountType\":\"checking\"},{\"id\":\"59ece40894939b745efeab28\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":100.0,\"accountType\":\"checking\"},{\"id\":\"59ece40894939b745efeab29\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":100.0,\"accountType\":\"checking\"},{\"id\":\"59ece40894939b745efeab2a\",\"userId\":\"59ebb4bac8a96c2a286732d1\",\"amount\":100.0,\"accountType\":\"checking\"}]"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"description": "",
+			"item": [
+				{
+					"name": "Get all Transactions",
+					"request": {
+						"url": "http://localhost:8080/transactions",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transaction",
+					"request": {
+						"url": "http://localhost:8080/transactions",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fromAccountId\": \"59ece3f694939b745efeab26\",\n  \"toAcccountId\": \"59ece40894939b745efeab27\",\n  \"type\": \"debit\",\n  \"amount\": 10.50\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update Transaction",
+					"request": {
+						"url": "http://localhost:8080/transactions/59ece6bd94939b74b4021362",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\":\"denied\"\n}"
+						},
+						"description": "only status can be updated on a trasaction"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Transactions For Account",
+					"request": {
+						"url": "http://localhost:8080/transactions/account/59ece3f694939b745efeab26",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "application status",
 			"request": {
-				"url": "http://localhost:8080/users",
+				"url": "http://localhost:8080/",
 				"method": "GET",
 				"header": [],
 				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "get user",
-			"request": {
-				"url": "http://localhost:8080/users/59ebb20cf832aa27410af181",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"type\": \"administrator\",\n  \"name\": \"ZhExlbzMS2\",\n  \"address\": \"b_bEBatDx3\",\n  \"phoneNumber\": \"SxJRdj631Q\",\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "create user",
-			"request": {
-				"url": "http://localhost:8080/users",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"type\": \"administrator\",\n    \"name\": \"James_{{$timestamp}}\",\n    \"address\": \"b_bEBatDx3\",\n    \"phoneNumber\": \"SxJRdj631Q\",\n    \"username\": \"admin_{{$timestamp}}\",\n    \"password\": \"admin\"\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "delete user",
-			"request": {
-				"url": "http://localhost:8080/users/59ebb4c5c8a96c2a286732d2",
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"type\": \"administrator\",\n    \"name\": \"James_{{$timestamp}}\",\n    \"address\": \"b_bEBatDx3\",\n    \"phoneNumber\": \"SxJRdj631Q\",\n    \"username\": \"admin_{{$timestamp}}\",\n    \"password\": \"admin\"\n}"
-				},
 				"description": ""
 			},
 			"response": []

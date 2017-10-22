@@ -96,42 +96,67 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
         .state('credit_debit', {
             url: '/credit_debit',
-            templateUrl: '../views/external_users/credit_debit_external.html'
+            templateUrl: '../views/external_users/credit_debit_external.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
+
         })
 
         .state('fund_transfer_external_user', {
             url: '/fund_transfer_external_user',
-            templateUrl: '../views/external_users/fund_transfer_external_user.html'
+            templateUrl: '../views/external_users/fund_transfer_external_user.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('fund_transfer_external_merchant', {
             url: '/fund_transfer_external_merchant',
-            templateUrl: '../views/external_users/fund_transfer_external_merchant.html'
+            templateUrl: '../views/external_users/fund_transfer_external_merchant.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('payments_external_user', {
             url: '/payments_external_user',
-            templateUrl: '../views/external_users/payments_external_user.html'
+            templateUrl: '../views/external_users/payments_external_user.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('requests_to_merchant', {
             url: '/requests_to_merchant',
-            templateUrl: '../views/external_users/requests_to_merchant.html'
+            templateUrl: '../views/external_users/requests_to_merchant.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('settings_ext_customer', {
             url: '/settings_ext_customer',
-            templateUrl: '../views/external_users/settings_ext_customer.html'
+            templateUrl: '../views/external_users/settings_ext_customer.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('statements_external_user', {
             url: '/statements_external_user',
-            templateUrl: '../views/external_users/statements_external_user.html'
+            templateUrl: '../views/external_users/statements_external_user.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('critical_transactions', {
             url: '/critical_transactions',
-            templateUrl: '../views/internal_users/critical_transactions.html'
+            templateUrl: '../views/internal_users/critical_transactions.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('dashboard_admin', {
@@ -153,7 +178,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         })
 
         .state('dashboard_internal_manager', {
-            url: '/dashboard_internal_manager',
+            url: '/dashboard_manager',
             templateUrl: '../views/internal_users/dashboard_internal_manager.html'
         })
 
@@ -162,19 +187,33 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: '../views/external_users/dashboard_external_user.html'
         })
 
+        .state('dashboard_external_merchant', {
+            url: '/dashboard_merchant',
+            templateUrl: '../views/external_users/dashboard_external_merchant.html'
+        })
+
         .state('edit_users', {
             url: '/edit_users',
-            templateUrl: '../views/internal_users/edit_users.html'
+            templateUrl: '../views/internal_users/edit_users.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('internal_emp_transactions', {
             url: '/internal_emp_transactions',
-            templateUrl: '../views/internal_users/internal_emp_transactions.html'
+            templateUrl: '../views/internal_users/internal_emp_transactions.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('internal_mgr_transactions', {
             url: '/internal_mgr_transactions',
-            templateUrl: '../views/internal_users/internal_mgr_transactions.html'
+            templateUrl: '../views/internal_users/internal_mgr_transactions.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('manage_employee', {
@@ -187,27 +226,43 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
         .state('pending_requests', {
             url: '/pending_requests',
-            templateUrl: '../views/internal_users/pending_requests.html'
+            templateUrl: '../views/internal_users/pending_requests.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
+
         })
 
         .state('request_admin', {
             url: '/request_admin',
-            templateUrl: '../views/internal_users/Request_admin.html'
+            templateUrl: '../views/internal_users/Request_admin.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('request_manager', {
             url: '/request_manager',
-            templateUrl: '../views/internal_users/Request_manager.html'
+            templateUrl: '../views/internal_users/Request_manager.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('settings_internal', {
             url: '/settings_internal',
-            templateUrl: '../views/internal_users/settings_internal.html'
+            templateUrl: '../views/internal_users/settings_internal.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('system_log', {
             url: '/system_log',
-            templateUrl: '../views/internal_users/system_log.html'
+            templateUrl: '../views/internal_users/system_log.html',
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         });
 
 

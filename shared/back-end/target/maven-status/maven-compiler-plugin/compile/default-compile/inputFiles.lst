@@ -1,8 +1,9 @@
-C:\Users\akuma151\myGithub\CSE545_Java\CSE545-Project\shared\back-end\src\main\java\com\securebank\bank\model\Account.java
-C:\Users\akuma151\myGithub\CSE545_Java\CSE545-Project\shared\back-end\src\main\java\com\securebank\bank\BankApplication.java
-C:\Users\akuma151\myGithub\CSE545_Java\CSE545-Project\shared\back-end\src\main\java\com\securebank\bank\services\UserRepository.java
-C:\Users\akuma151\myGithub\CSE545_Java\CSE545-Project\shared\back-end\src\main\java\com\securebank\bank\resources\UserResource.java
-C:\Users\akuma151\myGithub\CSE545_Java\CSE545-Project\shared\back-end\src\main\java\com\securebank\bank\model\Transaction.java
-C:\Users\akuma151\myGithub\CSE545_Java\CSE545-Project\shared\back-end\src\main\java\com\securebank\bank\services\Service.java
-C:\Users\akuma151\myGithub\CSE545_Java\CSE545-Project\shared\back-end\src\main\java\com\securebank\bank\JerseyConfig.java
-C:\Users\akuma151\myGithub\CSE545_Java\CSE545-Project\shared\back-end\src\main\java\com\securebank\bank\model\User.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/BankApplication.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/resources/UserResource.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/model/User.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/JerseyConfig.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/services/Service.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/model/Login.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/resources/LoginResource.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/services/UserRepository.java
+/Users/pduggal/software_security_project/shared/back-end/src/main/java/com/securebank/bank/model/Account.java

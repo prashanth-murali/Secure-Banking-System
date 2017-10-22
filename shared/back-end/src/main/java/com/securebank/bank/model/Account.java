@@ -1,12 +1,19 @@
 package com.securebank.bank.model;
 
+import org.springframework.data.annotation.Id;
+
 public class Account {
+
+    @Id
     private String id;
+
+    private String userId;
     private Double amount;
     private String accountType; // "checking"/"savings"/"cred"
 
-    public Account(String id, Double amount, String accountType) {
+    public Account(String id, String userId, Double amount, String accountType) {
         this.id = id;
+        this.userId = userId;
         this.amount = amount;
         this.accountType = accountType;
     }
@@ -38,4 +45,11 @@ public class Account {
         this.accountType = accountType;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }

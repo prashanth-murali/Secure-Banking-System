@@ -2,7 +2,9 @@ package com.securebank.bank.resources;
 
 import com.securebank.bank.model.Account;
 import com.securebank.bank.model.User;
+import com.securebank.bank.services.LoggedInService;
 import com.securebank.bank.services.UserRepository;
+import com.securebank.bank.services.errors.ApplicationValidationError;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +33,18 @@ public class UserResource {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    LoggedInService loggedInService;
+
     @GET
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<User> getUsers(@HeaderParam("Authorization") String authorization) {
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        if(!loggedInUser.getType().equals("administrator")){
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        }else{
+            return userRepository.findAll();
+        }
+
     }
 
     @GET

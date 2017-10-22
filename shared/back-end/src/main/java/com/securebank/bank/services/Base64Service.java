@@ -2,7 +2,10 @@ package com.securebank.bank.services;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class Base64Service {
     public String decode(String s) {
         return StringUtils.newStringUtf8(Base64.decodeBase64(s));

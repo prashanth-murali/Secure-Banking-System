@@ -102,6 +102,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: '../views/external_users/fund_transfer_external_user.html'
         })
 
+        .state('fund_transfer_external_merchant', {
+            url: '/fund_transfer_external_merchant',
+            templateUrl: '../views/external_users/fund_transfer_external_merchant.html'
+        })
+
         .state('payments_external_user', {
             url: '/payments_external_user',
             templateUrl: '../views/external_users/payments_external_user.html'

@@ -37,8 +37,6 @@ public class TransactionsResource {
         return transactionsRepository.findByTransactionId(transId);
     }
 
-    // create trasaction
-    // update transaction
 
     @POST
     public Transaction createTransaction(Transaction trans){

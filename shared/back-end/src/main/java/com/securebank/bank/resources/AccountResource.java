@@ -56,6 +56,12 @@ public class AccountResource {
         return accountRepository.findById(accountId);
     }
 
+    @GET
+    @Path("/user/{userId}")
+    public List<Account> getAccountsForUser(@PathParam("userId") String userId){
+        return accountRepository.findByUserId(userId);
+    }
+
     @POST
     public Account createAccount(Account account){
         //validate that the user_id matches a valid user valid

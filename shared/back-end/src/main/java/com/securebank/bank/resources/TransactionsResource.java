@@ -2,6 +2,7 @@ package com.securebank.bank.resources;
 
 import com.securebank.bank.model.Transaction;
 import com.securebank.bank.services.TransactionsRepository;
+import com.securebank.bank.services.UserRepository;
 import com.securebank.bank.services.AccountRepository;
 import com.securebank.bank.services.LoggedInService;
 import org.springframework.beans.BeanUtils;
@@ -50,16 +51,16 @@ public class TransactionsResource {
     @POST
     public Transaction createTransaction(Transaction trans){
         //all of this validation function could be refactored into XXservice
-        Account target_account = accountRepository.findById(trans.toAccountId);
-        Account my_account = accountRepository.findById(trans.fromAccountId);
+        Account target_account = accountRepository.findById(trans.getToAccountId());
+        Account my_account = accountRepository.findById(trans.getFromAccountId());
         //make sure the target account is exist 
         //if (target_account == null) bad request
 
         //make sure my_account money is enough for trasaction
         //if (my_account.amount <= 0.0 || my_account.amount < trans.amount) bad request
 
-        //define the critical transaction: if per transaction > 50000 -> critical transaciotn
-        if (trans.amount > 5000) trans.setCritical(true);
+        //define the critical transaction: if per transaction > 5000 -> critical transaciotn
+        if (trans.getAmount() > 5000) trans.setCritical(true);
         
         // Do create the transaction
         if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
@@ -70,9 +71,9 @@ public class TransactionsResource {
         } 
         else {
             trans.setStatus("approved");
-            double my_remain = my_account.getAmount() - trans.amount;
+            double my_remain = my_account.getAmount() - trans.getAmount();
             my_account.setAmount(my_remain);
-            double target_remain = target_account.getAmount() + trans.amount;
+            double target_remain = target_account.getAmount() + trans.getAmount();
             target_account.setAmount(target_remain);
             trans.setCreatedDate(new Date());
             trans.setTransactionId(null);// ensure the user does not pass their own id to mongo

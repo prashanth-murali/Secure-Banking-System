@@ -22,7 +22,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -60,7 +59,6 @@ public class UserResource {
     @POST
     public User createUser(User user){
         user.setId(null);// ensure the user does not pass their own id to mongo
-        user.setAccounts(new ArrayList<Account>()); // set to empty list
         return userRepository.save(user);
     }
 
@@ -69,10 +67,6 @@ public class UserResource {
     public User updateUser(@PathParam("userId") String userId, User user){
         User byId = userRepository.findById(userId);
         BeanUtils.copyProperties(user, byId);
-
-        if(byId.getAccounts() == null){ // set to empty list if property is not htere
-            user.setAccounts(new ArrayList<Account>());
-        }
 
         return userRepository.save(byId);
     }
@@ -93,10 +87,6 @@ public class UserResource {
         }
 
         account.setId(new ObjectId().toString());
-        if(user.getAccounts() == null){
-            user.setAccounts(new ArrayList<>());
-        }
-
         return Response.status(Response.Status.OK).entity(user).build();
     }
 

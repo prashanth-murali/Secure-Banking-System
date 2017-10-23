@@ -50,7 +50,7 @@ public class TransactionsResource {
     @POST
     public Transaction createTransaction(Transaction trans){
         //all of this validation function could be refactored into XXservice
-        Account target_account = accountRepository.findById(trans.getToAcccountId());
+        Account target_account = accountRepository.findById(trans.getToAccountId());
         Account my_account = accountRepository.findById(trans.getFromAccountId());
         //make sure the target account is exist
         //if (target_account == null) bad request
@@ -82,7 +82,7 @@ public class TransactionsResource {
     @GET
     @Path("/account/{accountId}")
     public List<Transaction> getAllTransactionsByAccount(@PathParam("accountId") String accountId){
-        return transactionsRepository.findByFromAccountIdEqualsOrToAcccountIdEquals(accountId,accountId);
+        return transactionsRepository.findByFromAccountIdEqualsOrToAccountIdEquals(accountId,accountId);
     }
 
 

@@ -23,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.Date;
 import java.util.List;
+import java.util.*;
 
 @Component
 @Path("/transactions")
@@ -42,6 +43,7 @@ public class TransactionsResource {
 
     @GET// need to give some validation to only for administrator or external only can see their own transaction history
     public List<Transaction> getTransactions() {
+
         return transactionsRepository.findAll();
     }
 
@@ -70,8 +72,21 @@ public class TransactionsResource {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
         }
 
-        //define the critical transaction: if per transaction > 5000 -> critical transaciotn
-        if (trans.getAmount() > 5000) trans.setCritical(true);
+        //define the critical transaction: all day transaction amount > 5000 -> critical transaciotn
+        double critical_limit = 0.0;
+        List<Transaction> list = transactionsRepository.findByFromAccountIdEqualsOrToAccountIdEquals(my_account.getId(), my_account.getId());
+        if (list != null){
+            for (Transaction transaction_history : list) {
+                if (my_account.getId().equals(transaction_history.getFromAccountId())) {
+                    critical_limit = critical_limit + transaction_history.getAmount();
+                }
+            }
+        }
+
+        critical_limit = critical_limit + trans.getAmount();
+
+        if (critical_limit > 5000) trans.setCritical(true);
+        else trans.setCritical(false);
 
         // Do create the transaction
         if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
@@ -88,6 +103,8 @@ public class TransactionsResource {
             target_account.setAmount(target_remain);
             trans.setCreatedDate(new Date());
             trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
+            accountRepository.save(my_account);
+            accountRepository.save(target_account);
             return transactionsRepository.save(trans);
         }
     }
@@ -99,14 +116,33 @@ public class TransactionsResource {
 
 
 
-    // update transaction
+    // update transaction, approve for the critical transaction
     @PUT
     @Path("/{transactionId}")
     public Transaction updateTransaction(@PathParam("transactionId") String transactionId, Transaction trans){
         // todo: the only things that can be updated is the status
         Transaction byId = transactionsRepository.findByTransactionId(transactionId);
+        Account targetAccount = accountRepository.findById(byId.getToAccountId());
+        Account myAccount = accountRepository.findById(byId.getFromAccountId());
 
-        byId.setStatus(trans.getStatus());// only allow the status to be updated on transaction
+        if (byId.getCritical() && byId.getStatus().equals("pending")) {
+            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
+                logger.info("Unable to transaction, money is not enough");
+                byId.setStatus("denied");
+                return transactionsRepository.save(byId);
+            }
+            else {
+                byId.setStatus("approved");
+                double myRemain = myAccount.getAmount() - byId.getAmount();
+                myAccount.setAmount(myRemain);
+                double targetRemain = targetAccount.getAmount() + byId.getAmount();
+                targetAccount.setAmount(targetRemain);
+                byId.setCreatedDate(new Date());
+                accountRepository.save(myAccount);
+                accountRepository.save(targetAccount);
+                return transactionsRepository.save(byId);
+            }
+        }
 
         return transactionsRepository.save(byId);
     }

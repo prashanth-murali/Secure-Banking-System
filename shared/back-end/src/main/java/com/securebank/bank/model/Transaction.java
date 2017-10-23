@@ -18,7 +18,7 @@ import java.util.Date;
 
     public Transaction() {}
 
-     public Transaction(String transactionId, String fromAccountId, String toAccountId, Date createdDate, String type, Double amount, String status, boolean isCritical) {
+     public Transaction(String transactionId, String fromAccountId, String toAccountId, Date createdDate, String type, Double amount, String status, Boolean isCritical) {
          this.transactionId = transactionId;
          this.fromAccountId = fromAccountId;
          this.toAccountId = toAccountId;
@@ -26,7 +26,7 @@ import java.util.Date;
          this.type = type;
          this.amount = amount;
          this.status = status;
-         this.isCritical = false;
+         this.isCritical = isCritical;
      }
 
 

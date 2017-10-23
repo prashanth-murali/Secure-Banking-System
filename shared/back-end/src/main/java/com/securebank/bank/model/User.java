@@ -1,17 +1,18 @@
 package com.securebank.bank.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 public class User {
 
     @Id
     private String id;
-    private String type;
+    private String type;// tier1,tier2,administrator,merchant,consumer todo: add validation
     private String name;
     private String address;
     private String phoneNumber;
 
+    @Indexed(unique = true)
     private String username;
     private String password;
     private String email;
@@ -78,7 +79,6 @@ public class User {
         this.username = username;
     }
 
-    @JsonIgnore // do not display password back to clients
     public String getPassword() {
         return password;
     }

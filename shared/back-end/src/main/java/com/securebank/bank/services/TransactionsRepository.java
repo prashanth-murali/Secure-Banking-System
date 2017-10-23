@@ -8,7 +8,7 @@ import java.util.List;
 public interface TransactionsRepository extends MongoRepository<Transaction, String> {
 
     public Transaction findByTransactionId(String transactionId);
-    public List<Transaction> findByFromAccountIdEqualsOrToAcccountIdEquals(String fromAccountId, String toAccountId);
+    public List<Transaction> findByFromAccountIdEqualsOrToAccountIdEquals(String fromAccountId, String toAccountId);
     //public void deleteByTransactionId(String id);
     public List<Transaction> findAll();
 }

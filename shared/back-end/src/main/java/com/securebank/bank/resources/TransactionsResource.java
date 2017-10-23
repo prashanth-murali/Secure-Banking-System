@@ -7,6 +7,11 @@ import com.securebank.bank.services.TransactionsRepository;
 import com.securebank.bank.services.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.securebank.bank.services.errors.ApplicationValidationError;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.ws.rs.core.Response;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -24,7 +29,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TransactionsResource {
-
+    Logger logger = LoggerFactory.getLogger(TransactionsResource.class);
+    
     @Autowired
     TransactionsRepository transactionsRepository;
 
@@ -53,10 +59,16 @@ public class TransactionsResource {
         Account target_account = accountRepository.findById(trans.getToAccountId());
         Account my_account = accountRepository.findById(trans.getFromAccountId());
         //make sure the target account is exist
-        //if (target_account == null) bad request
+        if (target_account == null) {
+                logger.info("Unable to find target account from Authorization");
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        }
 
         //make sure my_account money is enough for trasaction
-        //if (my_account.amount <= 0.0 || my_account.amount < trans.amount) bad request
+        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < trans.getAmount()) {
+            logger.info("Unable to transaction, money is not enough");
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        }
 
         //define the critical transaction: if per transaction > 5000 -> critical transaciotn
         if (trans.getAmount() > 5000) trans.setCritical(true);

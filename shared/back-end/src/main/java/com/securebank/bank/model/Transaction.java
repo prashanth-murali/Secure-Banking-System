@@ -9,7 +9,7 @@ import java.util.Date;
 	@Id
     private String transactionId;
     private String fromAccountId;
-    private String toAcccountId;
+    private String toAccountId;
     private Date createdDate;
     private String type;
     private Double amount;
@@ -18,10 +18,10 @@ import java.util.Date;
 
     public Transaction() {}
 
-     public Transaction(String transactionId, String fromAccountId, String toAcccountId, Date createdDate, String type, Double amount, String status, boolean isCritical) {
+     public Transaction(String transactionId, String fromAccountId, String toAccountId, Date createdDate, String type, Double amount, String status, boolean isCritical) {
          this.transactionId = transactionId;
          this.fromAccountId = fromAccountId;
-         this.toAcccountId = toAcccountId;
+         this.toAccountId = toAccountId;
          this.createdDate = createdDate;
          this.type = type;
          this.amount = amount;
@@ -47,12 +47,12 @@ import java.util.Date;
          this.fromAccountId = fromAccountId;
      }
 
-     public String getToAcccountId() {
-         return toAcccountId;
+     public String getToAccountId() {
+         return toAccountId;
      }
 
-     public void setToAcccountId(String toAcccountId) {
-         this.toAcccountId = toAcccountId;
+     public void setToAccountId(String toAccountId) {
+         this.toAccountId = toAccountId;
      }
 
      public Date getCreatedDate() {

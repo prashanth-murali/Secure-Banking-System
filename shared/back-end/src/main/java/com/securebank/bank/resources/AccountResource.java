@@ -21,6 +21,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.*;
+import javax.ws.rs.core.Response;
+import com.securebank.bank.services.errors.ApplicationValidationError;
 
 @Component
 @Path("/accounts")
@@ -46,7 +49,15 @@ public class AccountResource {
     public List<Account> getAccounts(@HeaderParam("Authorization") String authorization){
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
         validationService.validateLoggedInUserIsAdmin(loggedInUser);
-
+        // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
+        if( roleLevel.get(loggedInUser.getType()) < 1) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        }
         return accountRepository.findAll();
     }
 

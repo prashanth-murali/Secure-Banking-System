@@ -8,7 +8,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import java.util.*;
+import javax.ws.rs.core.Response;
+import com.securebank.bank.services.errors.ApplicationValidationError;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -40,17 +42,60 @@ public class UserResource {
     @GET
     public List<User> getUsers(@HeaderParam("Authorization") String authorization) {
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
-        validationService.validateLoggedInUserIsAdmin(loggedInUser);
-
-        return userRepository.findAll();
+        // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
+        if (roleLevel.get(loggedInUser.getType()) < 1) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        }
+        else if (roleLevel.get(loggedInUser.getType()) == 1) {
+            List<User> list = userRepository.findAll();
+            for (int i = 0; i < list.size(); i++) {
+                if (roleLevel.get(list.get(i).getType()) > 1) {
+                    list.remove(i);
+                }
+            }
+            return list;
+        }
+        else if (roleLevel.get(loggedInUser.getType()) == 2){
+            List<User> list = userRepository.findAll();
+            for (int i = 0; i < list.size(); i++) {
+                if (roleLevel.get(list.get(i).getType()) > 2) {
+                    list.remove(i);
+                }
+            }
+            return list;
+        }
+        else {
+            return userRepository.findAll();
+        }
     }
 
     @GET
     @Path("/{userId}")
     public User getUser(@PathParam("userId") String userId, @HeaderParam("Authorization") String authorization){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
+        User oneUser = userRepository.findById(userId);
+        if (roleLevel.get(loggedInUser.getType()) < 1) {
+            if (loggedInUser.getId().equals(userId)) {
+                return oneUser;
+            }
+        }
+        else if (roleLevel.get(loggedInUser.getType()) >= 1 ) {
+            return oneUser;
+        }
+        else throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
 
-
-        return userRepository.findById(userId);
+        return oneUser;
     }
 
     @POST
@@ -61,17 +106,43 @@ public class UserResource {
 
     @PUT
     @Path("/{userId}")
-    public User updateUser(@PathParam("userId") String userId, User user){
+    public User updateUser(@PathParam("userId") String userId, @HeaderParam("Authorization") String authorization, User user){
         User byId = userRepository.findById(userId);
-        BeanUtils.copyProperties(user, byId);
-
-        return userRepository.save(byId);
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
+        if( roleLevel.get(loggedInUser.getType()) == 0 || roleLevel.get(loggedInUser.getType()) <= roleLevel.get(byId.getType()) ) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        }
+        else {
+            BeanUtils.copyProperties(user, byId);
+            return userRepository.save(byId);
+        }
     }
 
     @DELETE
     @Path("/{userId}")
-    public String deleteUser(@PathParam("userId") String userId){
-        userRepository.deleteById(userId);
-        return "{\"status\":\"success\"}";
+    public String deleteUser(@PathParam("userId") String userId, @HeaderParam("Authorization") String authorization){
+        User byId = userRepository.findById(userId);
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
+        if( roleLevel.get(loggedInUser.getType()) == 0)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        else if (roleLevel.get(loggedInUser.getType()) == 2 && roleLevel.get(byId.getType()) == 0) {
+            userRepository.deleteById(userId);
+            return "{\"status\":\"success\"}";
+        }
+        else if (roleLevel.get(loggedInUser.getType()) == 3 && roleLevel.get(byId.getType()) < 3){
+            userRepository.deleteById(userId);
+            return "{\"status\":\"success\"}";
+        }
+        else throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 }

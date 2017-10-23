@@ -15,8 +15,8 @@ module.exports = ['$scope','$http','$mdToast', 'authService', '$state', '$base64
 
     function login(auth){
         return $http.post(BACKEND_URL+'/api/login/',{
-            "username": "admin_pall",
-            "password": "admin"
+            "username": $scope.email,
+            "password": $scope.password
         },{
             headers:{
                 "authorization": auth
@@ -50,16 +50,16 @@ module.exports = ['$scope','$http','$mdToast', 'authService', '$state', '$base64
 
     function routeBasedOnUserRole(user) {
         if (user.type === 'tier1') {
-            //todo
+            $state.transitionTo('dashboard_internal_employee');
         }
         else if (user.type === 'tier2') {
-            //todo
+            $state.transitionTo('dashboard_internal_manager');
         }
         else if (user.type === 'administrator') {
             $state.transitionTo('dashboard_admin');
         }
         else if (user.type === 'merchant') {
-            $state.transitionTo('dashboard_external_user');
+            $state.transitionTo('dashboard_external_merchant');
         }
         else if (user.type === 'consumer') {
             $state.transitionTo('dashboard_external_user');

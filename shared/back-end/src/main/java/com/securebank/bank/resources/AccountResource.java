@@ -55,12 +55,15 @@ public class AccountResource {
         roleLevel.put("tier1", 1);
         roleLevel.put("external", 0);
 
-        if (roleLevel.get(loggedInUser.getType()) < 1) {
+        if (roleLevel.get(loggedInUser.getType()) == 0) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
-        else
+        else if (roleLevel.get(loggedInUser.getType()) < 3)
             return accountRepository.findAll();
-        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+
+    }
 
     @GET
     @Path("/{accountId}")
@@ -73,11 +76,11 @@ public class AccountResource {
         roleLevel.put("tier1", 1);
         roleLevel.put("external", 0);
         Account account = accountRepository.findById(accountId);
-        User user = userRepository.findById(account.getUserId());
-        if (loggedInUser == user && roleLevel.get(loggedInUser.getType()) == 0) {
+
+        if (loggedInUser.getId().equals(account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
             return accountRepository.findById(accountId);
         }
-        else if (roleLevel.get(loggedInUser.getType()) > 0) {
+        else if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
             return accountRepository.findById(accountId);
         }
         else
@@ -114,7 +117,7 @@ public class AccountResource {
             else
                 throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Account Type");
         }
-        else if (roleLevel.get(loggedInUser.getType()) > 0) {
+        else if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
             String acct = account.getAccountType();
             String[] types = {"checking", "savings", "credit"};
             if(Arrays.asList(types).contains(acct)) {
@@ -138,7 +141,7 @@ public class AccountResource {
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
         roleLevel.put("external", 0);
-        if (roleLevel.get(loggedInUser.getType()) > 0) {
+        if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
             byId.setAmount(account.getAmount()); // only allow the amount of an account to be updated
             return accountRepository.save(byId);
         }
@@ -155,7 +158,7 @@ public class AccountResource {
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
         roleLevel.put("external", 0);
-        if (roleLevel.get(loggedInUser.getType()) > 1) {
+        if (roleLevel.get(loggedInUser.getType()) == 2) {
             accountRepository.deleteById(accountId);
             return "{\"status\":\"success\"}";
         }

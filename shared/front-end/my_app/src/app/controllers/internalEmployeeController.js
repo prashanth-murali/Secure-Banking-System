@@ -8,6 +8,8 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         );
     }
 
+
+
     function randomString() {
         return Math.floor(Math.random()*90000) + 10000 + "";
     }
@@ -31,6 +33,44 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             "uType": "tier1",
             "isMerchant": false,
         };
+    }
+
+    $scope.filterInternal=function(transaction)
+    {
+        if(transaction.status=='pending')
+        {
+            if(transaction.critical==false)
+            {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    $scope.approveTransaction = function(TransactionId)
+    {
+
+        return $http.put(BACKEND_URL + '/api/transactions/'+TransactionId,{
+            "status":"approved"
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.declineTransaction = function(TransactionId)
+    {
+
+        return $http.put(BACKEND_URL + '/api/transactions/'+TransactionId,{
+            "status":"denied"
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
     }
 
     function createUser(){
@@ -62,6 +102,26 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             toast('Error loading users');
         });
     }
+
+
+    function getAllTransactions(){
+        return $http.get(BACKEND_URL + '/api/transactions/', {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+
+        });
+    }
+
+    function fetchTransactions(){
+        getAllTransactions().then(function successCallback(response) {
+            $scope.transactions = response.data;
+        }, function errorCallback(response) {
+            toast('Error loading transactions');
+        });
+    }
+
+
 
     $scope.submit = function () {
         console.log($scope.create);
@@ -96,9 +156,9 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
                 "authorization": authService.getAuth(),
             }
         }).then(function success(){
-           fetchUsers();
+            fetchUsers();
         }, function errorCallback(){
-           toast('Failed to delete User');
+            toast('Failed to delete User');
         })
     };
 

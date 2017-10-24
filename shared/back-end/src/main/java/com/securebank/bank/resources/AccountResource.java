@@ -21,6 +21,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.*;
+import javax.ws.rs.core.Response;
+import com.securebank.bank.services.errors.ApplicationValidationError;
 
 @Component
 @Path("/accounts")
@@ -45,49 +48,121 @@ public class AccountResource {
     @GET
     public List<Account> getAccounts(@HeaderParam("Authorization") String authorization){
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
-        validationService.validateLoggedInUserIsAdmin(loggedInUser);
+        // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
 
-        return accountRepository.findAll();
+        if (roleLevel.get(loggedInUser.getType()) == 0) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        }
+        else if (roleLevel.get(loggedInUser.getType()) < 3)
+            return accountRepository.findAll();
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+
     }
 
     @GET
     @Path("/{accountId}")
-    public Account getAccount(@PathParam("accountId") String accountId){
-        return accountRepository.findById(accountId);
+    public Account getAccount(@PathParam("accountId") String accountId, @HeaderParam("Authorization") String authorization){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
+        Account account = accountRepository.findById(accountId);
+
+        if (loggedInUser.getId().equals(account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
+            return accountRepository.findById(accountId);
+        }
+        else if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
+            return accountRepository.findById(accountId);
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 
     @GET
     @Path("/user/{userId}")
-    public List<Account> getAccountsForUser(@PathParam("userId") String userId){
-        return accountRepository.findByUserId(userId);
+    public List<Account> getAccountsForUser(@PathParam("userId") String userId, @HeaderParam("Authorization") String authorization){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        if (loggedInUser.getId().equals(userId))
+            return accountRepository.findByUserId(userId);
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 
     @POST
-    public Account createAccount(Account account){
+    public Account createAccount(Account account, @HeaderParam("Authorization") String authorization){
         //validate that the user_id matches a valid user valid
-
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
         // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
-
-        // validate account type is set to "checking", "savings" or "credit"
-
-        account.setId(null);// ensure that id is set by database
-        return accountRepository.save(account);
+        if (loggedInUser.getId().equals(account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
+            String acct = account.getAccountType();
+            String[] types = {"checking", "savings", "credit"};
+            if(Arrays.asList(types).contains(acct)) {
+                account.setId(null);// ensure that id is set by database
+                return accountRepository.save(account);
+            }
+            else
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Account Type");
+        }
+        else if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
+            String acct = account.getAccountType();
+            String[] types = {"checking", "savings", "credit"};
+            if(Arrays.asList(types).contains(acct)) {
+                account.setId(null);// ensure that id is set by database
+                return accountRepository.save(account);
+            }
+            else
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Account Type");
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 
     @PUT
     @Path("/{accountId}")
-    public Account updateAccount(@PathParam("accountId") String accountId, Account account){
+    public Account updateAccount(@PathParam("accountId") String accountId, Account account, @HeaderParam("Authorization") String authorization){
         Account byId = accountRepository.findById(accountId);
-
-        byId.setAmount(account.getAmount()); // only allow the amount of an account to be updated
-
-        return accountRepository.save(byId);
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
+        if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
+            byId.setAmount(account.getAmount()); // only allow the amount of an account to be updated
+            return accountRepository.save(byId);
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 
     @DELETE
     @Path("/{accountId}")
-    public String deleteAccount(@PathParam("accountId") String accountId){
-        accountRepository.deleteById(accountId);
-        return "{\"status\":\"success\"}";
+    public String deleteAccount(@PathParam("accountId") String accountId, @HeaderParam("Authorization") String authorization) {
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("external", 0);
+        if (roleLevel.get(loggedInUser.getType()) == 2) {
+            accountRepository.deleteById(accountId);
+            return "{\"status\":\"success\"}";
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 }

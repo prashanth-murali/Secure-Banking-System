@@ -85,30 +85,46 @@ public class UserResource {
         roleLevel.put("tier1", 1);
         roleLevel.put("external", 0);
         User oneUser = userRepository.findById(userId);
-        if (roleLevel.get(loggedInUser.getType()) < 1) {
+        if (roleLevel.get(loggedInUser.getType()) == 0) {
             if (loggedInUser.getId().equals(userId)) {
                 return oneUser;
             }
+            else
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
-        else if (roleLevel.get(loggedInUser.getType()) >= 1 ) {
+        else if (roleLevel.get(loggedInUser.getType()) > roleLevel.get(oneUser.getType()) ) {
+            return oneUser;
+        }
+        else if (roleLevel.get(loggedInUser.getType()) == roleLevel.get(oneUser.getType()) && loggedInUser.getId().equals(oneUser.getId())) {
             return oneUser;
         }
         else throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
 
-        return oneUser;
     }
 
     @POST
-    public User createUser(User user){
+    public User createUser(User user, @HeaderParam("Authorization") String authorization){
         String[] types = {"tier1", "tier2", "administrator", "external"};
         String userType = user.getType();
         if(Arrays.asList(types).contains(userType)) {
-            user.setId(null);// ensure that id is set by database
-            return userRepository.save(user);
+            if (user.getType().equals("external") || user.getType().equals("administrator")) {
+                user.setId(null);// ensure that id is set by database
+                return userRepository.save(user);
+            }
+            else if (user.getType().equals("tier1") || user.getType().equals("tier2")) {
+                User loggedInUser = loggedInService.getLoggedInUser(authorization);
+                if (loggedInUser.getType().equals("administrator")) {
+                    user.setId(null);// ensure that id is set by database
+                    return userRepository.save(user);
+                }
+            }
+            else
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid auth");
         }
         else
-            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid User Type");
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid auth");
 
+        return userRepository.save(user);
     }
 
     @PUT
@@ -150,6 +166,7 @@ public class UserResource {
             userRepository.deleteById(userId);
             return "{\"status\":\"success\"}";
         }
-        else throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 }

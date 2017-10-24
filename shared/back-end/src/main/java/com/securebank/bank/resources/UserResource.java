@@ -100,8 +100,15 @@ public class UserResource {
 
     @POST
     public User createUser(User user){
-        user.setId(null);// ensure the user does not pass their own id to mongo
-        return userRepository.save(user);
+        String[] types = {"tier1", "tier2", "administrator", "external"};
+        String userType = user.getType();
+        if(Arrays.asList(types).contains(userType)) {
+            user.setId(null);// ensure that id is set by database
+            return userRepository.save(user);
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid User Type");
+
     }
 
     @PUT

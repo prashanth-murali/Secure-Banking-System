@@ -11,19 +11,22 @@ import com.securebank.bank.services.errors.ApplicationValidationError;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.ws.rs.core.Response;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.Date;
 import java.util.List;
 import java.util.*;
+import java.util.Date;
 
 @Component
 @Path("/transactions")
@@ -42,7 +45,7 @@ public class TransactionsResource {
     UserRepository userRepository;
 
     @GET// need to give some validation to only for administrator or external only can see their own transaction history
-    public List<Transaction> getTransactions() {
+    public List<Transaction> getTransactions(@HeaderParam("Authorization") String authorization) {
 
         return transactionsRepository.findAll();
     }

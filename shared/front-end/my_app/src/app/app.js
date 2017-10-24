@@ -17,7 +17,7 @@ import authService from './services/authService';
 import common from './services/common';
 import dashboardAdminController from './controllers/dashBoardAdminController';
 import dashboardAdminEditUser from './controllers/dashBoardAdminEditUserController';
-
+import externalUserController from './controllers/externalUserController';
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -97,10 +97,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('credit_debit', {
             url: '/credit_debit',
             templateUrl: '../views/external_users/credit_debit_external.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
-
+            controller: externalUserController
         })
 
         .state('fund_transfer_external_user', {
@@ -184,12 +181,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
         .state('dashboard_external_user', {
             url: '/dashboard_external_user',
-            templateUrl: '../views/external_users/dashboard_external_user.html'
+            templateUrl: '../views/external_users/dashboard_external_user.html',
+            controller: externalUserController
         })
 
         .state('dashboard_external_merchant', {
             url: '/dashboard_merchant',
-            templateUrl: '../views/external_users/dashboard_external_merchant.html'
+            templateUrl: '../views/external_users/dashboard_external_merchant.html',
+            controller: externalUserController
         })
 
         .state('edit_users', {

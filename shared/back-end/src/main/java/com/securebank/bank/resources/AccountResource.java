@@ -53,7 +53,8 @@ public class AccountResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         if (roleLevel.get(loggedInUser.getType()) == 0) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
@@ -74,7 +75,8 @@ public class AccountResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
         Account account = accountRepository.findById(accountId);
 
         if (loggedInUser.getId().equals(account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
@@ -105,7 +107,8 @@ public class AccountResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("consumer", 0);
+        roleLevel.put("merchant", 0);
         // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
         if (loggedInUser.getId().equals(account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
             String acct = account.getAccountType();
@@ -140,7 +143,8 @@ public class AccountResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("consumer", 0);
+        roleLevel.put("merchant", 0);
         if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
             byId.setAmount(account.getAmount()); // only allow the amount of an account to be updated
             return accountRepository.save(byId);
@@ -157,7 +161,8 @@ public class AccountResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
         if (roleLevel.get(loggedInUser.getType()) == 2) {
             accountRepository.deleteById(accountId);
             return "{\"status\":\"success\"}";

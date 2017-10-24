@@ -55,7 +55,8 @@ public class TransactionsResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         if (roleLevel.get(loggedInUser.getType()) == 0 || roleLevel.get(loggedInUser.getType()) == 3) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
@@ -74,7 +75,8 @@ public class TransactionsResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         Transaction transaction = transactionsRepository.findByTransactionId(transId);
         Account fromAccount = accountRepository.findById(transaction.getFromAccountId());
@@ -101,7 +103,8 @@ public class TransactionsResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         Account target_account = accountRepository.findById(trans.getToAccountId());
         Account my_account = accountRepository.findById(trans.getFromAccountId());
@@ -207,7 +210,8 @@ public class TransactionsResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         if (byId.getCritical() && byId.getStatus().equals("pending") && roleLevel.get(loggedInUser.getType()) == 2) {
 

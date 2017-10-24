@@ -47,7 +47,8 @@ public class UserResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
         if (roleLevel.get(loggedInUser.getType()) < 1) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
@@ -83,8 +84,10 @@ public class UserResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer",0);
         User oneUser = userRepository.findById(userId);
+
         if (roleLevel.get(loggedInUser.getType()) == 0) {
             if (loggedInUser.getId().equals(userId)) {
                 return oneUser;
@@ -104,10 +107,10 @@ public class UserResource {
 
     @POST
     public User createUser(User user, @HeaderParam("Authorization") String authorization){
-        String[] types = {"tier1", "tier2", "administrator", "external"};
+        String[] types = {"tier1", "tier2", "administrator", "consumer","merchant"};
         String userType = user.getType();
         if(Arrays.asList(types).contains(userType)) {
-            if (user.getType().equals("external") || user.getType().equals("administrator")) {
+            if (user.getType().equals("merchant") || user.getType().equals("consumer") || user.getType().equals("administrator")) {
                 user.setId(null);// ensure that id is set by database
                 return userRepository.save(user);
             }
@@ -136,7 +139,9 @@ public class UserResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
+
         if( roleLevel.get(loggedInUser.getType()) == 0 || roleLevel.get(loggedInUser.getType()) <= roleLevel.get(byId.getType()) ) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
@@ -155,7 +160,8 @@ public class UserResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
         if( roleLevel.get(loggedInUser.getType()) == 0)
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         else if (roleLevel.get(loggedInUser.getType()) == 2 && roleLevel.get(byId.getType()) == 0) {

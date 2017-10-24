@@ -17,17 +17,18 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Account Type</th>
+                    <th>Account ID</th>
                     <th>Balance</th>
-                    <th>Credit / Debit</th>
+
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="account in accounts | filter: search">
 
                     <td><a href="#">{{account.accountType | uppercase}}</a></td>
+                    <td>{{account.id}}</td>
                     <td>{{account.amount | currency }}</td>
-                    <td><a class="add-withdraw" href="">Add / Withdraw Funds</a></td>
 
                 </tr>
                 </tbody>

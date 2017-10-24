@@ -4,7 +4,7 @@
     <div class="row">
 
         <div class="btn-group" role="group">
-            <button class="btn btn-success" ng-click="goBack()">Go Back</button>
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
         </div>
         <div class="col-sm-9 col-md-10 main">
 
@@ -23,15 +23,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><a title="Go to Account" href="#">${User}'s Checking Account (*1234)</a></td>
-                    <td>$200.10</td>
+                <tr ng-repeat="account in accounts | filter: search">
+
+                    <td><a href="#">{{account.accountType | uppercase}}</a></td>
+                    <td>{{account.amount | currency }}</td>
                     <td><a class="add-withdraw" href="">Add / Withdraw Funds</a></td>
-                </tr>
-                <tr>
-                    <td><a title="Go to Account" href="#">${User}'s Savings Account (*5678)</a></td>
-                    <td>$7500.47</td>
-                    <td><a class="add-withdraw" href="">Add / Withdraw Funds</a></td>
+
                 </tr>
                 </tbody>
             </table>

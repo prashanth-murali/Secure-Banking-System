@@ -18,15 +18,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><a title="Go to Account" href="#">${User}'s Checking Account (*1234)</a></td>
-                    <td>$200.10</td>
-                    <td><a href="">View Statement</a></td>
-                </tr>
-                <tr>
-                    <td><a title="Go to Account" href="#">${User}'s Savings Account (*5678)</a></td>
-                    <td>$7500.47</td>
-                    <td><a href="">View Statement</a></td>
+                <tr ng-repeat="account in accounts | filter: search">
+
+                    <td><a href="#">{{account.accountType | uppercase}}</a></td>
+                    <td>{{account.amount | currency }}</td>
+
                 </tr>
                 </tbody>
             </table>

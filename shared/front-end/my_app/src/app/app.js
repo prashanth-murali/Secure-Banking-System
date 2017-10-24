@@ -227,13 +227,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
         })
 
-        .state('pending_requests_admin', {
-            url: '/pending_requests_admin',
-            templateUrl: '../views/internal_users/pending_requests_admin.html',
-            controller: dashBoardAdminController
-
-        })
-
         .state('request_admin', {
             url: '/request_admin',
             templateUrl: '../views/internal_users/Request_admin.html',

@@ -2,28 +2,32 @@ package com.securebank.bank.resources;
 
 import com.securebank.bank.model.Account;
 import com.securebank.bank.model.Transaction;
+import com.securebank.bank.model.User;
 import com.securebank.bank.services.AccountRepository;
 import com.securebank.bank.services.TransactionsRepository;
 import com.securebank.bank.services.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.securebank.bank.services.errors.ApplicationValidationError;
-
+import com.securebank.bank.services.LoggedInService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.ws.rs.core.Response;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.Date;
 import java.util.List;
 import java.util.*;
+import java.util.Date;
 
 @Component
 @Path("/transactions")
@@ -41,29 +45,76 @@ public class TransactionsResource {
     @Autowired
     UserRepository userRepository;
 
-    @GET// need to give some validation to only for administrator or external only can see their own transaction history
-    public List<Transaction> getTransactions() {
+    @Autowired
+    LoggedInService loggedInService;
 
-        return transactionsRepository.findAll();
+    @GET// need to give some validation to only for administrator or external only can see their own transaction history
+    public List<Transaction> getTransactions(@HeaderParam("Authorization") String authorization) {
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
+
+        if (roleLevel.get(loggedInUser.getType()) == 0 || roleLevel.get(loggedInUser.getType()) == 3) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        }
+        else
+            return transactionsRepository.findAll();
     }
 
     @GET
     @Path("/{transactionId}")
-    public Transaction getTransaction(@PathParam("transactionId") String transId){
+    public Transaction getTransaction(@PathParam("transactionId") String transId, @HeaderParam("Authorization") String authorization){
         // give me Llist<transactions> by accountId = to or form
-        return transactionsRepository.findByTransactionId(transId);
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
+
+        Transaction transaction = transactionsRepository.findByTransactionId(transId);
+        Account fromAccount = accountRepository.findById(transaction.getFromAccountId());
+        Account toAccount = accountRepository.findById(transaction.getFromAccountId());
+
+        User fromUser = userRepository.findById(fromAccount.getUserId());
+        User toUser = userRepository.findById(toAccount.getUserId());
+
+        if ((loggedInUser.getId().equals(fromAccount.getUserId()) || loggedInUser.getId().equals(toAccount.getUserId())) && roleLevel.get(loggedInUser.getType()) == 0) {
+            return transaction;
+        }
+        else if (roleLevel.get(loggedInUser.getType()) == 1 || roleLevel.get(loggedInUser.getType()) == 2) {
+            return transaction;
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 
     // create trasaction // also need do the transaction not only by account id but also by email or phone in User model
     @POST
-    public Transaction createTransaction(Transaction trans){
-        //all of this validation function could be refactored into XXservice
+    public Transaction createTransaction(Transaction trans, @HeaderParam("Authorization") String authorization){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
+
         Account target_account = accountRepository.findById(trans.getToAccountId());
         Account my_account = accountRepository.findById(trans.getFromAccountId());
+        //User fromUser = userRepository.findById(my_account.getUserId());
+        //User toUser = userRepository.findById(target_account.getUserId());
+
         //make sure the target account is exist
-        if (target_account == null) {
-                logger.info("Unable to find target account from Authorization");
-                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        if (target_account == null || my_account == null) {
+            logger.info("Unable to find account from Authorization");
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
         }
 
         //make sure my_account money is enough for trasaction
@@ -88,30 +139,60 @@ public class TransactionsResource {
         if (critical_limit > 5000) trans.setCritical(true);
         else trans.setCritical(false);
 
-        // Do create the transaction
-        if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
-            trans.setStatus("pending");
-            trans.setCreatedDate(new Date());
-            trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
-            return transactionsRepository.save(trans);
+
+        //Define who is going to create transaction, create the transaction method by account number, phone or email
+        if (loggedInUser.getId().equals(my_account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
+            //if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
+                trans.setStatus("pending");
+                trans.setCreatedDate(new Date());
+                trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
+                return transactionsRepository.save(trans);
         }
-        else {
-            trans.setStatus("approved");
-            double my_remain = my_account.getAmount() - trans.getAmount();
-            my_account.setAmount(my_remain);
-            double target_remain = target_account.getAmount() + trans.getAmount();
-            target_account.setAmount(target_remain);
-            trans.setCreatedDate(new Date());
-            trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
-            accountRepository.save(my_account);
-            accountRepository.save(target_account);
-            return transactionsRepository.save(trans);
+        else if (roleLevel.get(loggedInUser.getType()) == 1) {
+            if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
+                trans.setStatus("pending");
+                trans.setCreatedDate(new Date());
+                trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
+                return transactionsRepository.save(trans);
+            }
+            else {
+                trans.setStatus("approved");
+                double my_remain = my_account.getAmount() - trans.getAmount();
+                my_account.setAmount(my_remain);
+                double target_remain = target_account.getAmount() + trans.getAmount();
+                target_account.setAmount(target_remain);
+                trans.setCreatedDate(new Date());
+                trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
+                accountRepository.save(my_account);
+                accountRepository.save(target_account);
+                return transactionsRepository.save(trans);
+            }
         }
+        else if (roleLevel.get(loggedInUser.getType()) == 2) {
+                trans.setStatus("approved");
+                double my_remain = my_account.getAmount() - trans.getAmount();
+                my_account.setAmount(my_remain);
+                double target_remain = target_account.getAmount() + trans.getAmount();
+                target_account.setAmount(target_remain);
+                trans.setCreatedDate(new Date());
+                trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
+                accountRepository.save(my_account);
+                accountRepository.save(target_account);
+                return transactionsRepository.save(trans);
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
     }
+
     @GET
     @Path("/account/{accountId}")
-    public List<Transaction> getAllTransactionsByAccount(@PathParam("accountId") String accountId){
-        return transactionsRepository.findByFromAccountIdEqualsOrToAccountIdEquals(accountId,accountId);
+    public List<Transaction> getAllTransactionsByAccount(@PathParam("accountId") String accountId, @HeaderParam("Authorization") String authorization){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Account account = accountRepository.findById(accountId);
+        if (loggedInUser.getId().equals(account.getUserId()))
+            return transactionsRepository.findByFromAccountIdEqualsOrToAccountIdEquals(accountId,accountId);
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
     }
 
 
@@ -119,19 +200,36 @@ public class TransactionsResource {
     // update transaction, approve for the critical transaction
     @PUT
     @Path("/{transactionId}")
-    public Transaction updateTransaction(@PathParam("transactionId") String transactionId, Transaction trans){
-        // todo: the only things that can be updated is the status
+    public Transaction updateTransaction(@PathParam("transactionId") String transactionId, Transaction trans, @HeaderParam("Authorization") String authorization){
         Transaction byId = transactionsRepository.findByTransactionId(transactionId);
         Account targetAccount = accountRepository.findById(byId.getToAccountId());
         Account myAccount = accountRepository.findById(byId.getFromAccountId());
 
-        if (byId.getCritical() && byId.getStatus().equals("pending")) {
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Map<String, Integer> roleLevel = new HashMap<String, Integer>();
+        roleLevel.put("administrator", 3);
+        roleLevel.put("tier2", 2);
+        roleLevel.put("tier1", 1);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
+
+        if (byId.getCritical() && byId.getStatus().equals("pending") && roleLevel.get(loggedInUser.getType()) == 2) {
+
+            //make sure the target account is exist
+            if (targetAccount == null || myAccount == null) {
+                logger.info("Unable to find account from Authorization");
+                byId.setStatus("denied");
+                return transactionsRepository.save(byId);
+            }
+
+            //make sure my_account money is enough for trasaction
             if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
                 logger.info("Unable to transaction, money is not enough");
                 byId.setStatus("denied");
                 return transactionsRepository.save(byId);
             }
-            else {
+
+            if (trans.getStatus().equals("approved")) {
                 byId.setStatus("approved");
                 double myRemain = myAccount.getAmount() - byId.getAmount();
                 myAccount.setAmount(myRemain);
@@ -142,18 +240,48 @@ public class TransactionsResource {
                 accountRepository.save(targetAccount);
                 return transactionsRepository.save(byId);
             }
+            else if (trans.getStatus().equals("denied")) {
+                byId.setStatus("denied");
+                return transactionsRepository.save(byId);
+            }
+
         }
+        else if (!byId.getCritical() && byId.getStatus().equals("pending") && (roleLevel.get(loggedInUser.getType()) == 1 || roleLevel.get(loggedInUser.getType()) == 2)) {
+            //make sure the target account is exist
+            if (targetAccount == null || myAccount == null) {
+                logger.info("Unable to find account from Authorization");
+                byId.setStatus("denied");
+                return transactionsRepository.save(byId);
+            }
+
+            //make sure my_account money is enough for trasaction
+            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
+                logger.info("Unable to transaction, money is not enough");
+                byId.setStatus("denied");
+                return transactionsRepository.save(byId);
+            }
+
+            if (trans.getStatus().equals("approved")) {
+                byId.setStatus("approved");
+                double myRemain = myAccount.getAmount() - byId.getAmount();
+                myAccount.setAmount(myRemain);
+                double targetRemain = targetAccount.getAmount() + byId.getAmount();
+                targetAccount.setAmount(targetRemain);
+                byId.setCreatedDate(new Date());
+                accountRepository.save(myAccount);
+                accountRepository.save(targetAccount);
+                return transactionsRepository.save(byId);
+            }
+            else if (trans.getStatus().equals("denied")) {
+                byId.setStatus("denied");
+                return transactionsRepository.save(byId);
+            }
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
 
         return transactionsRepository.save(byId);
     }
-
-    // we don't want transactions to be deleted ever, they should be read only
-//    @DELETE
-//    @Path("/{transactionId}")
-//    public String deleteTransaction(@PathParam("transactionId") String transactionId){
-//        transactionsRepository.deleteByTransactionId(transactionId);
-//        return "{\"status\":\"success\"}";
-//    }
 
 
 }

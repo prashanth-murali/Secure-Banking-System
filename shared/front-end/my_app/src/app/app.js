@@ -18,6 +18,7 @@ import common from './services/common';
 import dashboardAdminController from './controllers/dashBoardAdminController';
 import dashboardAdminEditUser from './controllers/dashBoardAdminEditUserController';
 import externalUserController from './controllers/externalUserController';
+import internalEmployeeController from './controllers/internalEmployeeController';
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -222,9 +223,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('pending_requests', {
             url: '/pending_requests',
             templateUrl: '../views/internal_users/pending_requests.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: internalEmployeeController
+
+        })
+
+        .state('pending_requests_admin', {
+            url: '/pending_requests_admin',
+            templateUrl: '../views/internal_users/pending_requests_admin.html',
+            controller: dashBoardAdminController
 
         })
 

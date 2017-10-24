@@ -103,6 +103,8 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     };
 
     fetchUsers();
+    fetchTransactions();
 
 }];
+
 

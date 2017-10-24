@@ -103,17 +103,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('fund_transfer_external_user', {
             url: '/fund_transfer_external_user',
             templateUrl: '../views/external_users/fund_transfer_external_user.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: externalUserController
         })
 
         .state('fund_transfer_external_merchant', {
             url: '/fund_transfer_external_merchant',
             templateUrl: '../views/external_users/fund_transfer_external_merchant.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: externalUserController
         })
 
         .state('payments_external_user', {

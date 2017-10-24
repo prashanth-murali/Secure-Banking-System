@@ -4,65 +4,76 @@
     <div class="row">
 
         <div class="btn-group" role="group">
-            <button class="btn btn-success" ng-click="goBack()">Go Back</button>
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
         </div>
         <div class="col-sm-9 col-md-10 main">
 
-            <div class="page-header">
-                <h1>Fund Transfer</h1>
-            </div>
+            <h2>List of Accounts : </h2>
 
-            <h2>Transfer Funds:</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Balance</th>
+                    <th>Credit / Debit</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="account in accounts | filter: search">
+
+                    <td><a href="#">{{account.accountType | uppercase}}</a></td>
+                    <td>{{account.amount | currency }}</td>
+                    <td><a class="add-withdraw" href="">Add / Withdraw Funds</a></td>
+
+                </tr>
+                </tbody>
+            </table>
 
             <div id="fund-transfer">
                 <div class="modal-body">
-                    <p>
-                        <label>Debit Account:</label>
-                        <select class="form-control">
-                            <option>Select an Account</option>
-                            <option>${User}'s Checking Account (*1234)</option>
-                            <option>${User}'s Savings Account (*5678)</option>
-                        </select>
-                    </p>
+
+                    <label>Select From Account Id:</label>
+                     <select ng-model="selectedAccount" class="form-control">
+
+                         <option value="" disabled selected>Select an Account</option>
+                         <option ng-repeat="account in accounts" value={{selectedAccount=account.id}}>
+                                    {{account.accountType | uppercase}} - {{account.id}}
+                         </option>
+
+                   </select>
+
                     <hr>
                     <p>
-                        <label>Current Balance:</label>
-                    <p><i> Please select an account </i></p>
+                        <label>Sender Account ID :</label>
+                    <p><i> {{selectedAccount}} </i></p>
                     </p>
                     <hr>
                     <div>
-                        <label>Transfer Type:</label><br>
-                        <div class="btn-group" role="group">
-                            <button title="Transfer to another account of yours within our bank" type="button" class="internal-transfer transfer-option-btn btn btn-default">Internal Transfer</button>
-                            <button title="Transfer to another user's account within our bank" type="button" class="external-transfer transfer-option-btn btn btn-default">External Transfer</button>
-                        </div>
+                        <label>Select Nature of Transfer:</label><br>
+                        <select class="form-control">
+                            <option value="" disabled selected>Select an Option</option>
+                            <option>Internal Transfer</option>
+                            <option>External Transfer</option>
+                        </select>
                     </div>
+                    <br>
                     <div class="transfer-account-details">
-                        <div id="internal-transfer" class="hidden">
-                            <select class="form-control">
-                                <option>Select credit account</option>
-                                <option>${User}'s Checking Account (*1234)</option>
-                                <option>${User}'s Savings Account (*5678)</option>
-                            </select>
-                        </div>
 
-                        <div id="external-transfer" class="hidden">
-                            <p>
-                                <label>Account Holder's Name:</label>
-                                <input type="text" class="form-control" placeholder="eg: Rahul Parekh">
-                            </p>
-                            <p>
-                                <label>Account Number:</label>
-                                <input type="text" class="form-control" placeholder="123456789">
-                            </p>
-                        </div>
-                    </div>
-                    <hr>
-                    <p>
+
+                        <label>Enter Name of Receiver : </label><br>
+                        <input type="text" class="form-control" placeholder="First Last">
+                        <br>
+
+                        <label>Enter Account ID of Receiver : </label><br>
+                        <input type="text" ng-model="toAccountId" class="form-control" placeholder="13bbv3454545nbvb">
+                        <br>
+
                         <label>Amount to be Transferred:</label>
-                        <input type="text" class="form-control" placeholder="0.00">
-                    </p>
-                    <hr>
+                        <input type="text" ng-model="Amount" class="form-control" placeholder="0.00">
+                        <br>
+
+                    </div>
+
                     <p>
                         <label>Upload Security Token :</label>
                         <input type="file" class="form-control">
@@ -73,7 +84,7 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Transfer Funds</button>
+                    <button type="button" class="btn btn-success" ng-click="createTransaction()" onclick=location.reload();>Transfer Funds</button>
                 </div>
             </div><!-- /. -->
 

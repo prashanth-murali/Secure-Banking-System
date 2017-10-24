@@ -18,8 +18,24 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             headers: {
                 "authorization": authService.getAuth()
             }
+
         });
     }
+
+    $scope.createTransaction = function(){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": $scope.selectedAccount,
+            "toAccountId": $scope.toAccountId,
+            "type": "debit",
+            "amount": $scope.Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
 
     /**function setRandomCreateData() {
         $scope.create = {

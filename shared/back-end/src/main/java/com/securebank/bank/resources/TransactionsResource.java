@@ -83,10 +83,10 @@ public class TransactionsResource {
         User fromUser = userRepository.findById(fromAccount.getUserId());
         User toUser = userRepository.findById(toAccount.getUserId());
 
-        if (loggedInUser == fromUser || loggedInUser == toUser && roleLevel.get(loggedInUser.getType()) == 0) {
+        if ((loggedInUser.getId().equals(fromAccount.getUserId()) || loggedInUser.getId().equals(toAccount.getUserId())) && roleLevel.get(loggedInUser.getType()) == 0) {
             return transaction;
         }
-        else if (roleLevel.get(loggedInUser.getType()) == 1 && roleLevel.get(loggedInUser.getType()) == 2) {
+        else if (roleLevel.get(loggedInUser.getType()) == 1 || roleLevel.get(loggedInUser.getType()) == 2) {
             return transaction;
         }
         else
@@ -105,13 +105,13 @@ public class TransactionsResource {
 
         Account target_account = accountRepository.findById(trans.getToAccountId());
         Account my_account = accountRepository.findById(trans.getFromAccountId());
-        User fromUser = userRepository.findById(my_account.getUserId());
-        User toUser = userRepository.findById(target_account.getUserId());
+        //User fromUser = userRepository.findById(my_account.getUserId());
+        //User toUser = userRepository.findById(target_account.getUserId());
 
         //make sure the target account is exist
         if (target_account == null || my_account == null) {
-                logger.info("Unable to find account from Authorization");
-                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+            logger.info("Unable to find account from Authorization");
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
         }
 
         //make sure my_account money is enough for trasaction
@@ -138,25 +138,12 @@ public class TransactionsResource {
 
 
         //Define who is going to create transaction, create the transaction method by account number, phone or email
-        if (loggedInUser == fromUser && roleLevel.get(loggedInUser.getType()) == 0) {
+        if (loggedInUser.getId().equals(my_account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
             //if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
                 trans.setStatus("pending");
                 trans.setCreatedDate(new Date());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 return transactionsRepository.save(trans);
-            //}
-            //else {
-              //  trans.setStatus("approved");
-               // double my_remain = my_account.getAmount() - trans.getAmount();
-               // my_account.setAmount(my_remain);
-               // double target_remain = target_account.getAmount() + trans.getAmount();
-               // target_account.setAmount(target_remain);
-               // trans.setCreatedDate(new Date());
-               // trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
-               // accountRepository.save(my_account);
-               // accountRepository.save(target_account);
-               // return transactionsRepository.save(trans);
-            //}
         }
         else if (roleLevel.get(loggedInUser.getType()) == 1) {
             if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
@@ -199,7 +186,7 @@ public class TransactionsResource {
     public List<Transaction> getAllTransactionsByAccount(@PathParam("accountId") String accountId, @HeaderParam("Authorization") String authorization){
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
         Account account = accountRepository.findById(accountId);
-        if (loggedInUser.getId() == account.getUserId())
+        if (loggedInUser.getId().equals(account.getUserId()))
             return transactionsRepository.findByFromAccountIdEqualsOrToAccountIdEquals(accountId,accountId);
         else
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
@@ -255,7 +242,7 @@ public class TransactionsResource {
             }
 
         }
-        else if (byId.getCritical() == false && byId.getStatus().equals("pending") && (roleLevel.get(loggedInUser.getType()) == 1 || roleLevel.get(loggedInUser.getType()) == 2)) {
+        else if (!byId.getCritical() && byId.getStatus().equals("pending") && (roleLevel.get(loggedInUser.getType()) == 1 || roleLevel.get(loggedInUser.getType()) == 2)) {
             //make sure the target account is exist
             if (targetAccount == null || myAccount == null) {
                 logger.info("Unable to find account from Authorization");

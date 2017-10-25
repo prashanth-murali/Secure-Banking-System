@@ -4,7 +4,6 @@
   "description": "A workflow for Angular made with Webpack",
   "scripts": {
     "build": "webpack --bail --progress --profile",
-    "postbuild":"cp -r dist/* ../../back-end/src/main/resources/static",
     "server": "webpack-dev-server --history-api-fallback --inline --progress --port 8081",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",

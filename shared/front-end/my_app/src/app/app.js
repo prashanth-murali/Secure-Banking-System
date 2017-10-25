@@ -148,9 +148,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('critical_transactions', {
             url: '/critical_transactions',
             templateUrl: '../views/internal_users/critical_transactions.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: internalEmployeeController
         })
 
         .state('dashboard_admin', {

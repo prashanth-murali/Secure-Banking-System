@@ -47,6 +47,18 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         return false;
     };
 
+    $scope.filterManager=function(transaction)
+    {
+        if(transaction.status=='pending')
+        {
+            if(transaction.critical==true)
+            {
+                return true;
+            }
+        }
+        return false;
+    };
+
     $scope.approveTransaction = function(TransactionId)
     {
 

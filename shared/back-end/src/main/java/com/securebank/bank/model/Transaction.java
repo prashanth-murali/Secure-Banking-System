@@ -10,7 +10,7 @@ import java.util.Date;
     private String transactionId;
     private String fromAccountId;
     private String toAccountId;
-    private Date createdDate;
+    private String createdDate;
     private String type;
     private Double amount;
     private String status; // "pending", "approved", "denied"
@@ -18,7 +18,7 @@ import java.util.Date;
 
     public Transaction() {}
 
-     public Transaction(String transactionId, String fromAccountId, String toAccountId, Date createdDate, String type, Double amount, String status, Boolean isCritical) {
+     public Transaction(String transactionId, String fromAccountId, String toAccountId, String createdDate, String type, Double amount, String status, Boolean isCritical) {
          this.transactionId = transactionId;
          this.fromAccountId = fromAccountId;
          this.toAccountId = toAccountId;
@@ -55,11 +55,11 @@ import java.util.Date;
          this.toAccountId = toAccountId;
      }
 
-     public Date getCreatedDate() {
+     public String getCreatedDate() {
          return createdDate;
      }
 
-     public void setCreatedDate(Date createdDate) {
+     public void setCreatedDate(String createdDate) {
          this.createdDate = createdDate;
      }
 

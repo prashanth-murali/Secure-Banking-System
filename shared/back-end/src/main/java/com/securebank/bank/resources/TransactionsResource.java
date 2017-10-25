@@ -144,14 +144,14 @@ public class TransactionsResource {
         if (loggedInUser.getId().equals(my_account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
             //if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
                 trans.setStatus("pending");
-                trans.setCreatedDate(new Date());
+                trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 return transactionsRepository.save(trans);
         }
         else if (roleLevel.get(loggedInUser.getType()) == 1) {
             if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
                 trans.setStatus("pending");
-                trans.setCreatedDate(new Date());
+                trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 return transactionsRepository.save(trans);
             }
@@ -161,7 +161,7 @@ public class TransactionsResource {
                 my_account.setAmount(my_remain);
                 double target_remain = target_account.getAmount() + trans.getAmount();
                 target_account.setAmount(target_remain);
-                trans.setCreatedDate(new Date());
+                trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 accountRepository.save(my_account);
                 accountRepository.save(target_account);
@@ -174,7 +174,7 @@ public class TransactionsResource {
                 my_account.setAmount(my_remain);
                 double target_remain = target_account.getAmount() + trans.getAmount();
                 target_account.setAmount(target_remain);
-                trans.setCreatedDate(new Date());
+                trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 accountRepository.save(my_account);
                 accountRepository.save(target_account);
@@ -235,7 +235,7 @@ public class TransactionsResource {
                 myAccount.setAmount(myRemain);
                 double targetRemain = targetAccount.getAmount() + byId.getAmount();
                 targetAccount.setAmount(targetRemain);
-                byId.setCreatedDate(new Date());
+                byId.setCreatedDate(new Date().toString());
                 accountRepository.save(myAccount);
                 accountRepository.save(targetAccount);
                 return transactionsRepository.save(byId);
@@ -267,7 +267,7 @@ public class TransactionsResource {
                 myAccount.setAmount(myRemain);
                 double targetRemain = targetAccount.getAmount() + byId.getAmount();
                 targetAccount.setAmount(targetRemain);
-                byId.setCreatedDate(new Date());
+                byId.setCreatedDate(new Date().toString());
                 accountRepository.save(myAccount);
                 accountRepository.save(targetAccount);
                 return transactionsRepository.save(byId);

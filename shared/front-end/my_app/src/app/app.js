@@ -243,10 +243,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
         .state('settings_internal', {
             url: '/settings_internal',
-            templateUrl: '../views/internal_users/settings_internal.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            templateUrl: '../views/internal_users/create_user.html',
+            controller: internalEmployeeController
         })
 
         .state('system_log', {

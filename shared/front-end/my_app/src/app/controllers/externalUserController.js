@@ -37,6 +37,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     }
 
 
+
     /**function setRandomCreateData() {
         $scope.create = {
             "username": randomString(),

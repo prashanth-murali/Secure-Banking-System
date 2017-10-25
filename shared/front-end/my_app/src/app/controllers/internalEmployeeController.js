@@ -85,24 +85,19 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    function createUser(){
-        return $http({
-            url:BACKEND_URL + '/api/users/',
-            method: 'POST',
-            data: $httpParamSerializerJQLike({
-                "username": $scope.create.username,
-                "email": $scope.create.email,
-                "password": $scope.create.password,
-                "first_name": $scope.create.firstName,
-                "last_name": $scope.create.lastName,
-                "is_staff": false,
-                "uType": $scope.create.uType,
-                "isMerchant": $scope.create.isMerchant === true ? true : false,
-                "accounts": []
-            }),
-            headers: {
-                "authorization": authService.getAuth(),
-                "Content-Type" :"application/x-www-form-urlencoded"
+
+
+    $scope.createUser = function(username,email,password,phNumber,name,address,type){
+        return $http.post(BACKEND_URL+'/api/users/',{
+            "type": type,
+            "name": name,
+            "address": address,
+            "phoneNumber": phNumber,
+            "username": username,
+            "password": password
+        },{
+            headers:{
+                "authorization": authService.getAuth()
             }
         });
     }

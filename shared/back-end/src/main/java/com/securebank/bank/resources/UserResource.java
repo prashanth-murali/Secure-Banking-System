@@ -109,25 +109,29 @@ public class UserResource {
     public User createUser(User user, @HeaderParam("Authorization") String authorization){
         String[] types = {"tier1", "tier2", "administrator", "consumer","merchant"};
         String userType = user.getType();
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
         if(Arrays.asList(types).contains(userType)) {
-            if (user.getType().equals("merchant") || user.getType().equals("consumer") || user.getType().equals("administrator")) {
-                user.setId(null);// ensure that id is set by database
-                return userRepository.save(user);
-            }
-            else if (user.getType().equals("tier1") || user.getType().equals("tier2")) {
-                User loggedInUser = loggedInService.getLoggedInUser(authorization);
+            if (user.getType().equals("tier1") || user.getType().equals("tier2")) {
                 if (loggedInUser.getType().equals("administrator")) {
                     user.setId(null);// ensure that id is set by database
                     return userRepository.save(user);
                 }
+                else
+                    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid auth");
+            }
+            else if (user.getType().equals("consumer") || user.getType().equals("merchant")) {
+                if (loggedInUser.getType().equals("tier1") || loggedInUser.getType().equals("tier2")) {
+                    user.setId(null);// ensure that id is set by database
+                    return userRepository.save(user);
+                }
+                else
+                    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid auth");
             }
             else
                 throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid auth");
         }
         else
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid auth");
-
-        return userRepository.save(user);
     }
 
     @PUT

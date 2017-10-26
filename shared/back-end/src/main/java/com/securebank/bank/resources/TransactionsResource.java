@@ -118,7 +118,7 @@ public class TransactionsResource {
         }
 
         //make sure my_account money is enough for trasaction
-        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < trans.getAmount()) {
+        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < Math.abs(trans.getAmount())) {
             logger.info("Unable to transaction, money is not enough");
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
         }
@@ -129,14 +129,14 @@ public class TransactionsResource {
         if (list != null){
             for (Transaction transaction_history : list) {
                 if (my_account.getId().equals(transaction_history.getFromAccountId())) {
-                    critical_limit = critical_limit + transaction_history.getAmount();
+                    critical_limit = critical_limit + Math.abs(transaction_history.getAmount());
                 }
             }
         }
 
-        critical_limit = critical_limit + trans.getAmount();
+        critical_limit = critical_limit + Math.abs(trans.getAmount());
 
-        if (critical_limit > 5000) trans.setCritical(true);
+        if (critical_limit > Math.abs(5000)) trans.setCritical(true);
         else trans.setCritical(false);
 
 

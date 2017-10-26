@@ -59,11 +59,6 @@
                     <br>
                     <div class="transfer-account-details">
 
-
-                        <label>Enter Name of Receiver : </label><br>
-                        <input type="text" class="form-control" placeholder="First Last">
-                        <br>
-
                         <label>Enter Account ID of Receiver : </label><br>
                         <input type="text" ng-model="toAccountId" class="form-control" placeholder="13bbv3454545nbvb">
                         <br>
@@ -84,7 +79,7 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" ng-click="createTransaction()" onclick=location.reload();>Transfer Funds</button>
+                    <button type="button" class="btn btn-success" ng-click="createTransaction(selectedAccount,toAccountId)" onclick=location.reload();>Transfer Funds</button>
                 </div>
             </div><!-- /. -->
 

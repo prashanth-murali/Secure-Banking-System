@@ -24,12 +24,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="account in accounts | filter: search">
+                <tr ng-repeat="account in accounts | filter: search" ng-model="AccountId">
 
                     <td><a href="#">{{account.accountType | uppercase}}</a></td>
                     <td>{{account.id}}</td>
                     <td>{{account.amount | currency }}</td>
-
+                    <td><button class="btn btn-success" value={{AccountId=account.id}} ng-click="addMoney(AccountId)" >Add</button></td>
+                    <td><button class="btn btn-danger" value={{AccountId=account.id}}  ng-click="withdrawMoney(AccountId)">Withdraw</button></td>
                 </tr>
                 </tbody>
             </table>

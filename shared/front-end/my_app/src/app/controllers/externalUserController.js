@@ -45,6 +45,23 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         else {toast('Sender and Receiver Account Id cannot be the same');}
     }
 
+    function getAllTransactionsByAccount(AccountId){
+        return $http.get(BACKEND_URL + '/api/transactions/account/'+ AccountId, {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+
+        });
+    }
+
+    $scope.fetchAllTransactionsByAccount=function(AccountId){
+        getAllTransactionsByAccount(AccountId).then(function successCallback(response) {
+            $scope.statements = response.data;
+        }, function errorCallback(response) {
+            toast('Error loading statement');
+        });
+    }
+
     $scope.addMoney=function(AccountId)
     {
         var data=prompt("Enter_Amount","1000");
@@ -168,7 +185,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         })
     };**/
 
+
+
     fetchAccounts();
+
+
 
 }];
 

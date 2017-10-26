@@ -140,9 +140,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('statements_external_user', {
             url: '/statements_external_user',
             templateUrl: '../views/external_users/statements_external_user.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: externalUserController
         })
 
         .state('critical_transactions', {

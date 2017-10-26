@@ -51,10 +51,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     {
         if(transaction.status=='pending')
         {
-            if(transaction.critical==true)
-            {
                 return true;
-            }
         }
         return false;
     };

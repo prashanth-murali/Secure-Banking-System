@@ -110,6 +110,28 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
+    $scope.postTransaction = function(fromId,toId){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": fromId,
+            "toAccountId": toId,
+            "type": "debit",
+            "amount": $scope.Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.createTransaction=function(fromId,toId){
+        if(fromId!=toId)
+        {
+            $scope.postTransaction(fromId,toId);
+        }
+
+        else {toast('Sender and Receiver Account Id cannot be the same');}
+    }
 
     function getAllTransactions(){
         return $http.get(BACKEND_URL + '/api/transactions/', {

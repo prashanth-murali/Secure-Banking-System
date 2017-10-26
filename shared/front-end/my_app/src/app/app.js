@@ -197,17 +197,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('internal_emp_transactions', {
             url: '/internal_emp_transactions',
             templateUrl: '../views/internal_users/internal_emp_transactions.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: internalEmployeeController
         })
 
         .state('internal_mgr_transactions', {
             url: '/internal_mgr_transactions',
             templateUrl: '../views/internal_users/internal_mgr_transactions.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: internalEmployeeController
         })
 
         .state('manage_employee', {

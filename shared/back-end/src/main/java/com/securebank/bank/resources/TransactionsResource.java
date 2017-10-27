@@ -35,7 +35,7 @@ import java.util.Date;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TransactionsResource {
     Logger logger = LoggerFactory.getLogger(TransactionsResource.class);
-    
+
     @Autowired
     TransactionsRepository transactionsRepository;
 
@@ -118,7 +118,7 @@ public class TransactionsResource {
         }
 
         //make sure my_account money is enough for trasaction
-        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < Math.abs(trans.getAmount())) {
+        if (my_account.getAmount() <= 0.0 || trans.getAmount() < 0 && my_account.getAmount() < Math.abs(trans.getAmount())) {
             logger.info("Unable to transaction, money is not enough");
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
         }

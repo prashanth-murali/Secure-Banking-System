@@ -76,7 +76,9 @@ import java.util.Date;
      }
 
      public void setAmount(Double amount) {
-         this.amount = amount;
+        //  Rounding off 12.5555555555555 > 12.55
+        double roundOff = (double) Math.round(amount * 100) / 100;
+        this.amount = roundOff;
      }
 
      public String getStatus() {

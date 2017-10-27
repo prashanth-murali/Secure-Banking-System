@@ -58,6 +58,7 @@ public class UserResource {
                 if (roleLevel.get(list.get(i).getType()) > 1) {
                     list.remove(i);
                 }
+                list.get(i).setPassword(null);
             }
             return list;
         }
@@ -67,11 +68,16 @@ public class UserResource {
                 if (roleLevel.get(list.get(i).getType()) > 2) {
                     list.remove(i);
                 }
+                list.get(i).setPassword(null);
             }
             return list;
         }
         else {
-            return userRepository.findAll();
+            List<User> list = userRepository.findAll();
+            for (int i = 0; i < list.size(); i++) {
+                list.get(i).setPassword(null);
+            }
+            return list;
         }
     }
 

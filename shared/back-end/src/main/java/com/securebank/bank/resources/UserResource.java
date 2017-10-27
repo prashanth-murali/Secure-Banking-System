@@ -96,15 +96,18 @@ public class UserResource {
 
         if (roleLevel.get(loggedInUser.getType()) == 0) {
             if (loggedInUser.getId().equals(userId)) {
+                oneUser.setPassword(null);
                 return oneUser;
             }
             else
                 throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
         else if (roleLevel.get(loggedInUser.getType()) > roleLevel.get(oneUser.getType()) ) {
+            oneUser.setPassword(null);
             return oneUser;
         }
         else if (roleLevel.get(loggedInUser.getType()) == roleLevel.get(oneUser.getType()) && loggedInUser.getId().equals(oneUser.getId())) {
+            oneUser.setPassword(null);
             return oneUser;
         }
         else throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
@@ -116,6 +119,7 @@ public class UserResource {
         String[] types = {"tier1", "tier2", "administrator", "consumer","merchant"};
         String userType = user.getType();
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
+
         if(Arrays.asList(types).contains(userType)) {
             if (user.getType().equals("tier1") || user.getType().equals("tier2")) {
                 if (loggedInUser.getType().equals("administrator")) {
@@ -152,13 +156,26 @@ public class UserResource {
         roleLevel.put("merchant", 0);
         roleLevel.put("consumer", 0);
 
-        if( roleLevel.get(loggedInUser.getType()) == 0 || roleLevel.get(loggedInUser.getType()) <= roleLevel.get(byId.getType()) ) {
-            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
+        if(user.getId().equals(loggedInUser.getId())) {
+            loggedInUser.setName(user.getName());
+            loggedInUser.setAddress(user.getAddress());
+            loggedInUser.setPhoneNumber(user.getPhoneNumber());
+            return userRepository.save(loggedInUser);
         }
-        else {
-            BeanUtils.copyProperties(user, byId);
+        else if (roleLevel.get(loggedInUser.getType()) == 3 && (roleLevel.get(byId.getType()) == 2 ||roleLevel.get(byId.getType()) == 1)) {
+            byId.setName(user.getName());
+            byId.setAddress(user.getAddress());
+            byId.setPhoneNumber(user.getPhoneNumber());
             return userRepository.save(byId);
         }
+        else if (roleLevel.get(loggedInUser.getType()) == 2 && roleLevel.get(byId.getType()) == 0) {
+            byId.setName(user.getName());
+            byId.setAddress(user.getAddress());
+            byId.setPhoneNumber(user.getPhoneNumber());
+            return userRepository.save(byId);
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid auth");
     }
 
     @DELETE

@@ -120,7 +120,7 @@ public class UserResource {
                     throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid auth");
             }
             else if (user.getType().equals("consumer") || user.getType().equals("merchant")) {
-                if (loggedInUser.getType().equals("tier1") || loggedInUser.getType().equals("tier2")) {
+                if (loggedInUser.getType().equals("tier1") || loggedInUser.getType().equals("tier2") || loggedInUser.getType().equals("administrator")) {
                     user.setId(null);// ensure that id is set by database
                     return userRepository.save(user);
                 }

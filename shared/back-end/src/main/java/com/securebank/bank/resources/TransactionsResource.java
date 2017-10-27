@@ -118,9 +118,19 @@ public class TransactionsResource {
         }
 
         //make sure my_account money is enough for trasaction
-        if (my_account.getAmount() <= 0.0 || trans.getAmount() < 0 && my_account.getAmount() < Math.abs(trans.getAmount())) {
-            logger.info("Unable to transaction, money is not enough");
-            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < Math.abs(trans.getAmount())) {
+            if(trans.getFromAccountId().equals(trans.getToAccountId()) && trans.getAmount() < 0 )
+            {
+                logger.info("Unable to transaction, money is not enough");
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+            }
+
+            if(!trans.getFromAccountId().equals(trans.getToAccountId()))
+            {
+                logger.info("Unable to transaction, money is not enough");
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+            }
+
         }
 
         //define the critical transaction: all day transaction amount > 5000 -> critical transaciotn
@@ -223,10 +233,19 @@ public class TransactionsResource {
             }
 
             //make sure my_account money is enough for trasaction
-            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
-                logger.info("Unable to transaction, money is not enough");
-                byId.setStatus("denied");
-                return transactionsRepository.save(byId);
+            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < Math.abs(byId.getAmount())) {
+
+                if(byId.getFromAccountId().equals(byId.getToAccountId()) && byId.getAmount()<0) {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
+
+                if(!byId.getFromAccountId().equals(byId.getToAccountId())) {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
             }
 
             if (trans.getStatus().equals("approved")) {
@@ -255,10 +274,20 @@ public class TransactionsResource {
             }
 
             //make sure my_account money is enough for trasaction
-            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
+            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < Math.abs(byId.getAmount())) {
+                if(byId.getFromAccountId().equals(byId.getToAccountId()) && byId.getAmount()<0)
+                {
                 logger.info("Unable to transaction, money is not enough");
                 byId.setStatus("denied");
                 return transactionsRepository.save(byId);
+                }
+
+                if(!byId.getFromAccountId().equals(byId.getToAccountId()))
+                {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
             }
 
             if (trans.getStatus().equals("approved")) {

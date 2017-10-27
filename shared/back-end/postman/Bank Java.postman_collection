@@ -478,7 +478,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"fromAccountId\": \"59ece3f694939b745efeab26\",\n  \"toAcccountId\": \"59ece40894939b745efeab27\",\n  \"type\": \"debit\",\n  \"amount\": 10.50\n}"
+							"raw": "{\n  \"fromAccountId\": \"59ece3f694939b745efeab26\",\n  \"toAccountId\": \"59ece40894939b745efeab27\",\n  \"type\": \"debit\",\n  \"amount\": 10.50\n}"
 						},
 						"description": ""
 					},

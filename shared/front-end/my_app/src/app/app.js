@@ -20,6 +20,8 @@ import dashboardAdminEditUser from './controllers/dashBoardAdminEditUserControll
 import externalUserController from './controllers/externalUserController';
 import internalEmployeeController from './controllers/internalEmployeeController';
 import logFileController from './controllers/logFileController';
+import paymentExternalUserController from './controllers/paymentExternalUserController';
+
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -117,9 +119,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('payments_external_user', {
             url: '/payments_external_user',
             templateUrl: '../views/external_users/payments_external_user.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller:paymentExternalUserController
         })
 
         .state('requests_to_merchant', {

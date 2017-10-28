@@ -3,7 +3,7 @@
     <div class="row">
 
         <div class="btn-group" role="group">
-            <button class="btn btn-success" ng-click="goBack()">Go Back</button>
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
         </div>
 
         <div class="col-sm-9 col-md-10 main">
@@ -24,6 +24,13 @@
                         </option>
                     </select>
 
+                    <h3>User Details </h3>
+
+                    <label>User Id : {{individual.id}}</label><br>
+                    <label>Name : {{individual.name}} </label><br>
+                    <label>Address : {{individual.address}} </label><br>
+                    <label>Phone Number : {{individual.phoneNumber}} </label><br>
+                    <label>Type : {{individual.type}}</label><br>
                 </div>
 
                 <div class="modal-footer">

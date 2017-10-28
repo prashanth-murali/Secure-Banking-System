@@ -19,6 +19,7 @@ import dashboardAdminController from './controllers/dashBoardAdminController';
 import dashboardAdminEditUser from './controllers/dashBoardAdminEditUserController';
 import externalUserController from './controllers/externalUserController';
 import internalEmployeeController from './controllers/internalEmployeeController';
+import settingsAdminController from './controllers/settingsAdminController';
 import logFileController from './controllers/logFileController';
 const MODULE_NAME = 'app';
 
@@ -208,9 +209,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('manage_employee', {
             url: '/manage_employee',
             templateUrl: '../views/internal_users/manage_employee.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: dashboardAdminController
         })
 
         .state('pending_requests', {
@@ -245,7 +244,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('settings_admin', {
             url: '/settings_admin',
             templateUrl: '../views/internal_users/settings_admin.html',
-            controller: internalEmployeeController
+            controller: settingsAdminController
         })
 
         .state('create_account', {

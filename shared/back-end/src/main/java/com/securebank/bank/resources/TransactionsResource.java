@@ -126,10 +126,14 @@ public class TransactionsResource {
                 else {
                     int checking = 0;
                     List<Account> account = accountRepository.findByUserId(toUser.getId());
+
+
                     for (int i = 0; i < account.size(); i++) {
                         if (account.get(i).getAccountType().equals("checking")){
                             target_account = account.get(i);
+                            trans.setToAccountId(target_account.getId());
                             checking = 1;
+                            logger.info("get account");
                         }
                     }
                     if (checking == 0)

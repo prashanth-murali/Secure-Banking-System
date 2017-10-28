@@ -84,7 +84,7 @@ app.controller('AppCtrl', function(){
 app.factory('authService', authService);
 app.factory('common', common);
 
-app.config(function($stateProvider, $urlRouterProvider) {
+app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise('/home');
 
@@ -250,7 +250,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         });
 
 
-});
+}]);
 
 
 export default MODULE_NAME;

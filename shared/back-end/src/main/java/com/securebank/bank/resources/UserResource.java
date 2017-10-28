@@ -125,6 +125,14 @@ public class UserResource {
 
     }
 
+    public void user_email_val(String userName, String email)
+    {
+        if (userRepository.findByUsername(userName) != null)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "An user with same username already exits. Please use a different username.");
+        if (userRepository.findByEmail(email) != null)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "An user with same email already exits. Please use a different email.");
+    }
+
     /*
          * Password should be less than 15 and more than 8 characters in length.
          * Password should contain at least one upper case and one lower case alphabet.
@@ -168,6 +176,7 @@ public class UserResource {
         String userType = user.getType();
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
 
+        user_email_val(user.getUsername(), user.getEmail());
         passwordValidation(user.getUsername(), user.getPassword());
 
         if(Arrays.asList(types).contains(userType)) {

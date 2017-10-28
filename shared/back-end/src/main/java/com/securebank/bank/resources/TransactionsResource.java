@@ -135,9 +135,7 @@ public class TransactionsResource {
                 }
             }
         }
-        else
-            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Only can transact through your checking account");
-
+        
 
         //make sure the target account is exist
         if (target_account == null || my_account == null) {

@@ -49,13 +49,13 @@ public class UserResource {
         roleLevel.put("tier1", 1);
         roleLevel.put("merchant", 0);
         roleLevel.put("consumer", 0);
-        if (roleLevel.get(loggedInUser.getType()) < 1) {
+        if (roleLevel.get(loggedInUser.getType()) == 0) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
-        else if (roleLevel.get(loggedInUser.getType()) == 1) {
+        else if (roleLevel.get(loggedInUser.getType()) == 1 ) {
             List<User> list = userRepository.findAll();
             for (int i = 0; i < list.size(); i++) {
-                if (roleLevel.get(list.get(i).getType()) > 1) {
+                if (roleLevel.get(list.get(i).getType()) >= 1) {
                     list.remove(i);
                 }
                 list.get(i).setPassword(null);
@@ -123,6 +123,8 @@ public class UserResource {
         if(Arrays.asList(types).contains(userType)) {
             if (user.getType().equals("tier1") || user.getType().equals("tier2")) {
                 if (loggedInUser.getType().equals("administrator")) {
+                    if (user.getType().equals("tier1"))
+                        user.setAuthorization(false);
                     user.setId(null);// ensure that id is set by database
                     return userRepository.save(user);
                 }

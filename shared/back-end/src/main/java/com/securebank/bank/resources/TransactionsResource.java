@@ -61,8 +61,10 @@ public class TransactionsResource {
         if (roleLevel.get(loggedInUser.getType()) == 0 || roleLevel.get(loggedInUser.getType()) == 3) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
-        else
+        else if (roleLevel.get(loggedInUser.getType()) == 1 || roleLevel.get(loggedInUser.getType()) == 2)
             return transactionsRepository.findAll();
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 
     @GET
@@ -80,7 +82,7 @@ public class TransactionsResource {
 
         Transaction transaction = transactionsRepository.findByTransactionId(transId);
         Account fromAccount = accountRepository.findById(transaction.getFromAccountId());
-        Account toAccount = accountRepository.findById(transaction.getFromAccountId());
+        Account toAccount = accountRepository.findById(transaction.getToAccountId());
 
         User fromUser = userRepository.findById(fromAccount.getUserId());
         User toUser = userRepository.findById(toAccount.getUserId());
@@ -135,7 +137,7 @@ public class TransactionsResource {
                 }
             }
         }
-        
+
 
         //make sure the target account is exist
         if (target_account == null || my_account == null) {

@@ -1,95 +1,72 @@
+
 <div class="container container-main" role="main">
 
     <div class="row">
 
         <div class="btn-group" role="group">
-            <button class="btn btn-success" ng-click="goBack()">Go Back</button>
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
         </div>
+
         <div class="col-sm-9 col-md-10 main">
 
-
-            <h2>Edit Users:</h2>
-            <br>
+            <h3>Select a User </h3>
 
             <div id="fund-transfer">
                 <div class="modal-body">
-                    <p>
-                        <label>Add Account:</label>
-                        <br>
-                        <label>Type of User Account:</label>
-                        <select class="form-control">
-                            <option> </option>
-                            <option>Customer Account </option>
-                            <option>Merchant Account</option>
-                        </select>
-                    </p>
-                    <p>
-                        <label>Name:</label>
-                        <input type="text" class="form-control" placeholder="ex: Pallavi">
-                    </p>
-                    <p>
-                        <label>Address:</label>
-                        <input type="text" class="form-control" placeholder="ex: 1265 E University Dr">
-                    </p>
-                    <p>
-                        <label>Account No.:</label>
-                        <input type="text" class="form-control" placeholder="ex: 123456789">
-                    </p>
-                    <p>
-                        <label>Phone No.:</label>
-                        <input type="text" class="form-control" placeholder="ex: 480-111-1111">
-                    </p>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success">Submit</button>
-                    </div>
+                    <label>Select Account Id:</label>
+                    <select ng-model="selectedAccount" class="form-control">
 
+                        <option value="" disabled selected>Select a User</option>
+                        <option ng-repeat="user in users | filter: search |filter:filterUser" value={{selectedAccount=user.id}}>
+                            {{user.type | uppercase}} - {{user.name}}
+                        </option>
 
+                    </select>
 
-                    <br>
-                    <br>
-                    <div>
-                        <label>Action:</label><br>
-                        <div class="btn-group" role="group">
-                            <button title="To delete account" type="button" class="internal-transfer transfer-option-btn btn btn-default">Delete</button>
-                            <button type="button" class="btn btn-success" ng-click="update(individual.address,individual.email,individual.id,individual.name,individual.password,individual.phoneNumber,individual.type,individual.username)">Modify</button>
+                </div>
 
-                        </div>
-                    </div>
-                    <div class="transfer-account-details">
-                        <div id="internal-transfer" class="hidden">
-                            <select class="form-control">
-                                <option> </option>
-                                <option>Customer Account</option>
-                                <option>Merchant Account</option>
-                            </select>
-                        </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="fetchUserById(selectedAccount)">Get User Details</button>
+                    <button type="button" class="btn btn-danger" ng-click="deleteUser(selectedAccount)" onclick=location.reload()>Delete User</button>
+                </div>
 
-                        <div id="external-transfer" class="hidden">
-                            <p>
-                                <label>Name:</label>
-                                <input type="text" class="form-control" placeholder="ex: Prashanth">
-                            </p>
-                            <p>
-                                <label>Address:</label>
-                                <input type="text" class="form-control" placeholder="ex: 1111 E University Dr">
-                            </p>
-                            <p>
-                                <label>Phone No.:</label>
-                                <input type="text" class="form-control" placeholder="ex: 4802522119">
-                            </p>
-                        </div>
+                <h3>User Details </h3>
+
+                <label>User Id : </label><br>
+                <p><i>{{individual.id}}</i></p>
+                <br>
+                <label>Name : </label><br>
+                <input type="text" class="form-control" ng-model="individual.name">
+                <br>
+                <label>Address : </label><br>
+                <input type="text" class="form-control" ng-model="individual.address">
+                <br>
+                <label>Phone Number : </label><br>
+                <input type="text" class="form-control" ng-model="individual.phoneNumber">
+                <br>
+                <label>Type : </label><br>
+
+                <select ng-model="individual.type" class="form-control">
+
+                    <option value="" disabled selected>{{individual.type}}</option>
+                    <option>administrator</option>
+                    <option>tier2</option>
+                    <option>tier1</option>
+                    <option>consumer</option>
+                    <option>merchant</option>
+                </select>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="update(individual.address,individual.email,individual.id,individual.name,individual.password,individual.phoneNumber,individual.type,individual.username)" >Update</button>
+                </div>
 
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success">Submit</button>
-                    </div>
-                </div><!-- /. -->
+            </div><!-- /. -->
 
-            </div> <!-- /main -->
+        </div> <!-- /main -->
 
-        </div> <!-- /row -->
+    </div> <!-- /row -->
 
-    </div> <!-- /container -->
- </div>
+</div> <!-- /container -->
+

@@ -24,7 +24,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" ng-click="fetchUserById(selectedAccount)">Get User Details</button>
-                    <button type="button" class="btn btn-danger" ng-click="deleteUser(selectedAccount)">Delete User</button>
+                    <button type="button" class="btn btn-danger" ng-click="deleteUser(selectedAccount)" onclick=location.reload()>Delete User</button>
                 </div>
 
                 <h3>User Details </h3>
@@ -54,7 +54,7 @@
                 </select>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" ng-click="update(individual.address,individual.email,individual.id,individual.name,individual.password,individual.phoneNumber,individual.type,individual.username)">Update</button>
+                    <button type="button" class="btn btn-success" ng-click="update(individual.address,individual.email,individual.id,individual.name,individual.password,individual.phoneNumber,individual.type,individual.username)" >Update</button>
                 </div>
 
 

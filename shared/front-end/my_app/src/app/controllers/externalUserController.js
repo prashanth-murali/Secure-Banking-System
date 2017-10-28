@@ -107,13 +107,17 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             headers:{
                 "authorization": authService.getAuth()
             }
+        }).then(function success(){
+            toast("created transaction!");
+        },function onError(){
+            toast("error creating transaction");
         });
-    }
+    };
 
     $scope.withdrawMoney=function(AccountId){
         var data=prompt("Enter_Amount","1000");
         $scope.sendWithdrawMoneyReq(AccountId,data);
-    }
+    };
 
     $scope.sendWithdrawMoneyReq = function(AccountId,Amount){
         return $http.post(BACKEND_URL+'/api/transactions/',{

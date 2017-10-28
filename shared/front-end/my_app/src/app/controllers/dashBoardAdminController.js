@@ -23,13 +23,10 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     $scope.update = function(address,email,id,name,password,phoneNumber,type,username){
         return $http.put(BACKEND_URL+'/api/users/'+id,{
             "address":address,
-            "email":email,
             "id": id,
             "name": name,
-            "password": password,
             "phoneNumber":phoneNumber,
-            "type":type,
-            "username": username
+            "type":type
         },{
             headers:{
                 "authorization": authService.getAuth()

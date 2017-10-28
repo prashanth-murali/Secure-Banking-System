@@ -14,7 +14,7 @@
                     <select ng-model="selectedAccount" class="form-control">
 
                         <option value="" disabled selected>Select a User</option>
-                        <option ng-repeat="user in users" value={{selectedAccount=user.id}}>
+                        <option ng-repeat="user in users | filter: search |filter:filterAdmin" value={{selectedAccount=user.id}}>
                             {{user.type | uppercase}} - {{user.name}}
                         </option>
 

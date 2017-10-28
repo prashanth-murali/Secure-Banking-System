@@ -8,6 +8,17 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         );
     }
 
+    $scope.filterAdmin=function(user)
+    {
+        if(user.type=='tier1' || user.type=='tier2')
+        {
+            return true;
+
+        }
+        return false;
+    };
+
+
     function randomString() {
         return Math.floor(Math.random()*90000) + 10000 + "";
     }

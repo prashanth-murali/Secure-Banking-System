@@ -140,9 +140,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('statements_external_user', {
             url: '/statements_external_user',
             templateUrl: '../views/external_users/statements_external_user.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: externalUserController
         })
 
         .state('critical_transactions', {
@@ -197,17 +195,13 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('internal_emp_transactions', {
             url: '/internal_emp_transactions',
             templateUrl: '../views/internal_users/internal_emp_transactions.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: internalEmployeeController
         })
 
         .state('internal_mgr_transactions', {
             url: '/internal_mgr_transactions',
             templateUrl: '../views/internal_users/internal_mgr_transactions.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: internalEmployeeController
         })
 
         .state('manage_employee', {
@@ -243,10 +237,8 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
 
         .state('settings_internal', {
             url: '/settings_internal',
-            templateUrl: '../views/internal_users/settings_internal.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            templateUrl: '../views/internal_users/create_user.html',
+            controller: internalEmployeeController
         })
 
         .state('system_log', {

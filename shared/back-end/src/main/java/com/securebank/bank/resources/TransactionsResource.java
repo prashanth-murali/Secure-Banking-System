@@ -35,7 +35,7 @@ import java.util.Date;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TransactionsResource {
     Logger logger = LoggerFactory.getLogger(TransactionsResource.class);
-    
+
     @Autowired
     TransactionsRepository transactionsRepository;
 
@@ -61,8 +61,10 @@ public class TransactionsResource {
         if (roleLevel.get(loggedInUser.getType()) == 0 || roleLevel.get(loggedInUser.getType()) == 3) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
-        else
+        else if (roleLevel.get(loggedInUser.getType()) == 1 || roleLevel.get(loggedInUser.getType()) == 2)
             return transactionsRepository.findAll();
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
 
     @GET
@@ -80,7 +82,7 @@ public class TransactionsResource {
 
         Transaction transaction = transactionsRepository.findByTransactionId(transId);
         Account fromAccount = accountRepository.findById(transaction.getFromAccountId());
-        Account toAccount = accountRepository.findById(transaction.getFromAccountId());
+        Account toAccount = accountRepository.findById(transaction.getToAccountId());
 
         User fromUser = userRepository.findById(fromAccount.getUserId());
         User toUser = userRepository.findById(toAccount.getUserId());
@@ -111,6 +113,36 @@ public class TransactionsResource {
         //User fromUser = userRepository.findById(my_account.getUserId());
         //User toUser = userRepository.findById(target_account.getUserId());
 
+        //sent by email
+        if (trans.getType().equals("via_email") && my_account.getAccountType().equals("checking")) {
+            if (roleLevel.get(loggedInUser.getType()) == 0) {
+                User toUser = userRepository.findByEmail(trans.getEmail());
+                if (toUser == null) {
+                    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "target user not exist");
+                }
+                else if (toUser.equals(loggedInUser)) {
+                    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Cannot sent to yourself by email");
+                }
+                else {
+                    int checking = 0;
+                    List<Account> account = accountRepository.findByUserId(toUser.getId());
+
+
+                    for (int i = 0; i < account.size(); i++) {
+                        if (account.get(i).getAccountType().equals("checking")){
+                            target_account = account.get(i);
+                            trans.setToAccountId(target_account.getId());
+                            checking = 1;
+                            logger.info("get account");
+                        }
+                    }
+                    if (checking == 0)
+                        throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "target checking account not exist");
+                }
+            }
+        }
+
+
         //make sure the target account is exist
         if (target_account == null || my_account == null) {
             logger.info("Unable to find account from Authorization");
@@ -118,9 +150,19 @@ public class TransactionsResource {
         }
 
         //make sure my_account money is enough for trasaction
-        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < trans.getAmount()) {
-            logger.info("Unable to transaction, money is not enough");
-            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < Math.abs(trans.getAmount())) {
+            if(trans.getFromAccountId().equals(trans.getToAccountId()) && trans.getAmount() < 0 )
+            {
+                logger.info("Unable to transaction, money is not enough");
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+            }
+
+            if(!trans.getFromAccountId().equals(trans.getToAccountId()))
+            {
+                logger.info("Unable to transaction, money is not enough");
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+            }
+
         }
 
         //define the critical transaction: all day transaction amount > 5000 -> critical transaciotn
@@ -129,14 +171,14 @@ public class TransactionsResource {
         if (list != null){
             for (Transaction transaction_history : list) {
                 if (my_account.getId().equals(transaction_history.getFromAccountId())) {
-                    critical_limit = critical_limit + transaction_history.getAmount();
+                    critical_limit = critical_limit + Math.abs(transaction_history.getAmount());
                 }
             }
         }
 
-        critical_limit = critical_limit + trans.getAmount();
+        critical_limit = critical_limit + Math.abs(trans.getAmount());
 
-        if (critical_limit > 5000) trans.setCritical(true);
+        if (critical_limit > Math.abs(5000)) trans.setCritical(true);
         else trans.setCritical(false);
 
 
@@ -223,10 +265,19 @@ public class TransactionsResource {
             }
 
             //make sure my_account money is enough for trasaction
-            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
-                logger.info("Unable to transaction, money is not enough");
-                byId.setStatus("denied");
-                return transactionsRepository.save(byId);
+            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < Math.abs(byId.getAmount())) {
+
+                if(byId.getFromAccountId().equals(byId.getToAccountId()) && byId.getAmount()<0) {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
+
+                if(!byId.getFromAccountId().equals(byId.getToAccountId())) {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
             }
 
             if (trans.getStatus().equals("approved")) {
@@ -255,10 +306,20 @@ public class TransactionsResource {
             }
 
             //make sure my_account money is enough for trasaction
-            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
+            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < Math.abs(byId.getAmount())) {
+                if(byId.getFromAccountId().equals(byId.getToAccountId()) && byId.getAmount()<0)
+                {
                 logger.info("Unable to transaction, money is not enough");
                 byId.setStatus("denied");
                 return transactionsRepository.save(byId);
+                }
+
+                if(!byId.getFromAccountId().equals(byId.getToAccountId()))
+                {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
             }
 
             if (trans.getStatus().equals("approved")) {

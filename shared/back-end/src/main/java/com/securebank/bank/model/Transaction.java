@@ -15,10 +15,11 @@ import java.util.Date;
     private Double amount;
     private String status; // "pending", "approved", "denied"
     private Boolean isCritical;
+    private String email;
 
     public Transaction() {}
 
-     public Transaction(String transactionId, String fromAccountId, String toAccountId, String createdDate, String type, Double amount, String status, Boolean isCritical) {
+     public Transaction(String transactionId, String fromAccountId, String toAccountId, String createdDate, String type, Double amount, String status, Boolean isCritical, String email) {
          this.transactionId = transactionId;
          this.fromAccountId = fromAccountId;
          this.toAccountId = toAccountId;
@@ -27,6 +28,7 @@ import java.util.Date;
          this.amount = amount;
          this.status = status;
          this.isCritical = isCritical;
+         this.email = email;
      }
 
 
@@ -76,7 +78,9 @@ import java.util.Date;
      }
 
      public void setAmount(Double amount) {
-         this.amount = amount;
+        //  Rounding off 12.5555555555555 > 12.55
+        double roundOff = (double) Math.round(amount * 100) / 100;
+        this.amount = roundOff;
      }
 
      public String getStatus() {
@@ -93,5 +97,13 @@ import java.util.Date;
 
      public void setCritical(Boolean critical) {
          isCritical = critical;
+     }
+
+     public String getEmail() {
+         return email;
+     }
+
+     public void setEmail(String email) {
+         this.email = email;
      }
  }

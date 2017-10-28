@@ -51,10 +51,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     {
         if(transaction.status=='pending')
         {
-            if(transaction.critical==true)
-            {
                 return true;
-            }
         }
         return false;
     };
@@ -85,24 +82,20 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    function createUser(){
-        return $http({
-            url:BACKEND_URL + '/api/users/',
-            method: 'POST',
-            data: $httpParamSerializerJQLike({
-                "username": $scope.create.username,
-                "email": $scope.create.email,
-                "password": $scope.create.password,
-                "first_name": $scope.create.firstName,
-                "last_name": $scope.create.lastName,
-                "is_staff": false,
-                "uType": $scope.create.uType,
-                "isMerchant": $scope.create.isMerchant === true ? true : false,
-                "accounts": []
-            }),
-            headers: {
-                "authorization": authService.getAuth(),
-                "Content-Type" :"application/x-www-form-urlencoded"
+
+
+    $scope.createUser = function(username,email,password,phNumber,name,address,type){
+        return $http.post(BACKEND_URL+'/api/users/',{
+            "type": type,
+            "name": name,
+            "address": address,
+            "phoneNumber": phNumber,
+            "username": username,
+            "password": password,
+            "email":email
+        },{
+            headers:{
+                "authorization": authService.getAuth()
             }
         });
     }
@@ -115,6 +108,28 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
+    $scope.postTransaction = function(fromId,toId){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": fromId,
+            "toAccountId": toId,
+            "type": "debit",
+            "amount": $scope.Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.createTransaction=function(fromId,toId){
+        if(fromId!=toId)
+        {
+            $scope.postTransaction(fromId,toId);
+        }
+
+        else {toast('Sender and Receiver Account Id cannot be the same');}
+    }
 
     function getAllTransactions(){
         return $http.get(BACKEND_URL + '/api/transactions/', {

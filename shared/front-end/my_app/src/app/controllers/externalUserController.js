@@ -22,12 +22,105 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    $scope.createTransaction = function(){
+    $scope.postTransactionViaId = function(fromId,toId,transferType){
         return $http.post(BACKEND_URL+'/api/transactions/',{
-            "fromAccountId": $scope.selectedAccount,
-            "toAccountId": $scope.toAccountId,
-            "type": "debit",
+            "fromAccountId": fromId,
+            "toAccountId": toId,
+            "type": transferType,
             "amount": $scope.Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.postTransactionViaEmail = function(fromId,toId,transferType){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": fromId,
+            "email": toId,
+            "type": transferType,
+            "amount": $scope.Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.createTransaction=function(fromId,toId,transferType){
+        if(fromId!=toId)
+        {
+
+            if(transferType=="via_email")
+            {
+                $scope.postTransactionViaEmail(fromId,toId,transferType);
+                alert('Request sent via email. Please Check Statements page for updates on the status of your transfer.');
+
+            }
+            else
+            {
+                $scope.postTransactionViaId(fromId, toId, transferType);
+                alert('Request sent. Please Check Statements page for updates on the status of your transfer.');
+            }
+        }
+
+
+
+        else {alert('Sender and Receiver Account Id cannot be the same');}
+    }
+
+    function getAllTransactionsByAccount(AccountId){
+        return $http.get(BACKEND_URL + '/api/transactions/account/'+ AccountId, {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+
+        });
+    }
+
+    $scope.fetchAllTransactionsByAccount=function(AccountId){
+        getAllTransactionsByAccount(AccountId).then(function successCallback(response) {
+            $scope.statements = response.data;
+        }, function errorCallback(response) {
+            toast('Error loading statement');
+        });
+    }
+
+    $scope.addMoney=function(AccountId)
+    {
+        var data=prompt("Enter_Amount","1000");
+        $scope.sendAddMoneyReq(AccountId,data);
+
+    }
+
+    $scope.sendAddMoneyReq = function(AccountId,Amount){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": AccountId,
+            "toAccountId": AccountId,
+            "type": "debit",
+            "amount": Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.withdrawMoney=function(AccountId){
+        var data=prompt("Enter_Amount","1000");
+        $scope.sendWithdrawMoneyReq(AccountId,data);
+    }
+
+    $scope.sendWithdrawMoneyReq = function(AccountId,Amount){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": AccountId,
+            "toAccountId": AccountId,
+            "type": "debit",
+            "amount": -Amount
 
         },{
             headers:{
@@ -119,7 +212,10 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         })
     };**/
 
+
     fetchAccounts();
+
+
 
 }];
 

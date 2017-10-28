@@ -50,22 +50,18 @@
                     <hr>
                     <div>
                         <label>Select Nature of Transfer:</label><br>
-                        <select class="form-control">
+                        <select ng-model="transferType" class="form-control">
                             <option value="" disabled selected>Select an Option</option>
-                            <option>Internal Transfer</option>
-                            <option>External Transfer</option>
+                            <option>credit</option>
+                            <option>debit</option>
+                            <option>via_email</option>
                         </select>
                     </div>
                     <br>
                     <div class="transfer-account-details">
 
-
-                        <label>Enter Name of Receiver : </label><br>
-                        <input type="text" class="form-control" placeholder="First Last">
-                        <br>
-
-                        <label>Enter Account ID of Receiver : </label><br>
-                        <input type="text" ng-model="toAccountId" class="form-control" placeholder="13bbv3454545nbvb">
+                        <label>Enter Account ID or Email ID of the Receiver : </label><br>
+                        <input type="text" ng-model="toAccountId" class="form-control" placeholder="6677889989asdjasj778 or roger@blah.com">
                         <br>
 
                         <label>Amount to be Transferred:</label>
@@ -84,7 +80,7 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" ng-click="createTransaction()" onclick=location.reload();>Transfer Funds</button>
+                    <button type="button" class="btn btn-success" ng-click="createTransaction(selectedAccount,toAccountId,transferType)">Transfer Funds</button>
                 </div>
             </div><!-- /. -->
 

@@ -1,0 +1,67 @@
+
+
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
+        </div>
+        <div class="col-sm-9 col-md-10 main">
+
+
+            <h2>Enter User Details</h2>
+            <br>
+
+            <div id="fund-transfer">
+                <div class="modal-body">
+                    <p>
+                        <label>Name:</label>
+                        <input type="text" class="form-control" placeholder="ex: Sushi"ng-model="name">
+                    </p>
+                    <p>
+                        <label>Address:</label>
+                        <input type="text" class="form-control" placeholder="ex: 1234 E University Dr" ng-model="address">
+                    </p>
+
+                    <p>
+                        <label>Username:</label>
+                        <input type="text" class="form-control" placeholder="ex: user123" ng-model="username">
+                    </p>
+
+                    <p>
+                        <label>Password:</label>
+                        <input type="password" class="form-control" placeholder="ex: user123" ng-model="password">
+                    </p>
+                    <p>
+                        <label>Phone No.:</label>
+                        <input type="number" class="form-control" placeholder="ex: 480-111-2338" ng-model="phNumber">
+                    </p>
+
+                    <p>
+                        <label>email:</label>
+                        <input type="email" class="form-control" placeholder="ex: blah@blah.com" ng-model="email">
+                    </p>
+
+                    <select ng-model="type" class="form-control">
+
+                        <option value="" disabled selected>Select a Type</option>
+                        <option >consumer</option>
+                        <option >merchant</option>
+
+                    </select>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" ng-click="createUser(username,email,password,phNumber,name,address,type)" onclick=location.reload();>Submit</button>
+                    </div>
+
+                </div><!-- /. -->
+
+            </div> <!-- /main -->
+
+        </div> <!-- /row -->
+
+    </div> <!-- /container -->
+
+ </div>

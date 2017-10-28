@@ -1,9 +1,6 @@
 module.exports = ['$scope','$http','$mdToast', 'authService', '$state', '$base64', function($scope, $http, $mdToast, authService, $state, $base64) {
     console.log('controller here');
 
-    $scope.email = 'admin_pall';
-    $scope.password = 'admin';
-
     function toast(msg) {
         $mdToast.show(
             $mdToast.simple()

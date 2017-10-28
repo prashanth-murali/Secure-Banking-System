@@ -11,7 +11,7 @@ public class User {
     private String name;
     private String address;
     private String phoneNumber;
-    private Boolean authorization;
+    private String authorization;
 
     @Indexed(unique = true)
     private String username;
@@ -21,7 +21,7 @@ public class User {
 
     public User() {}
 
-    public User(String id, String type, String name, String address, String phoneNumber, String username, String password, String email, Boolean authorization) {
+    public User(String id, String type, String name, String address, String phoneNumber, String username, String password, String email, String authorization) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -97,11 +97,11 @@ public class User {
         this.email = email;
     }
 
-    public Boolean getAuthorization() {
+    public String getAuthorization() {
         return authorization;
     }
 
-    public void setAuthorization(Boolean authorization) {
+    public void setAuthorization(String authorization) {
         this.authorization = authorization;
     }
 

@@ -173,7 +173,7 @@ module.exports = function makeWebpackConfig() {
       }
     }),
     new webpack.DefinePlugin({
-        BACKEND_URL: JSON.stringify(""),
+        BACKEND_URL: JSON.stringify("http://localhost:8081"),
     })
   ];
 

@@ -145,12 +145,6 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
             controller: externalUserController
         })
 
-        .state('critical_transactions', {
-            url: '/critical_transactions',
-            templateUrl: '../views/internal_users/critical_transactions.html',
-            controller: internalEmployeeController
-        })
-
         .state('dashboard_admin', {
             url: '/dashboard_admin',
             templateUrl: '../views/internal_users/dashboard_admin.html',
@@ -171,7 +165,8 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
 
         .state('dashboard_internal_manager', {
             url: '/dashboard_manager',
-            templateUrl: '../views/internal_users/dashboard_internal_manager.html'
+            templateUrl: '../views/internal_users/dashboard_internal_manager.html',
+            controller: internalEmployeeController
         })
 
         .state('dashboard_external_user', {
@@ -189,9 +184,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('edit_users', {
             url: '/edit_users',
             templateUrl: '../views/internal_users/edit_users.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: internalEmployeeController
         })
 
         .state('internal_emp_transactions', {

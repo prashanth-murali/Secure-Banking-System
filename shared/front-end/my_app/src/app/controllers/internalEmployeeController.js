@@ -84,7 +84,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
 
 
-    $scope.createUser = function(username,email,password,phNumber,name,address,type){
+    $scope.postCreateUser = function(username,email,password,phNumber,name,address,type){
         return $http.post(BACKEND_URL+'/api/users/',{
             "type": type,
             "name": name,
@@ -100,6 +100,13 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
+    $scope.createUser=function(username,email,password,phNumber,name,address,type,userId,amount,accountType)
+    {
+        $scope.postCreateUser(username,email,password,phNumber,name,address,type);
+        $scope.createAccount(userId,amount,accountType);
+        alert('Request sent. Check your Email.');
+
+    }
     function fetchUsers() {
         getUsers().then(function successCallback(response) {
             $scope.users = response.data;
@@ -108,11 +115,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    $scope.postTransaction = function(fromId,toId){
+    $scope.postTransactionViaId = function(fromId,toId,transferType){
         return $http.post(BACKEND_URL+'/api/transactions/',{
             "fromAccountId": fromId,
             "toAccountId": toId,
-            "type": "debit",
+            "type": transferType,
             "amount": $scope.Amount
 
         },{
@@ -122,13 +129,56 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    $scope.createTransaction=function(fromId,toId){
+    $scope.postTransactionViaEmail = function(fromId,toId,transferType){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": fromId,
+            "email": toId,
+            "type": transferType,
+            "amount": $scope.Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.createTransaction=function(fromId,toId,transferType){
         if(fromId!=toId)
         {
-            $scope.postTransaction(fromId,toId);
+
+            if(transferType=="via_email")
+            {
+                $scope.postTransactionViaEmail(fromId,toId,transferType);
+                alert('Request sent via email. Please Check Statements page for updates on the status of your transfer.');
+
+            }
+            else
+            {
+                $scope.postTransactionViaId(fromId, toId, transferType);
+                alert('Request sent. Please Check Statements page for updates on the status of your transfer.');
+            }
         }
 
-        else {toast('Sender and Receiver Account Id cannot be the same');}
+
+
+        else {alert('Sender and Receiver Account Id cannot be the same');}
+    }
+
+    $scope.createAccount=function(userID,amount,accountType){
+
+        {
+            return $http.post(BACKEND_URL+'/api/accounts/',{
+                "userId": userID,
+                "amount": amount,
+                "accountType": accountType
+            },{
+                headers:{
+                    "authorization": authService.getAuth()
+                }
+            });
+        }
+
     }
 
     function getAllTransactions(){

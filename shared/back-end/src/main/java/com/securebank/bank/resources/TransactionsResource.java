@@ -111,6 +111,34 @@ public class TransactionsResource {
         //User fromUser = userRepository.findById(my_account.getUserId());
         //User toUser = userRepository.findById(target_account.getUserId());
 
+        //sent by email
+        if (trans.getType().equals("via_email") && my_account.getAccountType().equals("checking")) {
+            if (roleLevel.get(loggedInUser.getType()) == 0) {
+                User toUser = userRepository.findByEmail(trans.getEmail());
+                if (toUser == null) {
+                    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "target user not exist");
+                }
+                else if (toUser.equals(loggedInUser)) {
+                    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Cannot sent to yourself by email");
+                }
+                else {
+                    int checking = 0;
+                    List<Account> account = accountRepository.findByUserId(toUser.getId());
+                    for (int i = 0; i < account.size(); i++) {
+                        if (account.get(i).getAccountType().equals("checking")){
+                            target_account = account.get(i);
+                            checking = 1;
+                        }
+                    }
+                    if (checking == 0)
+                        throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "target checking account not exist");
+                }
+            }
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Only can transact through your checking account");
+
+
         //make sure the target account is exist
         if (target_account == null || my_account == null) {
             logger.info("Unable to find account from Authorization");

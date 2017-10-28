@@ -19,6 +19,7 @@ import dashboardAdminController from './controllers/dashBoardAdminController';
 import dashboardAdminEditUser from './controllers/dashBoardAdminEditUserController';
 import externalUserController from './controllers/externalUserController';
 import internalEmployeeController from './controllers/internalEmployeeController';
+import logFileController from './controllers/logFileController';
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -241,12 +242,16 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
             controller: internalEmployeeController
         })
 
+        .state('create_account', {
+            url: '/create_account',
+            templateUrl: '../views/internal_users/create_account.html',
+            controller: internalEmployeeController
+        })
+
         .state('system_log', {
             url: '/system_log',
             templateUrl: '../views/internal_users/system_log.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: logFileController
         });
 
 

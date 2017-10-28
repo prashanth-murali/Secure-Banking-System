@@ -100,10 +100,9 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    $scope.createUser=function(username,email,password,phNumber,name,address,type,userId,amount,accountType)
+    $scope.createUser=function(username,email,password,phNumber,name,address,type)
     {
         $scope.postCreateUser(username,email,password,phNumber,name,address,type);
-        $scope.createAccount(userId,amount,accountType);
         alert('Request sent. Check your Email.');
 
     }
@@ -165,7 +164,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         else {alert('Sender and Receiver Account Id cannot be the same');}
     }
 
-    $scope.createAccount=function(userID,amount,accountType){
+    $scope.postcreateAccount=function(userID,amount,accountType){
 
         {
             return $http.post(BACKEND_URL+'/api/accounts/',{
@@ -180,6 +179,12 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         }
 
     }
+
+    $scope.createAccount=function(userID,amount,accountType){
+        $scope.postcreateAccount(userID,amount,accountType);
+    }
+
+
 
     function getAllTransactions(){
         return $http.get(BACKEND_URL + '/api/transactions/', {

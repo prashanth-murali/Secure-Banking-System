@@ -1,4 +1,5 @@
 module.exports = ['$sessionStorage', function($sessionStorage){
+    console.log('$sessionStorage', $sessionStorage);
     return {
         getAuth: function(){
             return $sessionStorage.auth;

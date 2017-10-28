@@ -22,11 +22,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    $scope.postTransaction = function(fromId,toId){
+    $scope.postTransaction = function(fromId,toId,transferType){
         return $http.post(BACKEND_URL+'/api/transactions/',{
             "fromAccountId": fromId,
             "toAccountId": toId,
-            "type": "debit",
+            "type": transferType,
             "amount": $scope.Amount
 
         },{
@@ -36,13 +36,14 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    $scope.createTransaction=function(fromId,toId){
+    $scope.createTransaction=function(fromId,toId,transferType){
         if(fromId!=toId)
         {
-            $scope.postTransaction(fromId,toId);
+            $scope.postTransaction(fromId,toId,transferType);
+            alert('Request sent. Please Check Statements page for updates on the status of your transfer.');
         }
 
-        else {toast('Sender and Receiver Account Id cannot be the same');}
+        else {alert('Sender and Receiver Account Id cannot be the same');}
     }
 
     function getAllTransactionsByAccount(AccountId){
@@ -184,7 +185,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             toast('Failed to delete User');
         })
     };**/
-
 
 
     fetchAccounts();

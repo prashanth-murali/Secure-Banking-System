@@ -22,8 +22,9 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         );
     }
 
-    $scope.update = function() {
+    /**$scope.update = function() {
         console.log('update user: ', $scope.storage.editUser);
+        $http.get()
         $http({
             url:$sessionStorage.editUser.url,
             method: "PUT",
@@ -32,7 +33,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
                 "authorization": authService.getAuth(),
             }
         });
-    };
+    };**/
+
+
+
+/**    $scope.update = function(){}**/
 
     $scope.setRandomData = function () {
         setRandomCreateData();

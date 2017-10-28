@@ -1,35 +1,67 @@
-<div class="col-sm-9 col-md-10 main">
-        <!--create form/ -->
-        <p>
-        <h2>Search User</h2>
-        <label>Search:</label>
-        <input type="text" class="form-control" placeholder="ex: a.willis" ng-model="search">
-        </p>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Username</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>User Type</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="user in users | filter: search">
-                <td>{{user.username}}</td>
-                <td>{{user.name}}</td>
-                <td>{{user.email}}</td>
-                <td>{{user.phoneNumber}}</td>
-                <td>{{user.type}}</td>
-                <td><button type="button" class="btn btn-primary" ng-click="editUser(user)">Edit</button></td>
-                <td><button type="button" class="btn btn-danger" ng-click="deleteUser(user)">Delete</button></td>
-            </tr>
-            </tbody>
-        </table>
 
-    </div><!-- /payment -->
+<div class="container container-main" role="main">
 
-</div> <!-- /main -->
+    <div class="row">
+
+        <div class="col-sm-9 col-md-10 main">
+
+            <h3>Select a User </h3>
+
+            <div id="fund-transfer">
+                <div class="modal-body">
+
+                    <label>Select Account Id:</label>
+                    <select ng-model="selectedAccount" class="form-control">
+
+                        <option value="" disabled selected>Select a User</option>
+                        <option ng-repeat="user in users" value={{selectedAccount=user.id}}>
+                            {{user.type | uppercase}} - {{user.name}}
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="fetchUserById(selectedAccount)">Get User Details</button>
+                </div>
+
+                <h3>User Details </h3>
+
+                <label>User Id : </label><br>
+                <p><i>{{individual.id}}</i></p>
+                <br>
+                <label>Name : </label><br>
+                <input type="text" class="form-control" ng-model="individual.name">
+                <br>
+                <label>Address : </label><br>
+                <input type="text" class="form-control" ng-model="individual.address">
+                <br>
+                <label>Phone Number : </label><br>
+                <input type="text" class="form-control" ng-model="individual.phoneNumber">
+                <br>
+                <label>Type : </label><br>
+
+                <select ng-model="individual.type" class="form-control">
+
+                    <option value="" disabled selected>{{individual.type}}</option>
+                    <option>administrator</option>
+                    <option>tier2</option>
+                    <option>tier1</option>
+                    <option>consumer</option>
+                    <option>merchant</option>
+                </select>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="update(individual.address,individual.email,individual.id,individual.name,individual.password,individual.phoneNumber,individual.type,individual.username)">Update</button>
+                </div>
+
+
+            </div><!-- /. -->
+
+        </div> <!-- /main -->
+
+    </div> <!-- /row -->
+
+</div> <!-- /container -->
+

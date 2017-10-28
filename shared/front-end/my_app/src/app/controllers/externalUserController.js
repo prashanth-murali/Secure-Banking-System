@@ -22,7 +22,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    $scope.postTransaction = function(fromId,toId,transferType){
+    $scope.postTransactionViaId = function(fromId,toId,transferType){
         return $http.post(BACKEND_URL+'/api/transactions/',{
             "fromAccountId": fromId,
             "toAccountId": toId,
@@ -36,12 +36,38 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
+    $scope.postTransactionViaEmail = function(fromId,toId,transferType){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": fromId,
+            "email": toId,
+            "type": transferType,
+            "amount": $scope.Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
     $scope.createTransaction=function(fromId,toId,transferType){
         if(fromId!=toId)
         {
-            $scope.postTransaction(fromId,toId,transferType);
-            alert('Request sent. Please Check Statements page for updates on the status of your transfer.');
+
+            if(transferType=="via_email")
+            {
+                $scope.postTransactionViaEmail(fromId,toId,transferType);
+                alert('Request sent via email. Please Check Statements page for updates on the status of your transfer.');
+
+            }
+            else
+            {
+                $scope.postTransactionViaId(fromId, toId, transferType);
+                alert('Request sent. Please Check Statements page for updates on the status of your transfer.');
+            }
         }
+
+
 
         else {alert('Sender and Receiver Account Id cannot be the same');}
     }

@@ -20,6 +20,27 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
+    $scope.update = function(address,email,id,name,password,phoneNumber,type,username){
+        return $http.put(BACKEND_URL+'/api/users/'+id,{
+            "address":address,
+            "email":email,
+            "id": id,
+            "name": name,
+            "password": password,
+            "phoneNumber":phoneNumber,
+            "type":type,
+            "username": username
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        }).then(function success(){
+            alert('Successfully updated');
+        }, function errorCallback(){
+            alert('Failed to update User');
+        })
+    };
+
     function setRandomCreateData() {
         $scope.create = {
             "username": randomString(),
@@ -31,6 +52,23 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             "uType": "tier1",
             "isMerchant": false,
         };
+    }
+
+    function getUserById(UserId)
+    {
+        return $http.get(BACKEND_URL + '/api/users/'+UserId, {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.fetchUserById=function(UserId){
+        getUserById(UserId).then(function successCallback(response) {
+            $scope.individual = response.data;
+        }, function errorCallback(response) {
+            toast('Error loading user details');
+        });
     }
 
     function createUser(){

@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="modal-footer">
-                <button type="button" class="btn btn-success" ng-click="fetchAllTransactionsByAccount(selectedAccount,toAccountId)">Get Transactions</button>
+                <button type="button" class="btn btn-success" ng-click="fetchAllTransactionsByAccount(selectedAccount)">Get Transactions</button>
                 </div>
 
                 <h3>Transactions List </h3>
@@ -43,7 +43,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="statement in statements | filter: search |filter:filterInternal" class="transaction" ng-model="TransactionId">
+                    <tr ng-repeat="statement in statements | filter: search" class="transaction" ng-model="TransactionId">
 
                         <td><a href="#">{{statement.transactionId}}</a></td>
                         <td>{{statement.toAccountId}}</td>
@@ -53,6 +53,11 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-ng-click="exportAction('pdf')">Download</button>
+                </div>
+
 
             </div><!-- /. -->
 

@@ -186,7 +186,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     };**/
 
 
-
     fetchAccounts();
 
 

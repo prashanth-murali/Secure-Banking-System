@@ -125,11 +125,50 @@ public class UserResource {
 
     }
 
+    /*
+         * Password should be less than 15 and more than 8 characters in length.
+         * Password should contain at least one upper case and one lower case alphabet.
+         * Password should contain at least one number.
+         * Password should contain at least one special character.
+         */
+
+    public void passwordValidation(String userName, String password)
+    {
+        if (password.length() > 15 || password.length() < 8)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should be less than 15 and more than 8 characters in length.");
+        if (password.indexOf(userName) > -1)
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password Should not be same as user name");
+        }
+        String upperCaseChars = "(.*[A-Z].*)";
+        if (!password.matches(upperCaseChars ))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should contain atleast one upper case alphabet");
+        }
+        String lowerCaseChars = "(.*[a-z].*)";
+        if (!password.matches(lowerCaseChars ))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should contain atleast one lower case alphabet");
+        }
+        String numbers = "(.*[0-9].*)";
+        if (!password.matches(numbers ))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should contain atleast one number.");
+        }
+        String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
+        if (!password.matches(specialChars ))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should contain atleast one special character");
+        }
+    }
+
     @POST
     public User createUser(User user, @HeaderParam("Authorization") String authorization){
         String[] types = {"tier1", "tier2", "administrator", "consumer","merchant"};
         String userType = user.getType();
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
+
+        passwordValidation(user.getUsername(), user.getPassword());
 
         if(Arrays.asList(types).contains(userType)) {
             if (user.getType().equals("tier1") || user.getType().equals("tier2")) {

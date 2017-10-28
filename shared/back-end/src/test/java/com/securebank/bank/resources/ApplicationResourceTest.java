@@ -41,9 +41,9 @@ public class ApplicationResourceTest {
     }
 
 
-    @Test
-    public void name() throws Exception {
-        HttpResponse<String> stringHttpResponse = Unirest.get(TestConfig.BASE_URL+"/version").asString();
-        System.out.println(stringHttpResponse.getBody());
-    }
+//    @Test
+//    public void name() throws Exception {
+//        HttpResponse<String> stringHttpResponse = Unirest.get(TestConfig.BASE_URL+"/version").asString();
+//        System.out.println(stringHttpResponse.getBody());
+//    }
 }

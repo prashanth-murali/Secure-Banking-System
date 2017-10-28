@@ -253,7 +253,7 @@ public class UserResource {
             userRepository.deleteById(userId);
             return "{\"status\":\"success\"}";
         }
-        else if (roleLevel.get(loggedInUser.getType()) == 3 && roleLevel.get(byId.getType()) < 3){
+        else if (roleLevel.get(loggedInUser.getType()) == 3 && (roleLevel.get(byId.getType()) == 1 || roleLevel.get(byId.getType()) == 2)){
             userRepository.deleteById(userId);
             return "{\"status\":\"success\"}";
         }

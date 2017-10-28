@@ -24,51 +24,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="account in accounts | filter: search">
+                <tr ng-repeat="account in accounts | filter: search" ng-model="AccountId">
 
                     <td><a href="#">{{account.accountType | uppercase}}</a></td>
                     <td>{{account.id}}</td>
                     <td>{{account.amount | currency }}</td>
-
+                    <td><button class="btn btn-success" value={{AccountId=account.id}} ng-click="addMoney(AccountId)" >Add</button></td>
+                    <td><button class="btn btn-danger" value={{AccountId=account.id}}  ng-click="withdrawMoney(AccountId)">Withdraw</button></td>
                 </tr>
                 </tbody>
             </table>
-
-            <div id="add-withdraw" class="modal fade">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Add / Withdraw </h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>
-                                <label>Account:</label>
-                                <select class="form-control">
-                                    <option>Select an Account</option>
-                                    <option>${User}'s Checking Account (*1234)</option>
-                                    <option>${User}'s Savings Account (*5678)</option>
-                                </select>
-                            </p>
-                            <hr>
-                            <p>
-                                <label>Current Balance:</label>
-                            <p><i> Please select an account </i></p>
-                            </p>
-                            <hr>
-                            <p>
-                                <label>Amount to be Credited / Debited (in USD):</label>
-                                <input type="text" class="form-control" placeholder="0.00">
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-success">Credit Funds</button>
-                            <button type="button" class="btn btn-danger">Debit Funds</button>
-                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
 
         </div> <!-- /main -->
 

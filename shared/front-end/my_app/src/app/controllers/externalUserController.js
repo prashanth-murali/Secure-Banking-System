@@ -22,12 +22,78 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    $scope.createTransaction = function(){
+    $scope.postTransaction = function(fromId,toId){
         return $http.post(BACKEND_URL+'/api/transactions/',{
-            "fromAccountId": $scope.selectedAccount,
-            "toAccountId": $scope.toAccountId,
+            "fromAccountId": fromId,
+            "toAccountId": toId,
             "type": "debit",
             "amount": $scope.Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.createTransaction=function(fromId,toId){
+        if(fromId!=toId)
+        {
+            $scope.postTransaction(fromId,toId);
+        }
+
+        else {toast('Sender and Receiver Account Id cannot be the same');}
+    }
+
+    function getAllTransactionsByAccount(AccountId){
+        return $http.get(BACKEND_URL + '/api/transactions/account/'+ AccountId, {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+
+        });
+    }
+
+    $scope.fetchAllTransactionsByAccount=function(AccountId){
+        getAllTransactionsByAccount(AccountId).then(function successCallback(response) {
+            $scope.statements = response.data;
+        }, function errorCallback(response) {
+            toast('Error loading statement');
+        });
+    }
+
+    $scope.addMoney=function(AccountId)
+    {
+        var data=prompt("Enter_Amount","1000");
+        $scope.sendAddMoneyReq(AccountId,data);
+
+    }
+
+    $scope.sendAddMoneyReq = function(AccountId,Amount){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": AccountId,
+            "toAccountId": AccountId,
+            "type": "debit",
+            "amount": Amount
+
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.withdrawMoney=function(AccountId){
+        var data=prompt("Enter_Amount","1000");
+        $scope.sendWithdrawMoneyReq(AccountId,data);
+    }
+
+    $scope.sendWithdrawMoneyReq = function(AccountId,Amount){
+        return $http.post(BACKEND_URL+'/api/transactions/',{
+            "fromAccountId": AccountId,
+            "toAccountId": AccountId,
+            "type": "debit",
+            "amount": -Amount
 
         },{
             headers:{
@@ -119,7 +185,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         })
     };**/
 
+
+
     fetchAccounts();
+
+
 
 }];
 

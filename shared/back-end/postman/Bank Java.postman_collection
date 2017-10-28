@@ -23,7 +23,7 @@
 								"showPassword": false
 							}
 						},
-						"url": "http://localhost:8080/users",
+						"url": "https://encrypted.ngrok.io/api/users",
 						"method": "GET",
 						"header": [
 							{
@@ -40,7 +40,7 @@
 				{
 					"name": "get user",
 					"request": {
-						"url": "http://localhost:8080/users/59ebb20cf832aa27410af181",
+						"url": "https://encrypted.ngrok.io/api/users/59ebb20cf832aa27410af181",
 						"method": "GET",
 						"header": [
 							{
@@ -60,7 +60,7 @@
 				{
 					"name": "create user",
 					"request": {
-						"url": "http://localhost:8080/users",
+						"url": "https://encrypted.ngrok.io/api/users",
 						"method": "POST",
 						"header": [
 							{
@@ -80,7 +80,7 @@
 				{
 					"name": "delete user",
 					"request": {
-						"url": "http://localhost:8080/users/59ebb6d0c8a96c2a838225b0",
+						"url": "https://encrypted.ngrok.io/api/users/59ebb6d0c8a96c2a838225b0",
 						"method": "DELETE",
 						"header": [
 							{
@@ -106,7 +106,7 @@
 				{
 					"name": "login",
 					"request": {
-						"url": "http://localhost:8080/login",
+						"url": "https://encrypted.ngrok.io/api/login",
 						"method": "POST",
 						"header": [
 							{
@@ -141,7 +141,7 @@
 								"showPassword": false
 							}
 						},
-						"url": "http://localhost:8080/accounts",
+						"url": "https://encrypted.ngrok.io/api/accounts",
 						"method": "GET",
 						"header": [
 							{
@@ -158,7 +158,7 @@
 							"id": "44f9ef9e-75d3-416f-b044-a515038e352c",
 							"name": "Get Accounts",
 							"originalRequest": {
-								"url": "http://localhost:8080/accounts",
+								"url": "https://encrypted.ngrok.io/api/accounts",
 								"method": "GET",
 								"header": [
 									{
@@ -236,7 +236,7 @@
 								"showPassword": false
 							}
 						},
-						"url": "http://localhost:8080/accounts",
+						"url": "https://encrypted.ngrok.io/api/accounts",
 						"method": "POST",
 						"header": [
 							{
@@ -270,7 +270,7 @@
 								"showPassword": false
 							}
 						},
-						"url": "http://localhost:8080/accounts/59ece44494939b745efeab2b",
+						"url": "https://encrypted.ngrok.io/api/accounts/59ece44494939b745efeab2b",
 						"method": "DELETE",
 						"header": [
 							{
@@ -304,7 +304,7 @@
 								"showPassword": false
 							}
 						},
-						"url": "http://localhost:8080/accounts/59ece3f694939b745efeab26",
+						"url": "https://encrypted.ngrok.io/api/accounts/59ece3f694939b745efeab26",
 						"method": "PUT",
 						"header": [
 							{
@@ -338,7 +338,7 @@
 								"showPassword": false
 							}
 						},
-						"url": "http://localhost:8080/accounts/user/59ebb4bac8a96c2a286732d1",
+						"url": "https://encrypted.ngrok.io/api/accounts/user/59ebb4bac8a96c2a286732d1",
 						"method": "GET",
 						"header": [
 							{
@@ -364,7 +364,7 @@
 								"showPassword": false
 							}
 						},
-						"url": "http://localhost:8080/accounts/59ece3f694939b745efeab26",
+						"url": "https://encrypted.ngrok.io/api/accounts/59ece3f694939b745efeab26",
 						"method": "GET",
 						"header": [
 							{
@@ -381,7 +381,7 @@
 							"id": "f7ad1fcc-a7e1-4c8c-85ea-6a9a2b7780e5",
 							"name": "Get Accounts",
 							"originalRequest": {
-								"url": "http://localhost:8080/accounts",
+								"url": "https://encrypted.ngrok.io/api/accounts",
 								"method": "GET",
 								"header": [
 									{
@@ -456,7 +456,7 @@
 				{
 					"name": "Get all Transactions",
 					"request": {
-						"url": "http://localhost:8080/transactions",
+						"url": "https://encrypted.ngrok.io/api/transactions",
 						"method": "GET",
 						"header": [],
 						"body": {},
@@ -467,7 +467,7 @@
 				{
 					"name": "Create Transaction",
 					"request": {
-						"url": "http://localhost:8080/transactions",
+						"url": "https://encrypted.ngrok.io/api/transactions",
 						"method": "POST",
 						"header": [
 							{
@@ -478,7 +478,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"fromAccountId\": \"59ece3f694939b745efeab26\",\n  \"toAcccountId\": \"59ece40894939b745efeab27\",\n  \"type\": \"debit\",\n  \"amount\": 10.50\n}"
+							"raw": "{\n  \"fromAccountId\": \"59ece3f694939b745efeab26\",\n  \"toAccountId\": \"59ece40894939b745efeab27\",\n  \"type\": \"debit\",\n  \"amount\": 10.50\n}"
 						},
 						"description": ""
 					},
@@ -487,7 +487,7 @@
 				{
 					"name": "Update Transaction",
 					"request": {
-						"url": "http://localhost:8080/transactions/59ece6bd94939b74b4021362",
+						"url": "https://encrypted.ngrok.io/api/transactions/59ece6bd94939b74b4021362",
 						"method": "PUT",
 						"header": [
 							{
@@ -507,7 +507,7 @@
 				{
 					"name": "Get all Transactions For Account",
 					"request": {
-						"url": "http://localhost:8080/transactions/account/59ece3f694939b745efeab26",
+						"url": "https://encrypted.ngrok.io/api/transactions/account/59ece3f694939b745efeab26",
 						"method": "GET",
 						"header": [],
 						"body": {},
@@ -520,7 +520,7 @@
 		{
 			"name": "application status",
 			"request": {
-				"url": "http://localhost:8080/",
+				"url": "https://encrypted.ngrok.io/api/",
 				"method": "GET",
 				"header": [],
 				"body": {},

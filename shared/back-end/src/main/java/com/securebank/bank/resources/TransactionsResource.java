@@ -35,7 +35,7 @@ import java.util.Date;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TransactionsResource {
     Logger logger = LoggerFactory.getLogger(TransactionsResource.class);
-    
+
     @Autowired
     TransactionsRepository transactionsRepository;
 
@@ -55,7 +55,8 @@ public class TransactionsResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         if (roleLevel.get(loggedInUser.getType()) == 0 || roleLevel.get(loggedInUser.getType()) == 3) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
@@ -74,7 +75,8 @@ public class TransactionsResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         Transaction transaction = transactionsRepository.findByTransactionId(transId);
         Account fromAccount = accountRepository.findById(transaction.getFromAccountId());
@@ -101,7 +103,8 @@ public class TransactionsResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         Account target_account = accountRepository.findById(trans.getToAccountId());
         Account my_account = accountRepository.findById(trans.getFromAccountId());
@@ -115,9 +118,19 @@ public class TransactionsResource {
         }
 
         //make sure my_account money is enough for trasaction
-        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < trans.getAmount()) {
-            logger.info("Unable to transaction, money is not enough");
-            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        if (my_account.getAmount() <= 0.0 || my_account.getAmount() < Math.abs(trans.getAmount())) {
+            if(trans.getFromAccountId().equals(trans.getToAccountId()) && trans.getAmount() < 0 )
+            {
+                logger.info("Unable to transaction, money is not enough");
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+            }
+
+            if(!trans.getFromAccountId().equals(trans.getToAccountId()))
+            {
+                logger.info("Unable to transaction, money is not enough");
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+            }
+
         }
 
         //define the critical transaction: all day transaction amount > 5000 -> critical transaciotn
@@ -126,14 +139,14 @@ public class TransactionsResource {
         if (list != null){
             for (Transaction transaction_history : list) {
                 if (my_account.getId().equals(transaction_history.getFromAccountId())) {
-                    critical_limit = critical_limit + transaction_history.getAmount();
+                    critical_limit = critical_limit + Math.abs(transaction_history.getAmount());
                 }
             }
         }
 
-        critical_limit = critical_limit + trans.getAmount();
+        critical_limit = critical_limit + Math.abs(trans.getAmount());
 
-        if (critical_limit > 5000) trans.setCritical(true);
+        if (critical_limit > Math.abs(5000)) trans.setCritical(true);
         else trans.setCritical(false);
 
 
@@ -141,14 +154,14 @@ public class TransactionsResource {
         if (loggedInUser.getId().equals(my_account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
             //if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
                 trans.setStatus("pending");
-                trans.setCreatedDate(new Date());
+                trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 return transactionsRepository.save(trans);
         }
         else if (roleLevel.get(loggedInUser.getType()) == 1) {
             if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
                 trans.setStatus("pending");
-                trans.setCreatedDate(new Date());
+                trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 return transactionsRepository.save(trans);
             }
@@ -158,7 +171,7 @@ public class TransactionsResource {
                 my_account.setAmount(my_remain);
                 double target_remain = target_account.getAmount() + trans.getAmount();
                 target_account.setAmount(target_remain);
-                trans.setCreatedDate(new Date());
+                trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 accountRepository.save(my_account);
                 accountRepository.save(target_account);
@@ -171,7 +184,7 @@ public class TransactionsResource {
                 my_account.setAmount(my_remain);
                 double target_remain = target_account.getAmount() + trans.getAmount();
                 target_account.setAmount(target_remain);
-                trans.setCreatedDate(new Date());
+                trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
                 accountRepository.save(my_account);
                 accountRepository.save(target_account);
@@ -207,7 +220,8 @@ public class TransactionsResource {
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
-        roleLevel.put("external", 0);
+        roleLevel.put("merchant", 0);
+        roleLevel.put("consumer", 0);
 
         if (byId.getCritical() && byId.getStatus().equals("pending") && roleLevel.get(loggedInUser.getType()) == 2) {
 
@@ -219,10 +233,19 @@ public class TransactionsResource {
             }
 
             //make sure my_account money is enough for trasaction
-            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
-                logger.info("Unable to transaction, money is not enough");
-                byId.setStatus("denied");
-                return transactionsRepository.save(byId);
+            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < Math.abs(byId.getAmount())) {
+
+                if(byId.getFromAccountId().equals(byId.getToAccountId()) && byId.getAmount()<0) {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
+
+                if(!byId.getFromAccountId().equals(byId.getToAccountId())) {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
             }
 
             if (trans.getStatus().equals("approved")) {
@@ -231,7 +254,7 @@ public class TransactionsResource {
                 myAccount.setAmount(myRemain);
                 double targetRemain = targetAccount.getAmount() + byId.getAmount();
                 targetAccount.setAmount(targetRemain);
-                byId.setCreatedDate(new Date());
+                byId.setCreatedDate(new Date().toString());
                 accountRepository.save(myAccount);
                 accountRepository.save(targetAccount);
                 return transactionsRepository.save(byId);
@@ -251,10 +274,20 @@ public class TransactionsResource {
             }
 
             //make sure my_account money is enough for trasaction
-            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < byId.getAmount()) {
+            if (myAccount.getAmount() <= 0.0 || myAccount.getAmount() < Math.abs(byId.getAmount())) {
+                if(byId.getFromAccountId().equals(byId.getToAccountId()) && byId.getAmount()<0)
+                {
                 logger.info("Unable to transaction, money is not enough");
                 byId.setStatus("denied");
                 return transactionsRepository.save(byId);
+                }
+
+                if(!byId.getFromAccountId().equals(byId.getToAccountId()))
+                {
+                    logger.info("Unable to transaction, money is not enough");
+                    byId.setStatus("denied");
+                    return transactionsRepository.save(byId);
+                }
             }
 
             if (trans.getStatus().equals("approved")) {
@@ -263,7 +296,7 @@ public class TransactionsResource {
                 myAccount.setAmount(myRemain);
                 double targetRemain = targetAccount.getAmount() + byId.getAmount();
                 targetAccount.setAmount(targetRemain);
-                byId.setCreatedDate(new Date());
+                byId.setCreatedDate(new Date().toString());
                 accountRepository.save(myAccount);
                 accountRepository.save(targetAccount);
                 return transactionsRepository.save(byId);

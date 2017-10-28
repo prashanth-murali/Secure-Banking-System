@@ -7,7 +7,7 @@ public class User {
 
     @Id
     private String id;
-    private String type;// tier1,tier2,administrator,external todo: add validation
+    private String type;// tier1,tier2,administrator, merchant, consumer
     private String name;
     private String address;
     private String phoneNumber;

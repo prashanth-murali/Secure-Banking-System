@@ -91,7 +91,8 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             "address": address,
             "phoneNumber": phNumber,
             "username": username,
-            "password": password
+            "password": password,
+            "email":email
         },{
             headers:{
                 "authorization": authService.getAuth()

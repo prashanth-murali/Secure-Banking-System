@@ -47,6 +47,33 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         return false;
     };
 
+    $scope.filterUser=function(user)
+    {
+        if(user.type=='consumer' || user.type=='merchant')
+        {
+            return true;
+
+        }
+        return false;
+    };
+
+    function getUserById(UserId)
+    {
+        return $http.get(BACKEND_URL + '/api/users/'+UserId, {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.fetchUserById=function(UserId){
+        getUserById(UserId).then(function successCallback(response) {
+            $scope.individual = response.data;
+        }, function errorCallback(response) {
+            toast('Error loading user details');
+        });
+    };
+
     $scope.filterManager=function(transaction)
     {
         if(transaction.status=='pending')

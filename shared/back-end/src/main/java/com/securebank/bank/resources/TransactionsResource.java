@@ -243,6 +243,27 @@ public class TransactionsResource {
     }
 
 
+    @GET
+    @Path("/merchantlist")
+    public List<Account> getAllMerchantAccounts (@HeaderParam("Authorization") String authorization){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        if (loggedInUser.getType().equals("tier1")) {
+            List<Account> accounts = new ArrayList<>();
+            List<User> users = userRepository.findByType("merchant");
+            for (User user : users) {
+                List<Account> temp = accountRepository.findByUserId(user.getId());
+                for (Account account : temp) {
+                    if (account.getAccountType().equals("checking") || account.getAccountType().equals("savings"))
+                        accounts.add(account);
+                }
+            }
+            return accounts;
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+    }
+
+
 
     // update transaction, approve for the critical transaction
     @PUT

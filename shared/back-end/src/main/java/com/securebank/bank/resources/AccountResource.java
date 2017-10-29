@@ -133,8 +133,15 @@ public class AccountResource {
         if ((roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true")) || roleLevel.get(loggedInUser.getType()) == 2) {
             String acct = account.getAccountType();
             if(Arrays.asList(types).contains(acct)) {
-                account.setId(null);// ensure that id is set by database
-                return accountRepository.save(account);
+                if (acct.equals("credit")) {
+                    //generate credit card number
+                    account.setId(null);// ensure that id is set by database
+                    return accountRepository.save(account);
+                }
+                else {
+                    account.setId(null);// ensure that id is set by database
+                    return accountRepository.save(account);
+                }
             }
             else
                 throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Account Type");

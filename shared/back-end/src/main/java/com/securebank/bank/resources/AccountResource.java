@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.securebank.bank.services.EmailService;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -134,6 +136,9 @@ public class AccountResource {
             String acct = account.getAccountType();
             if(Arrays.asList(types).contains(acct)) {
                 account.setId(null);// ensure that id is set by database
+                String emailMessageBody = "Dear Customer, your bank account has been created. Happy Banking with us!!!";
+                EmailService emailService = new EmailService();
+                emailService.sendEmail(accountUser.getEmail(), emailMessageBody);
                 return accountRepository.save(account);
             }
             else

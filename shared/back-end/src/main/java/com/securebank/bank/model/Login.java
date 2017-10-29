@@ -1,5 +1,11 @@
 package com.securebank.bank.model;
 
+import com.securebank.bank.services.errors.ApplicationValidationError;
+
+import javax.ws.rs.core.Response;
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+
 public class Login {
     private String username;
     private String password;
@@ -29,6 +35,15 @@ public class Login {
     }
 
     public String getPassword() {
+        String password = this.password;
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            password = DatatypeConverter.printHexBinary(md.digest());
+        } catch (Exception e) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error 3");
+        }
         return password;
     }
 

@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
+import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
 import java.util.Base64;
 
 
@@ -35,6 +37,15 @@ public class LoggedInService {
             String username = pieces[0];
             String otptoken = pieces[1];
 
+            MessageDigest md = null;
+            try {
+                md = MessageDigest.getInstance("MD5");
+                md.update(password.getBytes());
+                password = DatatypeConverter.printHexBinary(md.digest());
+            } catch (Exception e) {
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error 1");
+            }
+            System.out.println(password);
             User byUsername = userRepository.findByUsername(username);
             if(byUsername == null){
                 logger.info("Unable to find user from Authorization");

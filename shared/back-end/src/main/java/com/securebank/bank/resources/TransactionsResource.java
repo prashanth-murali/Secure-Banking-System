@@ -1,22 +1,21 @@
 package com.securebank.bank.resources;
 
 import com.securebank.bank.model.Account;
+import com.securebank.bank.model.StatmentCSV;
 import com.securebank.bank.model.Transaction;
 import com.securebank.bank.model.User;
 import com.securebank.bank.services.AccountRepository;
+import com.securebank.bank.services.EmailService;
+import com.securebank.bank.services.LoggedInService;
 import com.securebank.bank.services.TransactionsRepository;
 import com.securebank.bank.services.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import com.securebank.bank.services.errors.ApplicationValidationError;
-import com.securebank.bank.services.LoggedInService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -25,9 +24,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
-import java.util.*;
+import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Path("/transactions")
@@ -47,6 +53,9 @@ public class TransactionsResource {
 
     @Autowired
     LoggedInService loggedInService;
+
+    @Autowired
+    EmailService emailService;
 
     @GET// need to give some validation to only for administrator or external only can see their own transaction history
     public List<Transaction> getTransactions(@HeaderParam("Authorization") String authorization) {
@@ -110,7 +119,7 @@ public class TransactionsResource {
 
         Account target_account = accountRepository.findById(trans.getToAccountId());
         Account my_account = accountRepository.findById(trans.getFromAccountId());
-        //User fromUser = userRepository.findById(my_account.getUserId());
+        User fromUser = userRepository.findById(my_account.getUserId());
         //User toUser = userRepository.findById(target_account.getUserId());
 
         //if transaction times exceed 25
@@ -189,14 +198,19 @@ public class TransactionsResource {
 
         //Define who is going to create transaction, create the transaction method by account number, phone or email
         if (loggedInUser.getId().equals(my_account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
-            //if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
-                trans.setStatus("pending");
-                trans.setCreatedDate(new Date().toString());
-                trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
-                return transactionsRepository.save(trans);
+            if (trans.getCritical()) {
+                String emailMessageBody = "Dear Customer, your account has been requested a critical transaction. If there is any question, feel free to contact with us!!!";
+                emailService.sendEmail(loggedInUser.getEmail(), emailMessageBody);
+            }
+            trans.setStatus("pending");
+            trans.setCreatedDate(new Date().toString());
+            trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
+            return transactionsRepository.save(trans);
         }
         else if (roleLevel.get(loggedInUser.getType()) == 1) {
             if (trans.getCritical()) {// if is critical, put it in pending and do updated later by administrator
+                String emailMessageBody = "Dear Customer, your account has been requested a critical transaction by the tier1 staff. Waiting for the authorization by manager. If there is any question, feel free to contact with us!!!";
+                emailService.sendEmail(fromUser.getEmail(), emailMessageBody);
                 trans.setStatus("pending");
                 trans.setCreatedDate(new Date().toString());
                 trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
@@ -216,16 +230,20 @@ public class TransactionsResource {
             }
         }
         else if (roleLevel.get(loggedInUser.getType()) == 2) {
-                trans.setStatus("approved");
-                double my_remain = my_account.getAmount() - trans.getAmount();
-                my_account.setAmount(my_remain);
-                double target_remain = target_account.getAmount() + trans.getAmount();
-                target_account.setAmount(target_remain);
-                trans.setCreatedDate(new Date().toString());
-                trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
-                accountRepository.save(my_account);
-                accountRepository.save(target_account);
-                return transactionsRepository.save(trans);
+            if (trans.getCritical()) {
+                String emailMessageBody = "Dear Customer, your account has been requested a critical transaction by our manager. If there is any question, feel free to contact with us!!!";
+                emailService.sendEmail(fromUser.getEmail(), emailMessageBody);
+            }
+            trans.setStatus("approved");
+            double my_remain = my_account.getAmount() - trans.getAmount();
+            my_account.setAmount(my_remain);
+            double target_remain = target_account.getAmount() + trans.getAmount();
+            target_account.setAmount(target_remain);
+            trans.setCreatedDate(new Date().toString());
+            trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
+            accountRepository.save(my_account);
+            accountRepository.save(target_account);
+            return transactionsRepository.save(trans);
         }
         else
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
@@ -242,6 +260,58 @@ public class TransactionsResource {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
     }
 
+
+    @GET
+    @Path("/merchantlist")
+    public List<Account> getAllMerchantAccounts (@HeaderParam("Authorization") String authorization){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        if (loggedInUser.getType().equals("tier1")) {
+            List<Account> accounts = new ArrayList<>();
+            List<User> users = userRepository.findByType("merchant");
+            for (User user : users) {
+                List<Account> temp = accountRepository.findByUserId(user.getId());
+                for (Account account : temp) {
+                    if (account.getAccountType().equals("checking") || account.getAccountType().equals("savings"))
+                        accounts.add(account);
+                }
+            }
+            return accounts;
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+    }
+
+    @GET
+    @Path("/statement/{accountId}") // "An external user should be able to download banking statements."
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getStatment(@HeaderParam("Authorization") String authorization, @PathParam("accountId") String accountId) throws UnsupportedEncodingException {
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Account account = accountRepository.findById(accountId);
+
+        if(account == null){
+            throw new ApplicationValidationError(Response.Status.NOT_FOUND, "Account cannot be found");
+        }
+
+        if(!account.getUserId().equals(loggedInUser.getId())){
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        }
+
+
+        if(loggedInUser.getType().equals("consumer") || loggedInUser.getType().equals("merchant")){
+            StatmentCSV statmentCSV = new StatmentCSV();
+            List<Transaction> transactions = transactionsRepository.findByFromAccountIdEqualsOrToAccountIdEquals(account.getId(), account.getId());
+            for (Transaction transaction : transactions) {
+                statmentCSV.addCSVRow(account.getId(),transaction);
+            }
+
+            String csvContent = statmentCSV.writeCSV();
+            InputStream stream = new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8.name()));
+            return Response.ok(stream,MediaType.APPLICATION_OCTET_STREAM).header("Content-Disposition", "attachment; filename=\"statement.csv\"").build();
+        }else{
+            logger.info("only external users can do this!");
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        }
+    }
 
 
     // update transaction, approve for the critical transaction

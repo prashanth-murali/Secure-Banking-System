@@ -19,6 +19,8 @@ import dashboardAdminController from './controllers/dashBoardAdminController';
 import dashboardAdminEditUser from './controllers/dashBoardAdminEditUserController';
 import externalUserController from './controllers/externalUserController';
 import internalEmployeeController from './controllers/internalEmployeeController';
+import settingsAdminController from './controllers/settingsAdminController';
+import logFileController from './controllers/logFileController';
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -132,21 +134,13 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('settings_ext_customer', {
             url: '/settings_ext_customer',
             templateUrl: '../views/external_users/settings_ext_customer.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: settingsAdminController
         })
 
         .state('statements_external_user', {
             url: '/statements_external_user',
             templateUrl: '../views/external_users/statements_external_user.html',
             controller: externalUserController
-        })
-
-        .state('critical_transactions', {
-            url: '/critical_transactions',
-            templateUrl: '../views/internal_users/critical_transactions.html',
-            controller: internalEmployeeController
         })
 
         .state('dashboard_admin', {
@@ -164,12 +158,14 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
 
         .state('dashboard_internal_employee', {
             url: '/dashboard_internal_employee',
-            templateUrl: '../views/internal_users/dashboard_internal_employee.html'
+            templateUrl: '../views/internal_users/dashboard_internal_employee.html',
+            controller: internalEmployeeController
         })
 
         .state('dashboard_internal_manager', {
             url: '/dashboard_manager',
-            templateUrl: '../views/internal_users/dashboard_internal_manager.html'
+            templateUrl: '../views/internal_users/dashboard_internal_manager.html',
+            controller: internalEmployeeController
         })
 
         .state('dashboard_external_user', {
@@ -187,9 +183,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('edit_users', {
             url: '/edit_users',
             templateUrl: '../views/internal_users/edit_users.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: internalEmployeeController
         })
 
         .state('internal_emp_transactions', {
@@ -207,9 +201,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('manage_employee', {
             url: '/manage_employee',
             templateUrl: '../views/internal_users/manage_employee.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: dashboardAdminController
         })
 
         .state('pending_requests', {
@@ -235,18 +227,40 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
             }]
         })
 
+        .state('create_user', {
+            url: '/create_user',
+            templateUrl: '../views/internal_users/create_user.html',
+            controller: internalEmployeeController
+        })
+
+        .state('create_internal', {
+            url: '/create_internal',
+            templateUrl: '../views/internal_users/create_internal.html',
+            controller: dashboardAdminController
+        })
+
+        .state('settings_admin', {
+            url: '/settings_admin',
+            templateUrl: '../views/internal_users/settings_admin.html',
+            controller: settingsAdminController
+        })
+
         .state('settings_internal', {
             url: '/settings_internal',
-            templateUrl: '../views/internal_users/create_user.html',
+            templateUrl: '../views/internal_users/settings_internal.html',
+            controller: settingsAdminController
+        })
+
+        .state('create_account', {
+            url: '/create_account',
+            templateUrl: '../views/internal_users/create_account.html',
             controller: internalEmployeeController
         })
 
         .state('system_log', {
             url: '/system_log',
             templateUrl: '../views/internal_users/system_log.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: logFileController
         });
 
 

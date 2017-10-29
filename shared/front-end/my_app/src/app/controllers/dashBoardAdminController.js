@@ -8,6 +8,17 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         );
     }
 
+    $scope.filterAdmin=function(user)
+    {
+        if(user.type=='tier1' || user.type=='tier2')
+        {
+            return true;
+
+        }
+        return false;
+    };
+
+
     function randomString() {
         return Math.floor(Math.random()*90000) + 10000 + "";
     }
@@ -66,7 +77,19 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         }, function errorCallback(response) {
             toast('Error loading user details');
         });
-    }
+    };
+
+    $scope.deleteUser = function(userId){
+        $http({
+            url:BACKEND_URL + '/api/users/'+userId,
+            method: 'DELETE',
+            headers: {
+                "authorization": authService.getAuth(),
+            }
+        });
+        $scope.selectedAccount = null; // deselect user
+        fetchUsers();
+    };
 
     function createUser(){
         return $http({
@@ -93,8 +116,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     function fetchUsers() {
         getUsers().then(function successCallback(response) {
             $scope.users = response.data;
-        }, function errorCallback(response) {
-            toast('Error loading users');
         });
     }
 
@@ -124,18 +145,28 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         $state.transitionTo('dashboard_admin',{user:user});
     };
 
-    $scope.deleteUser = function (user) {
-        console.log('delete user: ', user);
-        $http.delete(user.url,{
-            headers: {
-                "authorization": authService.getAuth(),
+    $scope.postCreateUser = function(username,email,password,phNumber,name,address,type){
+        return $http.post(BACKEND_URL+'/api/users/',{
+            "type": type,
+            "name": name,
+            "address": address,
+            "phoneNumber": phNumber,
+            "username": username,
+            "password": password,
+            "email":email
+        },{
+            headers:{
+                "authorization": authService.getAuth()
             }
-        }).then(function success(){
-           fetchUsers();
-        }, function errorCallback(){
-           toast('Failed to delete User');
-        })
-    };
+        });
+    }
+
+    $scope.createUser=function(username,email,password,phNumber,name,address,type)
+    {
+        $scope.postCreateUser(username,email,password,phNumber,name,address,type);
+        alert('Request sent. Check your Email.');
+
+    }
 
     fetchUsers();
 

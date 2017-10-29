@@ -10,4 +10,5 @@ public interface TransactionsRepository extends MongoRepository<Transaction, Str
     public Transaction findByTransactionId(String transactionId);
     public List<Transaction> findByFromAccountIdEqualsOrToAccountIdEquals(String fromAccountId, String toAccountId);
     public List<Transaction> findAll();
+    public List<Transaction> findByFromAccountId(String id);
 }

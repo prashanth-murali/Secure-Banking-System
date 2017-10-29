@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.securebank.bank.services.EmailService;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -59,8 +61,9 @@ public class AccountResource {
         if (roleLevel.get(loggedInUser.getType()) == 0) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
-        else if (roleLevel.get(loggedInUser.getType()) < 3)
+        else if (roleLevel.get(loggedInUser.getType()) == 2 || (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true"))) {
             return accountRepository.findAll();
+        }
         else
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
 
@@ -82,7 +85,10 @@ public class AccountResource {
         if (loggedInUser.getId().equals(account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
             return accountRepository.findById(accountId);
         }
-        else if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
+        else if (roleLevel.get(loggedInUser.getType()) == 2) {
+            return accountRepository.findById(accountId);
+        }
+        else if (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true")) {
             return accountRepository.findById(accountId);
         }
         else
@@ -103,28 +109,36 @@ public class AccountResource {
     public Account createAccount(Account account, @HeaderParam("Authorization") String authorization){
         //validate that the user_id matches a valid user valid
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        User accountUser = userRepository.findById(account.getUserId());
         Map<String, Integer> roleLevel = new HashMap<String, Integer>();
         roleLevel.put("administrator", 3);
         roleLevel.put("tier2", 2);
         roleLevel.put("tier1", 1);
         roleLevel.put("consumer", 0);
         roleLevel.put("merchant", 0);
-        // ensure that the user has permission to create an account for this user (the user themselves or tier1 or tier2)
-        if (loggedInUser.getId().equals(account.getUserId()) && roleLevel.get(loggedInUser.getType()) == 0) {
-            String acct = account.getAccountType();
-            String[] types = {"checking", "savings", "credit"};
-            if(Arrays.asList(types).contains(acct)) {
-                account.setId(null);// ensure that id is set by database
-                return accountRepository.save(account);
+        String[] types = {"checking", "savings", "credit"};
+
+        if (accountUser == null || roleLevel.get(accountUser.getType()) != 0)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Account ID");
+
+        List<Account> userAccounts = accountRepository.findByUserId(accountUser.getId());
+        if (userAccounts.size() == 3)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Account more than 3");
+        else if (userAccounts.size() < 3) {
+            for(Account eachaccount : userAccounts) {
+                if (eachaccount.getAccountType().equals(account.getAccountType()))
+                    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Account type already exist");
             }
-            else
-                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Account Type");
         }
-        else if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
+
+        // ensure that the user has permission to create an account for this user (tier1 or tier2)
+        if ((roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true")) || roleLevel.get(loggedInUser.getType()) == 2) {
             String acct = account.getAccountType();
-            String[] types = {"checking", "savings", "credit"};
             if(Arrays.asList(types).contains(acct)) {
                 account.setId(null);// ensure that id is set by database
+                String emailMessageBody = "Dear Customer, your bank account has been created. Happy Banking with us!!!";
+                EmailService emailService = new EmailService();
+                emailService.sendEmail(accountUser.getEmail(), emailMessageBody);
                 return accountRepository.save(account);
             }
             else
@@ -145,7 +159,11 @@ public class AccountResource {
         roleLevel.put("tier1", 1);
         roleLevel.put("consumer", 0);
         roleLevel.put("merchant", 0);
-        if (roleLevel.get(loggedInUser.getType()) > 0 && roleLevel.get(loggedInUser.getType()) < 3) {
+        if (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true")) {
+            byId.setAmount(account.getAmount()); // only allow the amount of an account to be updated
+            return accountRepository.save(byId);
+        }
+        else if (roleLevel.get(loggedInUser.getType()) == 2) {
             byId.setAmount(account.getAmount()); // only allow the amount of an account to be updated
             return accountRepository.save(byId);
         }

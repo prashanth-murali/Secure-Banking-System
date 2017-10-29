@@ -125,11 +125,59 @@ public class UserResource {
 
     }
 
+    public void user_email_val(String userName, String email)
+    {
+        if (userRepository.findByUsername(userName) != null)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "An user with same username already exits. Please use a different username.");
+        if (userRepository.findByEmail(email) != null)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "An user with same email already exits. Please use a different email.");
+    }
+
+    /*
+         * Password should be less than 15 and more than 8 characters in length.
+         * Password should contain at least one upper case and one lower case alphabet.
+         * Password should contain at least one number.
+         * Password should contain at least one special character.
+         */
+
+    public void passwordValidation(String userName, String password)
+    {
+        if (password.length() > 15 || password.length() < 8)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should be less than 15 and more than 8 characters in length.");
+        if (password.indexOf(userName) > -1)
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password Should not be same as user name");
+        }
+        String upperCaseChars = "(.*[A-Z].*)";
+        if (!password.matches(upperCaseChars ))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should contain atleast one upper case alphabet");
+        }
+        String lowerCaseChars = "(.*[a-z].*)";
+        if (!password.matches(lowerCaseChars ))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should contain atleast one lower case alphabet");
+        }
+        String numbers = "(.*[0-9].*)";
+        if (!password.matches(numbers ))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should contain atleast one number.");
+        }
+        String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
+        if (!password.matches(specialChars ))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Password should contain atleast one special character");
+        }
+    }
+
     @POST
     public User createUser(User user, @HeaderParam("Authorization") String authorization){
         String[] types = {"tier1", "tier2", "administrator", "consumer","merchant"};
         String userType = user.getType();
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
+
+        user_email_val(user.getUsername(), user.getEmail());
+        passwordValidation(user.getUsername(), user.getPassword());
 
         if(Arrays.asList(types).contains(userType)) {
             if (user.getType().equals("tier1") || user.getType().equals("tier2")) {
@@ -253,7 +301,7 @@ public class UserResource {
             userRepository.deleteById(userId);
             return "{\"status\":\"success\"}";
         }
-        else if (roleLevel.get(loggedInUser.getType()) == 3 && roleLevel.get(byId.getType()) < 3){
+        else if (roleLevel.get(loggedInUser.getType()) == 3 && (roleLevel.get(byId.getType()) == 1 || roleLevel.get(byId.getType()) == 2)){
             userRepository.deleteById(userId);
             return "{\"status\":\"success\"}";
         }

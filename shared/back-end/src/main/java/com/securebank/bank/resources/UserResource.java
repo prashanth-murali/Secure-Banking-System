@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import javax.ws.rs.core.Response;
@@ -23,6 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.DatatypeConverter;
 import java.util.List;
 
 @Component
@@ -181,12 +183,23 @@ public class UserResource {
         user_email_val(user.getUsername(), user.getEmail());
         passwordValidation(user.getUsername(), user.getPassword());
 
+        MessageDigest md = null;
+        String password = user.getPassword();
+        try {
+            md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            password = DatatypeConverter.printHexBinary(md.digest());
+        } catch (Exception e) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error 1");
+        }
+
         if(Arrays.asList(types).contains(userType)) {
             if (user.getType().equals("tier1") || user.getType().equals("tier2")) {
                 if (loggedInUser.getType().equals("administrator")) {
                     if (user.getType().equals("tier1"))
                         user.setAuthorization("false");
                     user.setId(null);// ensure that id is set by database
+                    user.setPassword(password);
                     return userRepository.save(user);
                 }
                 else
@@ -195,6 +208,7 @@ public class UserResource {
             else if (user.getType().equals("consumer") || user.getType().equals("merchant")) {
                 if ((loggedInUser.getType().equals("tier1") && loggedInUser.getAuthorization().equals("true")) || loggedInUser.getType().equals("tier2") || loggedInUser.getType().equals("administrator")) {
                     user.setId(null);// ensure that id is set by database
+                    user.setPassword(password);
                     return userRepository.save(user);
                 }
                 else

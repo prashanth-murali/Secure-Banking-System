@@ -27,16 +27,16 @@ public class Login {
 
     public String getPassword() {
 
-        String password = null;
+        String temp = null;
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("MD5");
-            password = md.digest(this.password.getBytes()).toString();
+            temp = md.digest(password.getBytes()).toString();
         } catch (Exception e) {
-            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error");
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error 3");
         }
 
-        return password;
+        return temp;
     }
 
     public void setPassword(String password) {

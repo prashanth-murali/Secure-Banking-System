@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.ws.rs.core.Response;
+import javax.xml.bind.DatatypeConverter;
 import java.security.*;
 
 public class User {
@@ -90,13 +91,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-            this.password = md.digest(password.getBytes()).toString();
-        } catch (Exception e) {
-            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error");
-        }
+        this.password = password;
     }
 
     public String getEmail() {

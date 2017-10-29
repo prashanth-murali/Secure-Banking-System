@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
+import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Base64;
@@ -39,9 +40,10 @@ public class LoggedInService {
             MessageDigest md = null;
             try {
                 md = MessageDigest.getInstance("MD5");
-                password = md.digest(password.getBytes()).toString();
+                md.update(password.getBytes());
+                password = DatatypeConverter.printHexBinary(md.digest());
             } catch (Exception e) {
-                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error");
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error 1");
             }
 
             User byUsername = userRepository.findByUsername(username);

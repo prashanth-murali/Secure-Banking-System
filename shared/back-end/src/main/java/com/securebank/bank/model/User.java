@@ -1,5 +1,6 @@
 package com.securebank.bank.model;
 
+import com.securebank.bank.services.RandomString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -12,6 +13,8 @@ public class User {
     private String address;
     private String phoneNumber;
     private String authorization;
+    private String otpToken;
+    private long otpTokenExpires;
 
     @Indexed(unique = true)
     private String username;
@@ -103,6 +106,22 @@ public class User {
 
     public void setAuthorization(String authorization) {
         this.authorization = authorization;
+    }
+
+    public void generateOTPToken() {
+        RandomString gen = new RandomString();
+        this.otpToken = gen.nextString();
+        this.otpTokenExpires = System.currentTimeMillis() / 1000;
+        this.otpTokenExpires += 3600;
+    }
+
+    public String getOtpToken() {
+        return this.otpToken;
+    }
+
+    public boolean isOTPvalid(String otptoken) {
+        long curTime = System.currentTimeMillis() / 1000;
+        return  (otptoken == this.otpToken) && (curTime <= this.otpTokenExpires);
     }
 
     @Override

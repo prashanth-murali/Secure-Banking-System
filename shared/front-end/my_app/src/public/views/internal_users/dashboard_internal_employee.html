@@ -1,3 +1,4 @@
+
 <div class="container container-main" role="main">
 
     <div class="row">
@@ -5,30 +6,31 @@
         <side-bar></side-bar>
 
         <div class="col-sm-9 col-md-10 main">
-
-
-            <h2>Search By:</h2>
+            <h2>Pending Non Critical Transactions</h2>
             <br>
 
-            <div id="payment">
-                <p>
-                    <label>Customer ID:</label>
-                    <input type="text" class="form-control" placeholder="ex: 123456789">
-                </p>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Search</button>
-                </div>
+            <table class="table">
+                <thead>
+                <tr>
 
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
 
-                <p>
-                    <label>Transaction ID:</label>
-                    <input type="text" class="form-control" placeholder="ex: 9876543210123456789">
-                </p>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="transaction in transactions | filter: search |filter:filterInternal" class="transaction" ng-model="TransactionId">
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Search</button>
-                </div>
-            </div><!-- /payment -->
+                    <td><a href="#">{{transaction.transactionId}}</a></td>
+                    <td>{{transaction.createdDate}}</td>
+                    <td>{{transaction.amount | currency }}</td>
+                    <td><button class="btn btn-success" value={{TransactionId=transaction.transactionId}} ng-click="approveTransaction(TransactionId)" onclick=location.reload();>Approve</button></td>
+                    <td><button class="btn btn-danger" value={{TransactionId=transaction.transactionId}} ng-click="declineTransaction(TransactionId)" onclick=location.reload();>Decline</button></td>
+
+                </tr>
+                </tbody>
+            </table>
 
         </div> <!-- /main -->
 

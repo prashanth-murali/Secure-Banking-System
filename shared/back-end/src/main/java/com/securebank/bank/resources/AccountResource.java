@@ -64,7 +64,7 @@ public class AccountResource {
         if (roleLevel.get(loggedInUser.getType()) == 0) {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
         }
-        else if (roleLevel.get(loggedInUser.getType()) == 2 || (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true"))) {
+        else if (roleLevel.get(loggedInUser.getType()) == 2 || (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getRequest().equals("true"))) {
             return accountRepository.findAll();
         }
         else
@@ -91,7 +91,7 @@ public class AccountResource {
         else if (roleLevel.get(loggedInUser.getType()) == 2) {
             return accountRepository.findById(accountId);
         }
-        else if (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true")) {
+        else if (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getRequest().equals("true")) {
             return accountRepository.findById(accountId);
         }
         else
@@ -135,7 +135,7 @@ public class AccountResource {
         }
 
         // ensure that the user has permission to create an account for this user (tier1 or tier2)
-        if ((roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true")) || roleLevel.get(loggedInUser.getType()) == 2) {
+        if ((roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getRequest().equals("true")) || roleLevel.get(loggedInUser.getType()) == 2) {
             String acct = account.getAccountType();
             if(Arrays.asList(types).contains(acct)) {
                 if (acct.equals("credit")) {
@@ -171,7 +171,7 @@ public class AccountResource {
         roleLevel.put("tier1", 1);
         roleLevel.put("consumer", 0);
         roleLevel.put("merchant", 0);
-        if (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getAuthorization().equals("true")) {
+        if (roleLevel.get(loggedInUser.getType()) == 1 && loggedInUser.getRequest().equals("true")) {
             byId.setAmount(account.getAmount()); // only allow the amount of an account to be updated
             return accountRepository.save(byId);
         }

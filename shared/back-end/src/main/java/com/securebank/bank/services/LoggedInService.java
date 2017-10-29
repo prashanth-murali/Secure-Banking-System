@@ -45,7 +45,7 @@ public class LoggedInService {
             } catch (Exception e) {
                 throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error 1");
             }
-
+            System.out.println(password);
             User byUsername = userRepository.findByUsername(username);
             if(byUsername == null){
                 logger.info("Unable to find user from Authorization");

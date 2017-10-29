@@ -145,6 +145,29 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         $state.transitionTo('dashboard_admin',{user:user});
     };
 
+    $scope.postCreateUser = function(username,email,password,phNumber,name,address,type){
+        return $http.post(BACKEND_URL+'/api/users/',{
+            "type": type,
+            "name": name,
+            "address": address,
+            "phoneNumber": phNumber,
+            "username": username,
+            "password": password,
+            "email":email
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.createUser=function(username,email,password,phNumber,name,address,type)
+    {
+        $scope.postCreateUser(username,email,password,phNumber,name,address,type);
+        alert('Request sent. Check your Email.');
+
+    }
+
     fetchUsers();
 
 }];

@@ -51,7 +51,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     }
 
     $scope.createTransaction=function(fromId,toId,transferType){
-        if(fromId!=toId)
+        if(fromId!=toId && $scope.Amount>0)
         {
 
             if(transferType=="via_email")
@@ -69,7 +69,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
 
 
-        else {alert('Sender and Receiver Account Id cannot be the same');}
+        else {alert('Sender and Receiver Account Id cannot be the same/ Amount cannot be negative.');}
     }
 
     function getAllTransactionsByAccount(AccountId){

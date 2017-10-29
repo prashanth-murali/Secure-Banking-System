@@ -233,6 +233,12 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
             controller: internalEmployeeController
         })
 
+        .state('create_internal', {
+            url: '/create_internal',
+            templateUrl: '../views/internal_users/create_internal.html',
+            controller: dashboardAdminController
+        })
+
         .state('settings_admin', {
             url: '/settings_admin',
             templateUrl: '../views/internal_users/settings_admin.html',

@@ -33,7 +33,7 @@ public class LoggedInService {
 
             String[] pieces = credentials.split(":");
             String username = pieces[0];
-            String password = pieces[1];
+            String otptoken = pieces[1];
 
             User byUsername = userRepository.findByUsername(username);
             if(byUsername == null){
@@ -41,7 +41,7 @@ public class LoggedInService {
                 throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
             }
 
-            if(password.equals(byUsername.getPassword())){
+            if(byUsername.isOTPvalid(otptoken)){
                 logger.info("Returning logged in user: " + byUsername.toString());
                 return byUsername;
             }else{

@@ -112,7 +112,7 @@ public class User {
         RandomString gen = new RandomString();
         this.otpToken = gen.nextString();
         this.otpTokenExpires = System.currentTimeMillis() / 1000;
-        this.otpTokenExpires += 3600;
+        this.otpTokenExpires += 600;
     }
 
     public String getOtpToken() {
@@ -122,6 +122,11 @@ public class User {
     public boolean isOTPvalid(String otptoken) {
         long curTime = System.currentTimeMillis() / 1000;
         return  (otptoken == this.otpToken) && (curTime <= this.otpTokenExpires);
+    }
+
+    public void extendOTPExpiration() {
+        long curTime = System.currentTimeMillis() / 1000;
+        this.otpTokenExpires = curTime + 600;
     }
 
     @Override

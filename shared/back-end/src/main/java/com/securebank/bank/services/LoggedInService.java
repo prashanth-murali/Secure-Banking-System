@@ -42,6 +42,8 @@ public class LoggedInService {
             }
 
             if(byUsername.isOTPvalid(otptoken)){
+                byUsername.extendOTPExpiration();
+                userRepository.save(byUsername);
                 logger.info("Returning logged in user: " + byUsername.toString());
                 return byUsername;
             }else{

@@ -116,8 +116,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     function fetchUsers() {
         getUsers().then(function successCallback(response) {
             $scope.users = response.data;
-        }, function errorCallback(response) {
-            toast('Error loading users');
         });
     }
 

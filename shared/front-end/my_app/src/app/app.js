@@ -21,8 +21,6 @@ import externalUserController from './controllers/externalUserController';
 import internalEmployeeController from './controllers/internalEmployeeController';
 import settingsAdminController from './controllers/settingsAdminController';
 import logFileController from './controllers/logFileController';
-import paymentExternalUserController from './controllers/paymentExternalUserController';
-
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -120,7 +118,9 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('payments_external_user', {
             url: '/payments_external_user',
             templateUrl: '../views/external_users/payments_external_user.html',
-            controller:paymentExternalUserController
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('requests_to_merchant', {
@@ -134,9 +134,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('settings_ext_customer', {
             url: '/settings_ext_customer',
             templateUrl: '../views/external_users/settings_ext_customer.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: settingsAdminController
         })
 
         .state('statements_external_user', {
@@ -160,7 +158,8 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
 
         .state('dashboard_internal_employee', {
             url: '/dashboard_internal_employee',
-            templateUrl: '../views/internal_users/dashboard_internal_employee.html'
+            templateUrl: '../views/internal_users/dashboard_internal_employee.html',
+            controller: internalEmployeeController
         })
 
         .state('dashboard_internal_manager', {
@@ -237,6 +236,12 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('settings_admin', {
             url: '/settings_admin',
             templateUrl: '../views/internal_users/settings_admin.html',
+            controller: settingsAdminController
+        })
+
+        .state('settings_internal', {
+            url: '/settings_internal',
+            templateUrl: '../views/internal_users/settings_internal.html',
             controller: settingsAdminController
         })
 

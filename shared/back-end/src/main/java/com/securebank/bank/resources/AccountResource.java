@@ -137,10 +137,17 @@ public class AccountResource {
             if(Arrays.asList(types).contains(acct)) {
                 if (acct.equals("credit")) {
                     //generate credit card number
+
+                    String emailMessageBody = "Dear Customer, your bank account has been created. Happy Banking with us!!!";
+                    EmailService emailService = new EmailService();
+                    emailService.sendEmail(accountUser.getEmail(), emailMessageBody);
                     account.setId(null);// ensure that id is set by database
                     return accountRepository.save(account);
                 }
                 else {
+                    String emailMessageBody = "Dear Customer, your bank account has been created. Happy Banking with us!!!";
+                    EmailService emailService = new EmailService();
+                    emailService.sendEmail(accountUser.getEmail(), emailMessageBody);
                     account.setId(null);// ensure that id is set by database
                     return accountRepository.save(account);
                 }

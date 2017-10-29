@@ -133,6 +133,26 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
+    $scope.exportAction = function(accountId){
+        $http({
+            method: 'GET',
+            url: BACKEND_URL+'/api/transactions/statement/'+accountId,
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        }).then(function(response) {
+            console.log(response);
+            var anchor = angular.element('<a/>');
+            anchor.attr({
+                href: 'data:attachment/csv;charset=utf-8,' + encodeURI(response.data),
+                target: '_blank',
+                download: 'filename.csv'
+            })[0].click();
+
+        },function(data, status, headers, config) {
+            toast("Error fetching statement")
+        });
+    };
 
     /**function setRandomCreateData() {
         $scope.create = {

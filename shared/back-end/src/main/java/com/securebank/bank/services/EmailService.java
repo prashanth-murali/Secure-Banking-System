@@ -22,7 +22,7 @@ public class EmailService {
     private @Value("${sendgrid-api-key}") String sendGridKey;
 
     public void sendEmail(String toEmailAddress, String emailMessageBody){
-        Email from = new Email("test@example.com");
+        Email from = new Email(toEmailAddress);
         String subject = "Sending with SendGrid is Fun";
         Email to = new Email(toEmailAddress);
         Content content = new Content("text/plain", emailMessageBody);

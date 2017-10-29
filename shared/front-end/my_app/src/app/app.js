@@ -118,7 +118,9 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('payments_external_user', {
             url: '/payments_external_user',
             templateUrl: '../views/external_users/payments_external_user.html',
-            controller: paymentExternalUserController
+            controller: ['common','$scope', function(common,$scope){
+                $scope.goBack = common.goBack;
+            }]
         })
 
         .state('requests_to_merchant', {
@@ -132,9 +134,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('settings_ext_customer', {
             url: '/settings_ext_customer',
             templateUrl: '../views/external_users/settings_ext_customer.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: settingsAdminController
         })
 
         .state('statements_external_user', {

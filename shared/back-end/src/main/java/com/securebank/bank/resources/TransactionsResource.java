@@ -113,6 +113,11 @@ public class TransactionsResource {
         //User fromUser = userRepository.findById(my_account.getUserId());
         //User toUser = userRepository.findById(target_account.getUserId());
 
+        //if transaction times exceed 25
+        List<Transaction> transactions = transactionsRepository.findByFromAccountId(trans.getFromAccountId());
+        if (transactions.size() > 25)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Transaction over 25 times per day");
+
         //sent by email
         if (trans.getType().equals("via_email") && my_account.getAccountType().equals("checking")) {
             if (roleLevel.get(loggedInUser.getType()) == 0) {

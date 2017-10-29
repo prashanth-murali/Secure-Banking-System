@@ -21,6 +21,7 @@ import externalUserController from './controllers/externalUserController';
 import internalEmployeeController from './controllers/internalEmployeeController';
 import settingsAdminController from './controllers/settingsAdminController';
 import logFileController from './controllers/logFileController';
+import dashboardInternalEmployeeController from './controllers/dashboardInternalEmployeeController';
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -159,7 +160,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('dashboard_internal_employee', {
             url: '/dashboard_internal_employee',
             templateUrl: '../views/internal_users/dashboard_internal_employee.html',
-            controller: internalEmployeeController
+            controller: dashboardInternalEmployeeController
         })
 
         .state('dashboard_internal_manager', {
@@ -189,13 +190,13 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('internal_emp_transactions', {
             url: '/internal_emp_transactions',
             templateUrl: '../views/internal_users/internal_emp_transactions.html',
-            controller: internalEmployeeController
+            controller: dashboardInternalEmployeeController
         })
 
         .state('internal_mgr_transactions', {
             url: '/internal_mgr_transactions',
             templateUrl: '../views/internal_users/internal_mgr_transactions.html',
-            controller: internalEmployeeController
+            controller: dashboardInternalEmployeeController
         })
 
         .state('manage_employee', {

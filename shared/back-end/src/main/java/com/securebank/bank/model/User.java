@@ -1,7 +1,11 @@
 package com.securebank.bank.model;
 
+import com.securebank.bank.services.errors.ApplicationValidationError;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+
+import javax.ws.rs.core.Response;
+import java.security.*;
 
 public class User {
 
@@ -86,7 +90,13 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+            this.password = md.digest(password.getBytes()).toString();
+        } catch (Exception e) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error");
+        }
     }
 
     public String getEmail() {

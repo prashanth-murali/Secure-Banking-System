@@ -1,5 +1,10 @@
 package com.securebank.bank.model;
 
+import com.securebank.bank.services.errors.ApplicationValidationError;
+
+import javax.ws.rs.core.Response;
+import java.security.MessageDigest;
+
 public class Login {
     private String username;
     private String password;
@@ -21,6 +26,16 @@ public class Login {
     }
 
     public String getPassword() {
+
+        String password = null;
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+            password = md.digest(this.password.getBytes()).toString();
+        } catch (Exception e) {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error");
+        }
+
         return password;
     }
 

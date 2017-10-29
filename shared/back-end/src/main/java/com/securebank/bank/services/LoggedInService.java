@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
 import java.util.Base64;
 
 
@@ -34,6 +35,14 @@ public class LoggedInService {
             String[] pieces = credentials.split(":");
             String username = pieces[0];
             String password = pieces[1];
+
+            MessageDigest md = null;
+            try {
+                md = MessageDigest.getInstance("MD5");
+                password = md.digest(password.getBytes()).toString();
+            } catch (Exception e) {
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error");
+            }
 
             User byUsername = userRepository.findByUsername(username);
             if(byUsername == null){

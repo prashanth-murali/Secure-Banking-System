@@ -3,6 +3,7 @@ package com.securebank.bank.resources;
 import com.securebank.bank.model.Login;
 import com.securebank.bank.model.User;
 import com.securebank.bank.services.UserRepository;
+import com.securebank.bank.services.errors.ApplicationValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.security.MessageDigest;
 import java.util.*;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
@@ -35,6 +37,7 @@ public class LoginResource {
     @POST
     public Response login(Login login){
         User byUsername = userRepository.findByUsername(login.getUsername());
+
         if(byUsername == null){
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }

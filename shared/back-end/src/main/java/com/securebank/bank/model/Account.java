@@ -10,12 +10,14 @@ public class Account {
     private String userId;
     private Double amount;
     private String accountType; // "checking"/"savings"/"credit"
+    private String cardNumber;
 
-    public Account(String id, String userId, Double amount, String accountType) {
+    public Account(String id, String userId, Double amount, String accountType, String cardNumber) {
         this.id = id;
         this.userId = userId;
         this.amount = amount;
         this.accountType = accountType;
+        this.cardNumber = cardNumber;
     }
 
     public Account() {
@@ -54,5 +56,13 @@ public class Account {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }

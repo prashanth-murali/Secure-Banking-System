@@ -1,7 +1,12 @@
 package com.securebank.bank.model;
 
+import com.securebank.bank.services.errors.ApplicationValidationError;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+
+import javax.ws.rs.core.Response;
+import javax.xml.bind.DatatypeConverter;
+import java.security.*;
 
 public class User {
 
@@ -11,7 +16,7 @@ public class User {
     private String name;
     private String address;
     private String phoneNumber;
-    private String authorization;
+    private String request;
 
     @Indexed(unique = true)
     private String username;
@@ -21,7 +26,7 @@ public class User {
 
     public User() {}
 
-    public User(String id, String type, String name, String address, String phoneNumber, String username, String password, String email, String authorization) {
+    public User(String id, String type, String name, String address, String phoneNumber, String username, String password, String email, String request) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -30,7 +35,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.authorization = authorization;
+        this.request = request;
     }
 
     public String getId() {
@@ -97,12 +102,12 @@ public class User {
         this.email = email;
     }
 
-    public String getAuthorization() {
-        return authorization;
+    public String getRequest() {
+        return request;
     }
 
-    public void setAuthorization(String authorization) {
-        this.authorization = authorization;
+    public void setRequest(String request) {
+        this.request = request;
     }
 
     @Override

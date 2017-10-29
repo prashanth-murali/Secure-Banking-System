@@ -22,8 +22,8 @@ public class EmailService {
     private @Value("${sendgrid-api-key}") String sendGridKey;
 
     public void sendEmail(String toEmailAddress, String emailMessageBody){
-        Email from = new Email(toEmailAddress);
-        String subject = "Sending with SendGrid is Fun";
+        Email from = new Email("fromgroup5@softwaresecurity.xyz");
+        String subject = "Bank-Service-Group5";
         Email to = new Email(toEmailAddress);
         Content content = new Content("text/plain", emailMessageBody);
         Mail mail = new Mail(from, subject, to, content);

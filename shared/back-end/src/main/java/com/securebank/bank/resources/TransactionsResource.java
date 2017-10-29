@@ -1,23 +1,21 @@
 package com.securebank.bank.resources;
 
 import com.securebank.bank.model.Account;
+import com.securebank.bank.model.StatmentCSV;
 import com.securebank.bank.model.Transaction;
 import com.securebank.bank.model.User;
 import com.securebank.bank.services.AccountRepository;
+import com.securebank.bank.services.EmailService;
+import com.securebank.bank.services.LoggedInService;
 import com.securebank.bank.services.TransactionsRepository;
 import com.securebank.bank.services.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import com.securebank.bank.services.errors.ApplicationValidationError;
-import com.securebank.bank.services.LoggedInService;
-import com.securebank.bank.services.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -26,9 +24,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
-import java.util.*;
+import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Path("/transactions")
@@ -276,6 +281,37 @@ public class TransactionsResource {
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
     }
 
+    @GET
+    @Path("/statement/{accountId}") // "An external user should be able to download banking statements."
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getStatment(@HeaderParam("Authorization") String authorization, @PathParam("accountId") String accountId) throws UnsupportedEncodingException {
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        Account account = accountRepository.findById(accountId);
+
+        if(account == null){
+            throw new ApplicationValidationError(Response.Status.NOT_FOUND, "Account cannot be found");
+        }
+
+        if(!account.getUserId().equals(loggedInUser.getId())){
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        }
+
+
+        if(loggedInUser.getType().equals("consumer") || loggedInUser.getType().equals("merchant")){
+            StatmentCSV statmentCSV = new StatmentCSV();
+            List<Transaction> transactions = transactionsRepository.findByFromAccountIdEqualsOrToAccountIdEquals(account.getId(), account.getId());
+            for (Transaction transaction : transactions) {
+                statmentCSV.addCSVRow(account.getId(),transaction);
+            }
+
+            String csvContent = statmentCSV.writeCSV();
+            InputStream stream = new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8.name()));
+            return Response.ok(stream,MediaType.APPLICATION_OCTET_STREAM).header("Content-Disposition", "attachment; filename=\"statement.csv\"").build();
+        }else{
+            logger.info("only external users can do this!");
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+        }
+    }
 
 
     // update transaction, approve for the critical transaction

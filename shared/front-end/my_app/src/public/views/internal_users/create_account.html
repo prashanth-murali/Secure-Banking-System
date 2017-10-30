@@ -7,8 +7,22 @@
         <div class="btn-group" role="group">
             <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
         </div>
-        <div class="col-sm-9 col-md-10 main">
 
+        <div class="col-sm-9 col-md-10 main">
+        <div class="modal-body">
+
+            <label>Select Account Id:</label>
+                <select ng-model="selectedAccount" class="form-control">
+                    <option value="" disabled selected>Select a User</option>
+                     <option ng-repeat="user in users | filter: search |filter:filterUser" value={{selectedAccount=user.id}}>
+                        {{user.type | uppercase}} - {{user.name}}
+                     </option>
+
+                </select>
+        </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-success" ng-click="fetchUserById(selectedAccount)">Get User Details</button>
+         </div>
 
             <h2>Enter User Details</h2>
             <br>
@@ -17,7 +31,7 @@
                 <div class="modal-body">
                     <p>
                         <label>User ID:</label>
-                        <input type="text" class="form-control" placeholder="ex: Sushi"ng-model="userID">
+                        <input type="text" class="form-control"ng-model="individual.id">
                     </p>
 
                     <p>

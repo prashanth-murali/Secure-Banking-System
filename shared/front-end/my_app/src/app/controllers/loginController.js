@@ -72,12 +72,6 @@ module.exports = ['$scope','$http','$mdToast', 'authService', '$state', '$base64
         var auth = "Basic " +$base64.encode(user.username+":" + otp);
         authService.setAuth(auth);
         console.log("validateOtp start");
-        console.log(user.username);
-        console.log(user.password);
-        console.log(otp);
-        console.log(user);
-        console.log(auth);
-        console.log($scope);
         console.log("validateOtp ends");
 
         return $http.post(BACKEND_URL + '/api/login/step2',{

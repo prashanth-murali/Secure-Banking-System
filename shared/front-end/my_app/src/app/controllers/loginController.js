@@ -66,6 +66,34 @@ module.exports = ['$scope','$http','$mdToast', 'authService', '$state', '$base64
         }
     }
 
+    $scope.validateOtp=function(username,password,otp,user)
+    {
+        return $http.get(BACKEND_URL + '/api/login/step2',{
+            "username":$scope.email,
+            "password":$scope.password,
+            "otp":$scope.otp
+        }, {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+        }).then(function successCallback(response){
+            var auth = "Basic " +$base64.encode($scope.email + ":" + $scope.otp);
+            authService.setAuth(auth);
+            authService.setUserId(response.data.id);
+            routeBasedOnUserRole(user);
+        }, function errorCallback(response){
+            if(response.status!=200){
+                alert('Error: Check your OTP.');
+            }
+        }).then(getUser).then(function successCallback(response) {
+            var user = response.data;
+            authService.setUser(user);
+            $state.transitionTo('otp_auth');
+        },function errorCallback(){
+            toast('Error fetching user');
+        });
+    }
+
     $scope.onLoginSubmit = function(){
         var auth = "Basic " +$base64.encode($scope.email + ":" + $scope.password);
         console.log('onLoginSubmit', $scope);
@@ -74,14 +102,9 @@ module.exports = ['$scope','$http','$mdToast', 'authService', '$state', '$base64
             toast('Success');
             authService.setAuth(auth);
             authService.setUserId(response.data.id);
+            $state.transitionTo('otp_auth');
         }, function errorCallback(response) {
             toast('Invalid Username or Password');
-        }).then(getUser).then(function successCallback(response) {
-            var user = response.data;
-            authService.setUser(user);
-            routeBasedOnUserRole(user);
-        },function errorCallback(){
-            toast('Error fetching user');
-        });
+        })
     };
 }];

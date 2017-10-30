@@ -123,6 +123,12 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
             controller:loginController
         })
 
+        .state('otp_auth', {
+            url: '/otp_auth',
+            templateUrl: '../views/otp_auth.html',
+            controller:loginController
+        })
+
         .state('credit_debit', {
             url: '/credit_debit',
             templateUrl: '../views/external_users/credit_debit_external.html',

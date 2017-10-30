@@ -26,7 +26,7 @@
                 <tbody>
                 <tr ng-repeat="account in accounts | filter: search | filter:filterDebit" ng-model="AccountId">
 
-                    <td><a href="#">{{account.accountType | uppercase}}</a></td>
+                    <td>{{account.accountType | uppercase}}</td>
                     <td>{{account.id}}</td>
                     <td>{{account.amount | currency }}</td>
                     <td><button class="btn btn-success" value={{AccountId=account.id}} ng-click="addMoney(AccountId)" >Add</button></td>

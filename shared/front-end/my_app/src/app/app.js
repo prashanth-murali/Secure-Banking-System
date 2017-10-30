@@ -24,6 +24,9 @@ import logFileController from './controllers/logFileController';
 import dashboardInternalEmployeeController from './controllers/dashboardInternalEmployeeController';
 import createUserController from './controllers/createUserController.js';
 import settingsManager from './controllers/settingsManager.js';
+import paymentExternalUserController from './controllers/paymentExternalUserController.js';
+import requestsToMerchController from './controllers/requestsToMerchController.js';
+
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -141,17 +144,13 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('payments_external_user', {
             url: '/payments_external_user',
             templateUrl: '../views/external_users/payments_external_user.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: paymentExternalUserController
         })
 
         .state('requests_to_merchant', {
             url: '/requests_to_merchant',
             templateUrl: '../views/external_users/requests_to_merchant.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: requestsToMerchController
         })
 
         .state('settings_ext_customer', {

@@ -50,7 +50,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
     $scope.filterManager=function(transaction)
     {
-        if(transaction.status=='pending')
+        if(transaction.status=='pending' && transaction.type!='credit')
         {
             return true;
         }

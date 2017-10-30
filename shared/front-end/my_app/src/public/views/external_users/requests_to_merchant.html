@@ -3,41 +3,36 @@
     <div class="row">
 
         <div class="btn-group" role="group">
-            <button class="btn btn-success" ng-click="goBack()">Go Back</button>
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
         </div>
+
         <div class="col-sm-9 col-md-10 main">
 
-            <div class="page-header">
-                <h1>User Bank Requests</h1>
-            </div>
+            <h2>Customer Requests</h2>
+            <br>
 
-            <h2>Pending Bank Requests</h2>
-
-            <table class="table table-bordered">
+            <table class="table">
                 <thead>
                 <tr>
-                    <th colspan="3">Request</th>
+
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><a href="#">Credit Transaction #46879 review request</a></td>
-                    <td><button type="button" class="btn btn-success">Approve</button></td>
-                    <td><button type="button" class="btn btn-info">Decline</button></td>
-                </tr>
-                <tr>
-                    <td><a href="#">Debit Transaction #41121 review request</a></td>
-                    <td><button type="button" class="btn btn-success">Approve</button></td>
-                    <td><button type="button" class="btn btn-info">Decline</button></td>
-                </tr>
-                <tr>
-                    <td><a href="#">Merchant Payment to Apple.com #7455 review request</a></td>
-                    <td><button type="button" class="btn btn-success">Approve</button></td>
-                    <td><button type="button" class="btn btn-info">Decline</button></td>
+                <tr ng-repeat="req in merchReqs | filter: search | filter:filterMerchant" class="transaction" ng-model="TransactionId">
+
+                    <td>{{req.transactionId}}</td>
+                    <td>{{req.createdDate}}</td>
+                    <td>{{req.amount | currency }}</td>
+                    <td><button class="btn btn-success" value={{TransactionId=req.transactionId}} ng-click="approvePayment(TransactionId)" onclick=location.reload();>Approve</button></td>
+                    <td><button class="btn btn-danger" value={{TransactionId=req.transactionId}} ng-click="declinePayment(TransactionId)" onclick=location.reload();>Decline</button></td>
+
                 </tr>
                 </tbody>
             </table>
-
 
         </div> <!-- /main -->
 

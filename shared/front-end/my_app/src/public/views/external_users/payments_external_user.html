@@ -3,7 +3,7 @@
     <div class="row">
 
         <div class="btn-group" role="group">
-            <button class="btn btn-success" ng-click="goBack()">Go Back</button>
+            <button class="btn btn-success" onclick="window.history.back()">Go Back</button>
         </div>
         <div class="col-sm-9 col-md-10 main">
 
@@ -16,25 +16,55 @@
             <div id="payment">
                 <p>
                     <label>Select Merchant:</label>
-                    <select class="form-control">
-                        <option>Select Merchant</option>
-                        <option>Amazon.com</option>
-                        <option>Google.com</option>
-                        <option>Apple.com</option>
+
+                    <select ng-model="selectedMerchant" class="form-control">
+
+                        <option value="" disabled selected>Select an Account</option>
+                        <option ng-repeat="merchant in merchants" value={{selectedMerchant=merchant.id}}>
+                            {{merchant.name}}
+                        </option>
+
                     </select>
+
                 </p>
                 <hr>
                 <p>
-                    <label>Debit Account:</label>
-                    <select class="form-control">
-                        <option>Select an Account</option>
-                        <option>${User}'s Checking Account (*1234)</option>
-                        <option>${User}'s Savings Account (*5678)</option>
-                    </select>
+                    <label>Credit Account Details:</label>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Card ID</th>
+                        <th>CVV</th>
+                        <th>Limit</th>
+                        <th>Pay</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="account in accounts | filter: search | filter:filterCredit">
+                        <td>{{account.cardNumber}}</td>
+                        <td>{{account.cvv}}</td>
+                        <td>{{account.accountType | uppercase}}</td>
+                        <td>{{account.amount | currency }}</td>
+                        <td><button type="button" class="btn btn-success">Pay Back Credit</button></td>
+
+                    </tr>
+                    </tbody>
+                </table>
                 </p>
                 <p>
+                    <label>Enter Card Number:</label>
+                    <input type="text" class="form-control" placeholder="0.00" ng-model="cardId">
+                </p>
+
+                <p>
+                    <label>Enter CVV:</label>
+                    <input type="text" class="form-control" placeholder="0.00" ng-model="cvv">
+                </p>
+
+
+                <p>
                     <label>Amount to be Transferred:</label>
-                    <input type="text" class="form-control" placeholder="0.00">
+                    <input type="text" class="form-control" placeholder="0.00" ng-model="PayAmount">
                 </p>
                 <hr>
                 <p>
@@ -46,7 +76,7 @@
                     <input type="text" class="form-control">
                 </p>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Make Payment</button>
+                    <button type="button" class="btn btn-success" ng-click="payMerchant(cardId,cvv,PayAmount,selectedMerchant);">Make Payment</button>
                 </div>
             </div><!-- /payment -->
 

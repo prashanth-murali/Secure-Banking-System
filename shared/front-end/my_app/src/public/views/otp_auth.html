@@ -1,0 +1,12 @@
+<div class="container-fluid login-wrap">
+    <div class="container">
+
+        <form class="form-signin" ng-submit="onLoginSubmit()">
+            <h3>Enter One Time Password(OTP)</h3>
+            <label for="inputPassword" class="sr-only">One Time Password(OTP):</label>
+            <input ng-model="otp" type="password" id="inputPassword" class="form-control" placeholder="One Time Password" required>
+            <button class="btn btn-lg btn-primary btn-block" type="button" ng-click="validateOtp($scope.email,$scope.password,otp,$scope.user);">Sign in</button>
+        </form>
+
+    </div>
+</div>

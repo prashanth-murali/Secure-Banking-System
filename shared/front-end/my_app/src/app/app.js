@@ -245,7 +245,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('create_internal', {
             url: '/create_internal',
             templateUrl: '../views/internal_users/create_internal.html',
-            controller: dashboardAdminController
+            controller: createUserController
         })
 
         .state('settings_admin', {

@@ -206,9 +206,21 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     }
 
     $scope.createAccount=function(userID,amount,accountType){
-        $scope.postcreateAccount(userID,amount,accountType);
-    }
+        $scope.postcreateAccount(userID,amount,accountType).then(function success(){
+            alert('Successfully created Account');
+        }, function errorCallback(response) {
+            if(response.status==401)
+            {
+                alert('Please Enter Valid User ID, Amount and select an Account type. Tier 1 users cannot create accounts without Manager Access.');
+            }
+            else {
+                if (response.status != 200) {
+                    alert('Error : Unauthorized');
+                }
+            }
 
+        });
+    }
 
 
     function getAllTransactions(){

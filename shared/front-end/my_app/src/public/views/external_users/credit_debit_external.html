@@ -24,7 +24,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="account in accounts | filter: search" ng-model="AccountId">
+                <tr ng-repeat="account in accounts | filter: search | filter:filterDebit" ng-model="AccountId">
 
                     <td><a href="#">{{account.accountType | uppercase}}</a></td>
                     <td>{{account.id}}</td>

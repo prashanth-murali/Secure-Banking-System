@@ -36,6 +36,15 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
+    $scope.filterDebit=function(account)
+    {
+        if(account.accountType!='credit')
+        {
+            return true;
+        }
+        return false;
+    };
+
     $scope.postTransactionViaEmail = function(fromId,toId,transferType){
         return $http.post(BACKEND_URL+'/api/transactions/',{
             "fromAccountId": fromId,

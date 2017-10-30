@@ -66,22 +66,56 @@ module.exports = ['$scope','$http','$mdToast', 'authService', '$state', '$base64
         }
     }
 
-    $scope.onLoginSubmit = function(){
-        var auth = "Basic " +$base64.encode($scope.email + ":" + $scope.password);
-        console.log('onLoginSubmit', $scope);
+    $scope.validateOtp=function(username,password,otp,user)
+    {
+        user=authService.getUser();
+        var auth = "Basic " +$base64.encode(user.username+":" + otp);
+        authService.setAuth(auth);
+        console.log("validateOtp start");
+        console.log(user.username);
+        console.log(user.password);
+        console.log(otp);
+        console.log(user);
         console.log(auth);
-        login(auth).then(function successCallback(response) {
-            toast('Success');
-            authService.setAuth(auth);
+        console.log($scope);
+        console.log("validateOtp ends");
+
+        return $http.post(BACKEND_URL + '/api/login/step2',{
+            "username":user.username,
+            "password":user.password,
+            "otptoken":otp
+        }, {
+            headers: {
+                "authorization": auth
+            }
+        }).then(function successCallback(response){
+
+
             authService.setUserId(response.data.id);
-        }, function errorCallback(response) {
-            toast('Invalid Username or Password');
+            authService.setUser(response.data);
+        }, function errorCallback(response){
+            if(response.status!=200){
+                alert('Error: Check your OTP.');
+            }
         }).then(getUser).then(function successCallback(response) {
             var user = response.data;
             authService.setUser(user);
             routeBasedOnUserRole(user);
         },function errorCallback(){
             toast('Error fetching user');
+        });
+    };
+
+    $scope.onLoginSubmit = function(){
+        var auth = "Basic " +$base64.encode($scope.email + ":" + $scope.password);
+        login(auth).then(function successCallback(response) {
+            toast('Success');
+            //authService.setAuth(auth);
+            authService.setUserId(response.data.id);
+            authService.setUser(response.data);
+            $state.transitionTo('otp_auth');
+        }, function errorCallback(response) {
+            toast('Invalid Username or Password');
         });
     };
 }];

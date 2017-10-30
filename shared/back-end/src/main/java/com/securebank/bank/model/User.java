@@ -17,6 +17,8 @@ public class User {
     private String address;
     private String phoneNumber;
     private String request;
+    private String otpToken;
+    private long otpTokenExpires;
 
     @Indexed(unique = true)
     private String username;
@@ -108,6 +110,33 @@ public class User {
 
     public void setRequest(String request) {
         this.request = request;
+    }
+
+    public void generateOtpToken() {
+        String token = new String();
+        token += new Double(Math.floor(Math.random() * 10)).intValue();
+        while (token.length() < 6) {
+            token += new Double(Math.floor(Math.random() * 10)).intValue();
+        }
+        this.otpToken = token;
+        this.otpTokenExpires = (System.currentTimeMillis() / 1000) + 600;
+
+    }
+
+    public String getOtpToken() {
+        return this.otpToken;
+    }
+
+    public void setOtpToken(String token)  { this.otpToken = token; }
+
+    public Boolean isOtpValid(String token) {
+        long curTime = System.currentTimeMillis() / 1000;
+        return (token.equals(this.otpToken) && (curTime <= this.otpTokenExpires));
+    }
+
+    public void extendOtpExpiration() {
+        long curTime = System.currentTimeMillis() / 1000;
+        this.otpTokenExpires = curTime + 600;
     }
 
     @Override

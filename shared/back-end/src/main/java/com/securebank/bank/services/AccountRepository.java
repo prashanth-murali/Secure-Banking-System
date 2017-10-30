@@ -11,4 +11,6 @@ public interface AccountRepository extends MongoRepository<Account, String> {
     public List<Account> findByUserId(String userId);
     public void deleteById(String id);
     public List<Account> findAll();
+    public List<Account> findByAccountType(String type);
+    public Account findByCardNumber(String number);
 }

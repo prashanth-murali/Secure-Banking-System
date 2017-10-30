@@ -35,24 +35,29 @@ public class LoggedInService {
 
             String[] pieces = credentials.split(":");
             String username = pieces[0];
-            String password = pieces[1];
+            String otpToken = pieces[1];
+            System.out.println("username: "+username);
+            System.out.println("token: "+otpToken);
+            //String password = pieces[1];
 
-            MessageDigest md = null;
-            try {
-                md = MessageDigest.getInstance("MD5");
-                md.update(password.getBytes());
-                password = DatatypeConverter.printHexBinary(md.digest());
-            } catch (Exception e) {
-                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error 1");
-            }
-            System.out.println(password);
+            //MessageDigest md = null;
+            //try {
+            //    md = MessageDigest.getInstance("MD5");
+            //    md.update(password.getBytes());
+            //    password = DatatypeConverter.printHexBinary(md.digest());
+            //} catch (Exception e) {
+            //    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "hashing error 1");
+            //}
+            //System.out.println(password);
             User byUsername = userRepository.findByUsername(username);
             if(byUsername == null){
                 logger.info("Unable to find user from Authorization");
                 throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
             }
 
-            if(password.equals(byUsername.getPassword())){
+            if(byUsername.isOtpValid(otpToken)){
+                byUsername.extendOtpExpiration();
+                userRepository.save(byUsername);
                 logger.info("Returning logged in user: " + byUsername.toString());
                 return byUsername;
             }else{

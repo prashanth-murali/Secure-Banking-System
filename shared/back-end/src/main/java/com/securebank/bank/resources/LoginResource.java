@@ -2,6 +2,7 @@ package com.securebank.bank.resources;
 
 import com.securebank.bank.model.Login;
 import com.securebank.bank.model.User;
+import com.securebank.bank.services.EmailService;
 import com.securebank.bank.services.UserRepository;
 import com.securebank.bank.services.errors.ApplicationValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class LoginResource {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    EmailService emailService;
+
     @POST
     public Response login(Login login){
         User byUsername = userRepository.findByUsername(login.getUsername());
@@ -43,6 +47,28 @@ public class LoginResource {
         }
 
         if(login.getPassword().equals(byUsername.getPassword())){
+            byUsername.generateOtpToken();
+            userRepository.save(byUsername);
+            emailService.sendEmail(byUsername.getEmail(), "This is your OTP token, will expired with in ten minute " + byUsername.getOtpToken());
+            byUsername.setOtpToken(null);
+            return Response.status(Response.Status.OK).entity(byUsername).type(MediaType.APPLICATION_JSON).build();
+        }else{
+            // invalid password
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+
+    @POST
+    @Path("/step2")
+    public Response login_step2(Login login){
+        User byUsername = userRepository.findByUsername(login.getUsername());
+
+        if(byUsername == null){
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        if(login.getOtptoken() != null && byUsername.isOtpValid(login.getOtptoken())){
             return Response.status(Response.Status.OK).entity(byUsername).type(MediaType.APPLICATION_JSON).build();
         }else{
             // invalid password

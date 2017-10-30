@@ -21,9 +21,9 @@
                 <tbody>
                 <tr ng-repeat="account in accounts | filter: search">
 
-                    <td><a href="#">{{account.accountType | uppercase}}</a></td>
+                    <td>{{account.accountType | uppercase}}</td>
                     <td>{{account.amount | currency }}</td>
-                    <td><a class="add-withdraw" href="">Add / Withdraw Funds</a></td>
+                    <td>Add / Withdraw Funds</td>
 
                 </tr>
                 </tbody>

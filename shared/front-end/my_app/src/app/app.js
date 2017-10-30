@@ -22,6 +22,8 @@ import internalEmployeeController from './controllers/internalEmployeeController
 import settingsAdminController from './controllers/settingsAdminController';
 import logFileController from './controllers/logFileController';
 import dashboardInternalEmployeeController from './controllers/dashboardInternalEmployeeController';
+import createUserController from './controllers/createUserController.js';
+import settingsManager from './controllers/settingsManager.js';
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -187,6 +189,12 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
             controller: internalEmployeeController
         })
 
+        .state('edit_users_employee', {
+            url: '/edit_users_employee',
+            templateUrl: '../views/internal_users/edit_users_employee.html',
+            controller: internalEmployeeController
+        })
+
         .state('internal_emp_transactions', {
             url: '/internal_emp_transactions',
             templateUrl: '../views/internal_users/internal_emp_transactions.html',
@@ -231,7 +239,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('create_user', {
             url: '/create_user',
             templateUrl: '../views/internal_users/create_user.html',
-            controller: internalEmployeeController
+            controller: createUserController
         })
 
         .state('create_internal', {
@@ -250,6 +258,12 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
             url: '/settings_internal',
             templateUrl: '../views/internal_users/settings_internal.html',
             controller: settingsAdminController
+        })
+
+        .state('settings_manager', {
+            url: '/settings_manager',
+            templateUrl: '../views/internal_users/settings_manager.html',
+            controller: settingsManager
         })
 
         .state('create_account', {

@@ -18,9 +18,37 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         return false;
     };
 
+    $scope.filterRequest=function(access)
+    {
+        if(access.request=='pending')
+        {
+            return true;
+
+        }
+        return false;
+    };
+
+    $scope.getRequests=function(){
+        return $http.get(BACKEND_URL + '/api/users/requests', {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+        });
+    }
+
+    $scope.fetchRequests=function(){
+        $scope.getRequests().then(function successCallback(response) {
+            $scope.requests = response.data;
+        }, function errorCallback(response) {
+            if(response.status!=200) {
+                alert('Error loading user details');
+            }
+        });
+    }
+
     $scope.requestManager=function(){
         return $http.put(BACKEND_URL + '/api/users/requests/'+authService.getUserId(), {
-                "request": "pending"
+            "request": "pending"
         },{
             headers:{
                 "authorization": authService.getAuth()
@@ -68,8 +96,39 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     };
 
-    $scope.fetchUserById(authService.getUserId());
 
+
+    $scope.approveRequest=function(id){
+        return $http.put(BACKEND_URL+'/api/users/requests/'+id,{
+            "request" : "true"
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        }).then(function success(){
+            alert('Accepted Request');
+        }, function errorCallback(){
+            alert('Failed to Accept');
+        })
+    }
+
+    $scope.declineRequest=function(id){
+        return $http.put(BACKEND_URL+'/api/users/requests/'+id,{
+            "request" : "false"
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        }).then(function success(){
+            alert('Declined Request');
+        }, function errorCallback(){
+            alert('Failed to Decline');
+        })
+    }
+
+
+    $scope.fetchUserById(authService.getUserId());
+    $scope.fetchRequests();
 }];
 
 

@@ -122,6 +122,11 @@ public class TransactionsResource {
         User fromUser = userRepository.findById(my_account.getUserId());
         //User toUser = userRepository.findById(target_account.getUserId());
 
+        if(target_account.getAccountType().equals("credit"))
+        {
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED,"Cant send money to Credit Account.");
+        }
+
         //if transaction times exceed 25
         List<Transaction> transactions = transactionsRepository.findByFromAccountId(trans.getFromAccountId());
         if (transactions.size() > 25)

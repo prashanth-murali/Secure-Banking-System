@@ -65,14 +65,26 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
             if(transferType=="via_email")
             {
-                $scope.postTransactionViaEmail(fromId,toId,transferType);
-                alert('Request sent via email. Please Check Statements page for updates on the status of your transfer.');
+                $scope.postTransactionViaEmail(fromId,toId,transferType).then(function success(){
+                    alert('Request sent. Please Check Statements page for updates on the status of your transfer.');
+                },function errorCallback(response)
+                {
+                    if(response.status!=200)
+                    {alert('Error! Please check your details and try again.');}
+                });
+
 
             }
             else
             {
-                $scope.postTransactionViaId(fromId, toId, transferType);
-                alert('Request sent. Please Check Statements page for updates on the status of your transfer.');
+                $scope.postTransactionViaId(fromId, toId, transferType).then(function success(){
+                    alert('Request sent. Please Check Statements page for updates on the status of your transfer.');
+                },function errorCallback(response)
+                {
+                    if(response.status!=200)
+                    {alert('Error! Please check your details and try again.');}
+                });
+
             }
         }
 

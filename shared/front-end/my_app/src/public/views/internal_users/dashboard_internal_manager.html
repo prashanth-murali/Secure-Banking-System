@@ -22,7 +22,7 @@
                 <tbody>
                 <tr ng-repeat="transaction in transactions | filter: search |filter:filterManager" class="transaction" ng-model="TransactionId">
 
-                    <td><a href="#">{{transaction.transactionId}}</a></td>
+                    <td>{{transaction.transactionId}}</td>
                     <td>{{transaction.createdDate}}</td>
                     <td>{{transaction.amount | currency }}</td>
                     <td><button class="btn btn-success" value={{TransactionId=transaction.transactionId}} ng-click="approveTransaction(TransactionId)" onclick=location.reload();>Approve</button></td>

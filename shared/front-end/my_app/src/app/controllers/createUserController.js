@@ -26,22 +26,21 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
                 "authorization": authService.getAuth()
             }
         });
-    }
+    };
 
     $scope.createUser=function(username,email,password,phNumber,name,address,type)
     {
-        $scope.postCreateUser(username,email,password,phNumber,name,address,type).then(function success(){
-
-        }.then( function success(){alert('Successful : User Created!');},function errorCallback(response) {
+        $scope.postCreateUser(username,email,password,phNumber,name,address,type).then( function success(){
+            alert('Successful : User Created!');
+        },function errorCallback(response) {
             if(response.status==401)
             {
                 alert('Error : Invalid Email Address : Email Address Already Exists or Invalid Password : Password should be 8 to 15 characters in length and must have uppercase characters and special characters');
             }
 
-    }));
+    });
 
-
-    }
+    };
 
     $scope.postcreateAccount=function(userID,amount,accountType){
 
@@ -57,11 +56,10 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             });
         }
 
-    }
+    };
 
     $scope.createAccount=function(userID,amount,accountType){
-        $scope.postcreateAccount(userID,amount,accountType).then(function successCallback(response) {
-        }.then(function success(){
+        $scope.postcreateAccount(userID,amount,accountType).then(function success(){
             alert('Successfully created Account');
         }, function errorCallback(response) {
             if(response.status==401)
@@ -74,8 +72,8 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
                 }
             }
 
-        }));
-    }
+        });
+    };
 
 
 

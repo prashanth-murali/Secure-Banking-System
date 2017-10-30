@@ -3,6 +3,13 @@ import '@uirouter/angularjs';
 
 import '../style/app.css';
 import 'angular-material/angular-material.css'
+import 'angular-virtual-keyboard/release/angular-virtual-keyboard.css';
+import 'angular-virtual-keyboard/release/angular-virtual-keyboard.js';
+// import 'angular-virtual-keyboard/src/angular-virtual-keyboard.js';
+// import 'angular-virtual-keyboard/src/vki-core.js';
+// import 'angular-virtual-keyboard/src/vki-deadkeys.js';
+// import 'angular-virtual-keyboard/src/vki-layouts.js';
+// import 'angular-virtual-keyboard/css/angular-virtual-keyboard.css';
 
 import 'angular-aria';
 import 'angular-animate';
@@ -29,7 +36,7 @@ import requestsToMerchController from './controllers/requestsToMerchController.j
 
 const MODULE_NAME = 'app';
 
-let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
+let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage','angular-virtual-keyboard']);
 
 app.directive('app', function(){
     return {

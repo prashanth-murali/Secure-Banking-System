@@ -35,7 +35,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         },function errorCallback(response) {
             if(response.status==401)
             {
-                alert('Error : Invalid Email Address : Email Address Already Exists or Invalid Password : Password should be 8 to 15 characters in length and must have uppercase characters and special characters');
+                alert('Error : Invalid Authorization or Invalid Email Address : Email Address Already Exists or Invalid Password : Password should be 8 to 15 characters in length and must have uppercase characters and special characters');
             }
 
     });

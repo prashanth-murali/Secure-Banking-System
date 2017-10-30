@@ -106,11 +106,11 @@ public class AccountResource {
             if (list.size() >= 1) {
                 for (Account account : list) {
                     if (account.getAccountType().equals("credit")) {
-                        account.setCreditshopping(0.0);
                         List<Transaction> transactions = transactionsRepository.findByFromAccountId(account.getId());
                         double creditamount = 0.0;
                         for (Transaction transaction : transactions) {
-                            creditamount += transaction.getAmount();
+                            if (transaction.getStatus().equals("approved"));
+                                creditamount += transaction.getAmount();
                         }
                         account.setCreditshopping(creditamount);
                         accountRepository.save(account);
@@ -168,6 +168,7 @@ public class AccountResource {
                         cvv += new Double(Math.floor(Math.random() * 10)).intValue();
                     }
                     account.setCvv(cvv);
+                    account.setCreditshopping(0.0);
                     String emailMessageBody = "Dear Customer, your bank account has been created. Happy Banking with us!!!";
                     emailService.sendEmail(accountUser.getEmail(), emailMessageBody);
                     account.setId(null);// ensure that id is set by database

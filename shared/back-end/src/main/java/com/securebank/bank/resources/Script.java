@@ -49,8 +49,10 @@ public class Script {
             double credit = 0;
             double noncredit = 0;
             for (Account account : allaccount) {
-                if (account.getAccountType().equals("credit"))
+                if (account.getAccountType().equals("credit")) {
+                    System.out.println(account);
                     credit = account.getCreditshopping();
+                }
                 else
                     noncredit += account.getAmount();
             }

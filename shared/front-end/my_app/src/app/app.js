@@ -51,6 +51,17 @@ app.directive('sideBar', function(){
         templateUrl: '../views/side_bar_internal_employee.html'
     }
 });
+app.directive('logout',function () {
+    return {
+        template: '<a ng-click="logout()">Logout</a>',
+        controller: ['$scope','$state','$sessionStorage', function ($scope, $state,$sessionStorage) {
+            $scope.logout = function () {
+                $sessionStorage.$reset();
+                $state.transitionTo('home');
+            };
+        }]
+    };
+});
 
 app.directive('dashboardAdminUsers', function(){
     return {
@@ -85,6 +96,15 @@ app.directive('sideBarMerchant', function(){
 app.controller('AppCtrl', function(){
     this.url = 'https://github.com/preboot/angular-webpack';
 });
+
+app.run(['$rootScope','authService','$state',function ($rootScope, authService, $state) {
+    // Listen to '$locationChangeSuccess', not '$stateChangeStart'
+    $rootScope.$on('$locationChangeSuccess', function() {
+        if(authService.getUser() === undefined){
+            $state.go('home');
+        }
+    })
+}]);
 
 app.factory('authService', authService);
 app.factory('common', common);

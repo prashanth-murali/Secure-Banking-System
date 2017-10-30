@@ -35,8 +35,9 @@
                     <tr>
                         <th>Card ID</th>
                         <th>CVV</th>
+                        <th>Account Type</th>
                         <th>Credit Remaining</th>
-                        <th>Pay</th>
+                        <th>Amount Due</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -45,7 +46,7 @@
                         <td>{{account.cvv}}</td>
                         <td>{{account.accountType | uppercase}}</td>
                         <td>{{account.amount | currency }}</td>
-                        <td><button type="button" class="btn btn-success">Pay Back Credit</button></td>
+                        <td>{{account.creditshopping | currency }}</td>
 
                     </tr>
                     </tbody>
@@ -67,14 +68,7 @@
                     <input type="text" class="form-control" placeholder="0.00" ng-model="PayAmount">
                 </p>
                 <hr>
-                <p>
-                    <label>Upload Security Token :</label>
-                    <input type="file" class="form-control">
-                </p>
-                <p>
-                    <label>One time password: <a href="" class="btn btn-xs btn-info">Generate OTP</a></label>
-                    <input type="text" class="form-control">
-                </p>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" ng-click="payMerchant(cardId,cvv,PayAmount,selectedMerchant);">Make Payment</button>
                 </div>

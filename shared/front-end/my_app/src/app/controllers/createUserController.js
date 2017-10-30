@@ -31,21 +31,14 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     $scope.createUser=function(username,email,password,phNumber,name,address,type)
     {
         $scope.postCreateUser(username,email,password,phNumber,name,address,type).then(function success(){
-            alert('User Created! Check Email to Continue.');
-        }, function errorCallback(response) {
+
+        }.then( function success(){alert('Successful : User Created!');},function errorCallback(response) {
             if(response.status==401)
             {
                 alert('Error : Invalid Email Address : Email Address Already Exists or Invalid Password : Password should be 8 to 15 characters in length and must have uppercase characters and special characters');
             }
 
-            else {
-                if (response.status == 200) {
-                    alert('Account Created! Check Email to Continue.');
-                }
-            }
-
-
-    });
+    }));
 
 
     }

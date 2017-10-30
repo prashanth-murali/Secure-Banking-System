@@ -36,6 +36,8 @@ public class LoggedInService {
             String[] pieces = credentials.split(":");
             String username = pieces[0];
             String otpToken = pieces[1];
+            System.out.println("username: "+username);
+            System.out.println("token: "+otpToken);
             //String password = pieces[1];
 
             //MessageDigest md = null;

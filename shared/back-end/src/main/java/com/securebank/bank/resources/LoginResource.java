@@ -50,7 +50,7 @@ public class LoginResource {
             byUsername.generateOtpToken();
             userRepository.save(byUsername);
             emailService.sendEmail(byUsername.getEmail(), "This is your OTP token, will expired with in ten minute " + byUsername.getOtpToken());
-
+            byUsername.setOtpToken(null);
             return Response.status(Response.Status.OK).entity(byUsername).type(MediaType.APPLICATION_JSON).build();
         }else{
             // invalid password

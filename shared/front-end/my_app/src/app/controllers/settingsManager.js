@@ -56,9 +56,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    function randomString() {
-        return Math.floor(Math.random()*90000) + 10000 + "";
-    }
 
     $scope.update = function(address,email,id,name,password,phoneNumber,type,username){
         return $http.put(BACKEND_URL+'/api/users/'+id,{

@@ -189,11 +189,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         else {alert('Sender and Receiver Account Id cannot be the same');}
     }
 
-    $scope.postcreateAccount=function(userID,merchName,amount,accountType){
+    $scope.postcreateAccount=function(userID,amount,accountType){
 
         {
             return $http.post(BACKEND_URL+'/api/accounts/',{
-                "name":merchName,
+
                 "userId": userID,
                 "amount": amount,
                 "accountType": accountType

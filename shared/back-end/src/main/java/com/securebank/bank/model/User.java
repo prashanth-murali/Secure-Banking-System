@@ -127,6 +127,8 @@ public class User {
         return this.otpToken;
     }
 
+    public void setOtpToken(String token)  { this.otpToken = token; }
+
     public Boolean isOtpValid(String token) {
         long curTime = System.currentTimeMillis() / 1000;
         return (token.equals(this.otpToken) && (curTime <= this.otpTokenExpires));

@@ -43,7 +43,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             alert('Transaction Approved');
         }, function errorCallback(response){
             if(response.status!=200){
-                alert('Error!');
+                toast('Transaction Loading...');
+            }
+
+            if(response.status==401 || response.status==404 || response.status==500){
+                alert('Error! Please Try Again!');
             }
         });
     }

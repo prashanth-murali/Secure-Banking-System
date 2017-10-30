@@ -118,7 +118,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         }
         if(data>=1){
         $scope.sendAddMoneyReq(AccountId,data).then(function success(){
-            alert('Withdrawal Successful.');
+            alert('Deposit Successful.');
         },function errorCallback(response){
             if(response.status!=200)
             {

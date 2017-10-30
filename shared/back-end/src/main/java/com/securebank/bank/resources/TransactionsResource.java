@@ -271,7 +271,7 @@ public class TransactionsResource {
             for (User user : users) {
                 List<Account> temp = accountRepository.findByUserId(user.getId());
                 for (Account account : temp) {
-                    if (account.getAccountType().equals("checking") || account.getAccountType().equals("savings"))
+                    if (account.getAccountType().equals("checking"))
                         accounts.add(account);
                 }
             }

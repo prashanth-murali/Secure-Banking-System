@@ -1,16 +1,12 @@
 package com.securebank.bank.resources;
 
 import com.securebank.bank.model.Account;
+import com.securebank.bank.model.Transaction;
 import com.securebank.bank.model.User;
-import com.securebank.bank.services.AccountRepository;
-import com.securebank.bank.services.LoggedInService;
-import com.securebank.bank.services.UserRepository;
-import com.securebank.bank.services.ValidationService;
+import com.securebank.bank.services.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.securebank.bank.services.EmailService;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -48,6 +44,9 @@ public class AccountResource {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    TransactionsRepository transactionsRepository;
 
 
     @GET
@@ -102,8 +101,24 @@ public class AccountResource {
     @Path("/user/{userId}")
     public List<Account> getAccountsForUser(@PathParam("userId") String userId, @HeaderParam("Authorization") String authorization){
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
-        if (loggedInUser.getId().equals(userId))
+        if (loggedInUser.getId().equals(userId)){
+            List<Account> list = accountRepository.findByUserId(userId);
+            if (list.size() >= 1) {
+                for (Account account : list) {
+                    if (account.getAccountType().equals("credit")) {
+                        account.setCreditshopping(0.0);
+                        List<Transaction> transactions = transactionsRepository.findByFromAccountId(account.getId());
+                        double creditamount = 0.0;
+                        for (Transaction transaction : transactions) {
+                            creditamount += transaction.getAmount();
+                        }
+                        account.setCreditshopping(creditamount);
+                        accountRepository.save(account);
+                    }
+                }
+            }
             return accountRepository.findByUserId(userId);
+        }
         else
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }

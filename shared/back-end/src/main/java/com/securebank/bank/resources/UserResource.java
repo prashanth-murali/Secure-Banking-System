@@ -1,5 +1,6 @@
 package com.securebank.bank.resources;
 
+import com.securebank.bank.model.Account;
 import com.securebank.bank.model.User;
 import com.securebank.bank.services.LoggedInService;
 import com.securebank.bank.services.UserRepository;
@@ -326,4 +327,6 @@ public class UserResource {
         else
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Not Authorized");
     }
+
+
 }

@@ -8,6 +8,13 @@ kill -9 `cat /home/ubuntu/CSE545-Project/shared/back-end/pid`
 cd /home/ubuntu/CSE545-Project/
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/github_cse545
+
+git checkout develop
+git pull --no-edit origin develop
+git checkout prepare-prod
+git merge --no-edit develop
+git push origin prepare-prod
+
 #git pull --no-edit origin develop
 
 # 2. build deployable

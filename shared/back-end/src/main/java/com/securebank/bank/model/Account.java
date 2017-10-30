@@ -11,13 +11,15 @@ public class Account {
     private Double amount;
     private String accountType; // "checking"/"savings"/"credit"
     private String cardNumber;
+    private String cvv;
 
-    public Account(String id, String userId, Double amount, String accountType, String cardNumber) {
+    public Account(String id, String userId, Double amount, String accountType, String cardNumber, String cvv) {
         this.id = id;
         this.userId = userId;
         this.amount = amount;
         this.accountType = accountType;
         this.cardNumber = cardNumber;
+        this.cvv = cvv;
     }
 
     public Account() {
@@ -65,4 +67,8 @@ public class Account {
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
+
+    public String getCvv() { return cvv;}
+
+    public  void  setCvv(String cvv) { this.cvv = cvv; }
 }

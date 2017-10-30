@@ -11,15 +11,17 @@ import java.util.Date;
     private String fromAccountId;
     private String toAccountId;
     private String createdDate;
-    private String type;
+    private String type; //internal //external // payment
     private Double amount;
     private String status; // "pending", "approved", "denied"
     private Boolean isCritical;
     private String email;
+    private String creditCard;
+    private String cvv;
 
     public Transaction() {}
 
-     public Transaction(String transactionId, String fromAccountId, String toAccountId, String createdDate, String type, Double amount, String status, Boolean isCritical, String email) {
+     public Transaction(String transactionId, String fromAccountId, String toAccountId, String createdDate, String type, Double amount, String status, Boolean isCritical, String email, String creditCard, String cvv) {
          this.transactionId = transactionId;
          this.fromAccountId = fromAccountId;
          this.toAccountId = toAccountId;
@@ -29,6 +31,8 @@ import java.util.Date;
          this.status = status;
          this.isCritical = isCritical;
          this.email = email;
+         this.creditCard = creditCard;
+         this.cvv = cvv;
      }
 
 
@@ -99,6 +103,22 @@ import java.util.Date;
          isCritical = critical;
      }
 
+     public String getCreditCard() {
+         return creditCard;
+     }
+
+     public void setCreditCard(String creditCard) {
+         this.creditCard = creditCard;
+     }
+
+     public String getCvv() {
+         return cvv;
+     }
+
+     public void setCvv(String cvv) {
+         this.cvv = cvv;
+     }
+
      public String getEmail() {
          return email;
      }
@@ -106,4 +126,5 @@ import java.util.Date;
      public void setEmail(String email) {
          this.email = email;
      }
+
  }

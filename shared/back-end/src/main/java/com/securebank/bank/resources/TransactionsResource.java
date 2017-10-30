@@ -262,10 +262,10 @@ public class TransactionsResource {
 
 
     @GET
-    @Path("/merchantlist")
+    @Path("/payments")
     public List<Account> getAllMerchantAccounts (@HeaderParam("Authorization") String authorization){
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
-        if (loggedInUser.getType().equals("tier1")) {
+        if (loggedInUser.getType().equals("counsumer")) {
             List<Account> accounts = new ArrayList<>();
             List<User> users = userRepository.findByType("merchant");
             for (User user : users) {
@@ -276,6 +276,100 @@ public class TransactionsResource {
                 }
             }
             return accounts;
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+    }
+
+    @POST
+    @Path("/payments")
+    public Transaction makePayment (@HeaderParam("Authorization") String authorization, Transaction trans){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        List<Account> accounts = accountRepository.findByUserId(loggedInUser.getId());
+        int credit = 0;
+        Account creditacc = new Account();
+        for (Account account : accounts) {
+            if (account.getAccountType().equals("credit")) {
+                creditacc = account;
+                credit = 1;
+            }
+
+        }
+
+        if (loggedInUser.getType().equals("consumer") && credit == 1) {
+            if (creditacc.getCardNumber().equals(trans.getCreditCard()) && creditacc.getCvv().equals(trans.getCvv()) && creditacc.getAmount() >= trans.getAmount()) {
+                if (trans.getAmount() > 0) {
+                    trans.setStatus("pending");
+                    trans.setCreatedDate(new Date().toString());
+                    trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
+                    trans.setFromAccountId(creditacc.getAccountType());
+                    return transactionsRepository.save(trans);
+                }
+                else
+                    throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Wrong Amount");
+            }
+            else
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Credit card validation wrong or credit is not enough");
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+    }
+
+    @GET
+    @Path("/payments/requests")
+    public List<Transaction> getPaymentRequests (@HeaderParam("Authorization") String authorization){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        List<Account> accounts = accountRepository.findByUserId(loggedInUser.getId());
+        Account merchantacc = new Account();
+        for (Account account : accounts) {
+            if (account.getAccountType().equals("checking"))
+                merchantacc = account;
+        }
+        if (loggedInUser.getType().equals("merchant")) {
+            List<Transaction> transactions = transactionsRepository.findByToAccountId(merchantacc.getId());
+            return transactions;
+        }
+        else
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
+    }
+
+    @PUT
+    @Path("/payments/requests/{transactionId}")
+    public Transaction updatePayment (@HeaderParam("Authorization") String authorization, @PathParam("transactionId") String transactionId, Transaction trans){
+        User loggedInUser = loggedInService.getLoggedInUser(authorization);
+        List<Account> accounts = accountRepository.findByUserId(loggedInUser.getId());
+        Transaction byTransaction = transactionsRepository.findByTransactionId(transactionId);
+        Account consumeracc  = accountRepository.findById(byTransaction.getFromAccountId());
+        Account merchantacc = accountRepository.findById(byTransaction.getToAccountId());
+
+        if (consumeracc == null || merchantacc == null)
+            throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Account not exist");
+
+
+        if (loggedInUser.getType().equals("merchant") && merchantacc.getId().equals(byTransaction.getToAccountId())) {
+            if (trans.getStatus().equals("approved")) {
+                if (byTransaction.getAmount() <= consumeracc.getAmount()) {
+                    byTransaction.setStatus("approved");
+                    double myRemain = consumeracc.getAmount() - byTransaction.getAmount();
+                    consumeracc.setAmount(myRemain);
+                    double targetRemain = merchantacc.getAmount() + byTransaction.getAmount();
+                    merchantacc.setAmount(targetRemain);
+                    accountRepository.save(consumeracc);
+                    accountRepository.save(merchantacc);
+                    return transactionsRepository.save(byTransaction);
+                }
+                else {
+                    byTransaction.setStatus("denied");
+                    return transactionsRepository.save(byTransaction);
+                }
+
+            }
+            else if (trans.getStatus().equals("denied")) {
+                byTransaction.setStatus("denied");
+                return transactionsRepository.save(byTransaction);
+            }
+            else
+                throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");
         }
         else
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Invalid Auth");

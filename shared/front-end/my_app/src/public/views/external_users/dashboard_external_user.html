@@ -22,7 +22,7 @@
                 <tbody>
                 <tr ng-repeat="account in accounts | filter: search">
 
-                    <td><a href="#">{{account.accountType | uppercase}}</a></td>
+                    <td>{{account.accountType | uppercase}}</td>
                     <td>{{account.id}}</td>
                     <td>{{account.amount | currency }}</td>
 

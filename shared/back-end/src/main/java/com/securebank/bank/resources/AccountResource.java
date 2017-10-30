@@ -140,7 +140,19 @@ public class AccountResource {
             if(Arrays.asList(types).contains(acct)) {
                 if (acct.equals("credit")) {
                     //generate credit card number
-
+                    String cardNumber = new String();
+                    cardNumber += new Double(Math.floor(Math.random() * 10)).intValue();
+                    while (cardNumber.length() < 16) {
+                        cardNumber += new Double(Math.floor(Math.random() * 10)).intValue();
+                    }
+                    account.setCardNumber(cardNumber);
+                    //generate CVV
+                    String cvv = new String();
+                    cvv += new Double(Math.floor(Math.random() * 10)).intValue();
+                    while (cvv.length() < 3) {
+                        cvv += new Double(Math.floor(Math.random() * 10)).intValue();
+                    }
+                    account.setCvv(cvv);
                     String emailMessageBody = "Dear Customer, your bank account has been created. Happy Banking with us!!!";
                     emailService.sendEmail(accountUser.getEmail(), emailMessageBody);
                     account.setId(null);// ensure that id is set by database

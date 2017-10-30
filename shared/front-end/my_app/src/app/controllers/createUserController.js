@@ -30,21 +30,20 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
     $scope.createUser=function(username,email,password,phNumber,name,address,type)
     {
-        $scope.postCreateUser(username,email,password,phNumber,name,address,type).then(function successCallback(response) {
-    }, function errorCallback(response) {
+        $scope.postCreateUser(username,email,password,phNumber,name,address,type).then(function success(){
+            alert('User Created! Check Email to Continue.');
+        }, function errorCallback(response) {
             if(response.status==401)
             {
                 alert('Error : Invalid Email Address : Email Address Already Exists or Invalid Password : Password should be 8 to 15 characters in length and must have uppercase characters and special characters');
             }
-            if(response.status==500)
-            {
-                alert('Error : Unauthorized');
-            }
+
             else {
-                if (response.status != 200) {
-                    alert('Error : Unauthorized');
+                if (response.status == 200) {
+                    alert('Account Created! Check Email to Continue.');
                 }
             }
+
 
     });
 
@@ -68,7 +67,21 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     }
 
     $scope.createAccount=function(userID,amount,accountType){
-        $scope.postcreateAccount(userID,amount,accountType);
+        $scope.postcreateAccount(userID,amount,accountType).then(function successCallback(response) {
+        }.then(function success(){
+            alert('Successfully created Account');
+        }, function errorCallback(response) {
+            if(response.status==401)
+            {
+                alert('Please Enter Valid User ID, Amount and select an Account type. Tier 1 users cannot create accounts without Manager Access.');
+            }
+            else {
+                if (response.status != 200) {
+                    alert('Error : Unauthorized');
+                }
+            }
+
+        }));
     }
 
 

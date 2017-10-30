@@ -265,14 +265,17 @@ public class TransactionsResource {
     @Path("/payments")
     public List<Account> getAllMerchantAccounts (@HeaderParam("Authorization") String authorization){
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
-        if (loggedInUser.getType().equals("counsumer")) {
+        if (loggedInUser.getType().equals("consumer")) {
             List<Account> accounts = new ArrayList<>();
             List<User> users = userRepository.findByType("merchant");
             for (User user : users) {
                 List<Account> temp = accountRepository.findByUserId(user.getId());
                 for (Account account : temp) {
-                    if (account.getAccountType().equals("checking"))
+                    if (account.getAccountType().equals("checking")){
+                        account.setName(user.getName());
                         accounts.add(account);
+
+                    }
                 }
             }
             return accounts;
@@ -285,24 +288,21 @@ public class TransactionsResource {
     @Path("/payments")
     public Transaction makePayment (@HeaderParam("Authorization") String authorization, Transaction trans){
         User loggedInUser = loggedInService.getLoggedInUser(authorization);
-        List<Account> accounts = accountRepository.findByUserId(loggedInUser.getId());
-        int credit = 0;
-        Account creditacc = new Account();
-        for (Account account : accounts) {
-            if (account.getAccountType().equals("credit")) {
-                creditacc = account;
-                credit = 1;
-            }
+        Account fromacc = accountRepository.findByCardNumber(trans.getCreditCard());
+        Account toacc = accountRepository.findById(trans.getToAccountId());
 
-        }
+        System.out.println("credit card :" +trans.getCreditCard());
+        System.out.println("to acc id :" +trans.getToAccountId());
+        System.out.println("loggedInUser :" +loggedInUser.getUsername());
 
-        if (loggedInUser.getType().equals("consumer") && credit == 1) {
-            if (creditacc.getCardNumber().equals(trans.getCreditCard()) && creditacc.getCvv().equals(trans.getCvv()) && creditacc.getAmount() >= trans.getAmount()) {
+        if (loggedInUser.getType().equals("consumer") && fromacc.getAccountType().equals("credit") && toacc.getAccountType().equals("checking")) {
+            if (fromacc.getCardNumber().equals(trans.getCreditCard()) && fromacc.getCvv().equals(trans.getCvv()) && fromacc.getAmount() >= trans.getAmount()) {
                 if (trans.getAmount() > 0) {
                     trans.setStatus("pending");
                     trans.setCreatedDate(new Date().toString());
                     trans.setTransactionId(null);// ensure the user does not pass their own id to mongo
-                    trans.setFromAccountId(creditacc.getAccountType());
+                    trans.setType(fromacc.getAccountType());
+                    trans.setFromAccountId(fromacc.getId());
                     return transactionsRepository.save(trans);
                 }
                 else
@@ -341,6 +341,10 @@ public class TransactionsResource {
         Transaction byTransaction = transactionsRepository.findByTransactionId(transactionId);
         Account consumeracc  = accountRepository.findById(byTransaction.getFromAccountId());
         Account merchantacc = accountRepository.findById(byTransaction.getToAccountId());
+
+        System.out.println(byTransaction.getFromAccountId());
+        System.out.println(byTransaction.getFromAccountId());
+
 
         if (consumeracc == null || merchantacc == null)
             throw new ApplicationValidationError(Response.Status.UNAUTHORIZED, "Account not exist");

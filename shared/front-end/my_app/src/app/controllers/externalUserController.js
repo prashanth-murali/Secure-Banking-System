@@ -92,7 +92,19 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
     $scope.addMoney=function(AccountId)
     {
         var data=prompt("Enter_Amount","1000");
-        $scope.sendAddMoneyReq(AccountId,data);
+        if(data<1){
+            alert('Please Enter a Valid Amount!');
+        }
+        if(data>=1){
+        $scope.sendAddMoneyReq(AccountId,data).then(function success(){
+            alert('Withdrawal Successful.');
+        },function errorCallback(response){
+            if(response.status!=200)
+            {
+                alert('Please Enter a Valid Amount.');
+            }
+        });
+        }
 
     }
 
@@ -116,7 +128,14 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
     $scope.withdrawMoney=function(AccountId){
         var data=prompt("Enter_Amount","1000");
-        $scope.sendWithdrawMoneyReq(AccountId,data);
+        $scope.sendWithdrawMoneyReq(AccountId,data).then(function success(){
+            alert('Withdrawal Successful.');
+        },function errorCallback(response){
+            if(response.status!=200)
+            {
+                alert('Please Enter a Valid Amount.');
+            }
+        });
     };
 
     $scope.sendWithdrawMoneyReq = function(AccountId,Amount){
@@ -154,40 +173,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     };
 
-    /**function setRandomCreateData() {
-        $scope.create = {
-            "username": randomString(),
-            "email": randomString()+"@abc.com",
-            "password": "password",
-            "firstName": randomString(),
-            "lastName": randomString(),
-            "is_staff": false,
-            "uType": "tier1",
-            "isMerchant": false,
-        };
-    }**/
-
-    /**function createUser(){
-        return $http({
-            url:BACKEND_URL + '/api/users/',
-            method: 'POST',
-            data: $httpParamSerializerJQLike({
-                "username": $scope.create.username,
-                "email": $scope.create.email,
-                "password": $scope.create.password,
-                "first_name": $scope.create.firstName,
-                "last_name": $scope.create.lastName,
-                "is_staff": false,
-                "uType": $scope.create.uType,
-                "isMerchant": $scope.create.isMerchant === true ? true : false,
-                "accounts": []
-            }),
-            headers: {
-                "authorization": authService.getAuth(),
-                "Content-Type" :"application/x-www-form-urlencoded"
-            }
-        });
-    }**/
 
     function fetchAccounts() {
         getAccountsForUser().then(function successCallback(response) {
@@ -196,45 +181,6 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
             toast('Error loading accounts');
         });
     }
-
-    /**$scope.submit = function () {
-        console.log($scope.create);
-        createUser().then(function successCallback(response) {
-            console.log(response.data);
-            toast('Successfully created User');
-            fetchUsers();
-            delete $scope.create; //clear inputted data
-        }, function errorCallback(response) {
-            toast('Error loading users');
-        });
-    };
-
-    $scope.setRandomData = function () {
-        setRandomCreateData();
-    };**/
-
-    /**$scope.editUser = function (user) {
-        console.log('editUser',user);
-        $state.transitionTo('dashboard_admin_edit_user',{user:user});
-    };
-
-    $scope.userData = function (user) {
-        console.log('userData',user);
-        $state.transitionTo('dashboard_admin',{user:user});
-    };
-
-    $scope.deleteUser = function (user) {
-        console.log('delete user: ', user);
-        $http.delete(user.url,{
-            headers: {
-                "authorization": authService.getAuth(),
-            }
-        }).then(function success(){
-            fetchUsers();
-        }, function errorCallback(){
-            toast('Failed to delete User');
-        })
-    };**/
 
 
     fetchAccounts();

@@ -31,16 +31,60 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    function fetchAllmerchants(){
-        getAllMerchants().then(function successCallback(response){
-            $scope.merchants = response.data;
-            },
-        function errorCallback(response){
-            if(response.status!=200)
-            {
-                toast('Error Fetching Merchants!');
+    $scope.approvePayment=function(TransactionId){
+        return $http.put(BACKEND_URL + '/api/transactions/payments/requests/'+TransactionId, {
+            "status":"approved"
+        },{
+            headers: {
+                "authorization": authService.getAuth()
+            }
+
+        }).then(function successCallback(){
+            alert('Transaction Approved');
+        }, function errorCallback(response){
+            if(response.status!=200){
+                alert('Error!');
             }
         });
+    }
+
+    $scope.filterMerchant=function(transaction)
+    {
+        if(transaction.status=='pending')
+        {
+            return true;
+        }
+        return false;
+    };
+
+    $scope.declinePayment=function(TransactionId){
+        return $http.put(BACKEND_URL + '/api/transactions/payments/requests/'+TransactionId, {
+            "status":"denied"
+        },{
+            headers: {
+                "authorization": authService.getAuth()
+            }
+
+        }).then(function successCallback(){
+            alert('Transaction Declined');
+        }, function errorCallback(response){
+            if(response.status!=200){
+                alert('Error!');
+            }
+        });
+    }
+
+
+    function fetchAllmerchants(){
+        getAllMerchants().then(function successCallback(response){
+                $scope.merchants = response.data;
+            },
+            function errorCallback(response){
+                if(response.status!=200)
+                {
+                    toast('Error Fetching Merchants!');
+                }
+            });
     }
 
     $scope.payMerchant=function(cardId,cvv,amount,merchant){
@@ -55,17 +99,8 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
                 "authorization": authService.getAuth()
             }
 
-        }).then(function success(){
-            alert('Request Sent. Check Statements page to see Status of Transaction.');
-        },function errorCallback(response){
-            if(response.status!=200)
-            {
-                alert('Error : Please Verify Details');
-            }
         });
     }
-
-
 
     $scope.postTransactionViaId = function(fromId,toId,transferType){
         return $http.post(BACKEND_URL+'/api/transactions/',{
@@ -227,6 +262,27 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         return false;
     };
 
+    $scope.getRequests=function(){
+        return $http.get(BACKEND_URL + '/api/transactions/payments/requests', {
+            headers: {
+                "authorization": authService.getAuth()
+            }
+
+        });
+    }
+
+    function fetchAllRequests(){
+        $scope.getRequests().then(function successCallback(response){
+                $scope.merchReqs = response.data;
+            },
+            function errorCallback(response){
+                if(response.status!=200)
+                {
+                    toast('Error Fetching Merchants!');
+                }
+            });
+    }
+
 
     function fetchAccounts() {
         getAccountsForUser().then(function successCallback(response) {
@@ -236,8 +292,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     }
 
-    fetchAccounts();
-    fetchAllmerchants();
+    fetchAllRequests();
 
 }];
 

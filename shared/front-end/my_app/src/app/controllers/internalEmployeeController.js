@@ -76,7 +76,7 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
     $scope.filterManager=function(transaction)
     {
-        if(transaction.status=='pending')
+        if(transaction.status=='pending' && transaction.type!='credit')
         {
                 return true;
         }
@@ -189,10 +189,11 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         else {alert('Sender and Receiver Account Id cannot be the same');}
     }
 
-    $scope.postcreateAccount=function(userID,amount,accountType){
+    $scope.postcreateAccount=function(userID,merchName,amount,accountType){
 
         {
             return $http.post(BACKEND_URL+'/api/accounts/',{
+                "name":merchName,
                 "userId": userID,
                 "amount": amount,
                 "accountType": accountType
@@ -205,10 +206,22 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
     }
 
-    $scope.createAccount=function(userID,amount,accountType){
-        $scope.postcreateAccount(userID,amount,accountType);
-    }
+    $scope.createAccount=function(userID,merchName,amount,accountType){
+        $scope.postcreateAccount(userID,merchName,amount,accountType).then(function success(){
+            alert('Successfully created Account');
+        }, function errorCallback(response) {
+            if(response.status==401)
+            {
+                alert('Please Enter Valid User ID, Amount and select an Account type. Tier 1 users cannot create accounts without Manager Access.');
+            }
+            else {
+                if (response.status != 200) {
+                    alert('Error : Unauthorized');
+                }
+            }
 
+        });
+    }
 
 
     function getAllTransactions(){

@@ -24,6 +24,9 @@ import logFileController from './controllers/logFileController';
 import dashboardInternalEmployeeController from './controllers/dashboardInternalEmployeeController';
 import createUserController from './controllers/createUserController.js';
 import settingsManager from './controllers/settingsManager.js';
+import paymentExternalUserController from './controllers/paymentExternalUserController.js';
+import requestsToMerchController from './controllers/requestsToMerchController.js';
+
 const MODULE_NAME = 'app';
 
 let app = angular.module(MODULE_NAME, ['ui.router', 'ngMaterial', 'base64', 'ngStorage']);
@@ -50,6 +53,17 @@ app.directive('sideBar', function(){
     return {
         templateUrl: '../views/side_bar_internal_employee.html'
     }
+});
+app.directive('logout',function () {
+    return {
+        template: '<a ng-click="logout()">Logout</a>',
+        controller: ['$scope','$state','$sessionStorage', function ($scope, $state,$sessionStorage) {
+            $scope.logout = function () {
+                $sessionStorage.$reset();
+                $state.transitionTo('home');
+            };
+        }]
+    };
 });
 
 app.directive('dashboardAdminUsers', function(){
@@ -86,6 +100,15 @@ app.controller('AppCtrl', function(){
     this.url = 'https://github.com/preboot/angular-webpack';
 });
 
+app.run(['$rootScope','authService','$state',function ($rootScope, authService, $state) {
+    // Listen to '$locationChangeSuccess', not '$stateChangeStart'
+    $rootScope.$on('$locationChangeSuccess', function() {
+        if(authService.getUser() === undefined){
+            $state.go('home');
+        }
+    })
+}]);
+
 app.factory('authService', authService);
 app.factory('common', common);
 
@@ -121,17 +144,13 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('payments_external_user', {
             url: '/payments_external_user',
             templateUrl: '../views/external_users/payments_external_user.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: paymentExternalUserController
         })
 
         .state('requests_to_merchant', {
             url: '/requests_to_merchant',
             templateUrl: '../views/external_users/requests_to_merchant.html',
-            controller: ['common','$scope', function(common,$scope){
-                $scope.goBack = common.goBack;
-            }]
+            controller: requestsToMerchController
         })
 
         .state('settings_ext_customer', {
@@ -245,7 +264,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
         .state('create_internal', {
             url: '/create_internal',
             templateUrl: '../views/internal_users/create_internal.html',
-            controller: dashboardAdminController
+            controller: createUserController
         })
 
         .state('settings_admin', {

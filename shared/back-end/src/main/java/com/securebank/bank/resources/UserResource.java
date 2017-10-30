@@ -288,12 +288,14 @@ public class UserResource {
             byId.setName(user.getName());
             byId.setAddress(user.getAddress());
             byId.setPhoneNumber(user.getPhoneNumber());
+            byId.setType(user.getType());
             return userRepository.save(byId);
         }
         else if (roleLevel.get(loggedInUser.getType()) == 1 && roleLevel.get(byId.getType()) == 0 && loggedInUser.getRequest().equals("true")) {
             byId.setName(user.getName());
             byId.setAddress(user.getAddress());
             byId.setPhoneNumber(user.getPhoneNumber());
+            byId.setType(user.getType());
             return userRepository.save(byId);
         }
         else

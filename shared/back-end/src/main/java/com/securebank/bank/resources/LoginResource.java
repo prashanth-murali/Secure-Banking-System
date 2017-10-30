@@ -2,6 +2,8 @@ package com.securebank.bank.resources;
 
 import com.securebank.bank.model.Login;
 import com.securebank.bank.model.User;
+import com.securebank.bank.services.EmailService;
+import com.securebank.bank.services.RandomString;
 import com.securebank.bank.services.UserRepository;
 import com.securebank.bank.services.errors.ApplicationValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +45,32 @@ public class LoginResource {
         }
 
         if(login.getPassword().equals(byUsername.getPassword())){
+            byUsername.generateOTPToken();
+            userRepository.save(byUsername);
+
+            EmailService emailService = new EmailService();
+            emailService.sendEmail(byUsername.getAddress(), byUsername.getOtpToken());
             return Response.status(Response.Status.OK).entity(byUsername).type(MediaType.APPLICATION_JSON).build();
         }else{
             // invalid password
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+
+    @POST
+    @Path("/step2")
+    public Response login_step2(Login login){
+        User byUsername = userRepository.findByUsername(login.getUsername());
+
+        if(byUsername == null){
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        if(login.getOtptoken() != null && byUsername.isOTPvalid(login.getOtptoken())){
+            return Response.status(Response.Status.OK).entity(byUsername).type(MediaType.APPLICATION_JSON).build();
+        }else{
+            // invalid token
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }

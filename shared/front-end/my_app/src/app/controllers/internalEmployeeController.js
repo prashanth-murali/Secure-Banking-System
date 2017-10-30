@@ -242,6 +242,24 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
         });
     };
 
+    $scope.update = function(address,email,id,name,password,phoneNumber,type,username){
+        return $http.put(BACKEND_URL+'/api/users/'+id,{
+            "address":address,
+            "id": id,
+            "name": name,
+            "phoneNumber":phoneNumber,
+            "type":type
+        },{
+            headers:{
+                "authorization": authService.getAuth()
+            }
+        }).then(function success(){
+            alert('Successfully updated');
+        }, function errorCallback(){
+            alert('Failed to update User');
+        })
+    };
+
     $scope.setRandomData = function () {
         setRandomCreateData();
     };
@@ -258,9 +276,9 @@ module.exports = ['$scope', '$http', 'authService', '$mdToast', '$httpParamSeria
 
     $scope.deleteUser = function (user) {
         console.log('delete user: ', user);
-        $http.delete(user.url,{
+        $http.delete(BACKEND_URL+'/api/users/'+ user,{
             headers: {
-                "authorization": authService.getAuth(),
+                "authorization": authService.getAuth()
             }
         }).then(function success(){
             fetchUsers();

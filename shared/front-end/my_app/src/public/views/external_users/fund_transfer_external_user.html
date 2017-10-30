@@ -15,16 +15,13 @@
                 <tr>
                     <th>Name</th>
                     <th>Balance</th>
-                    <th>Credit / Debit</th>
-                </tr>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="account in accounts | filter: search">
+                <tr ng-repeat="account in accounts | filter: search | filter: filterDebit">
 
                     <td>{{account.accountType | uppercase}}</td>
                     <td>{{account.amount | currency }}</td>
-                    <td>Add / Withdraw Funds</td>
-
                 </tr>
                 </tbody>
             </table>
@@ -36,7 +33,7 @@
                      <select ng-model="selectedAccount" class="form-control">
 
                          <option value="" disabled selected>Select an Account</option>
-                         <option ng-repeat="account in accounts" value={{selectedAccount=account.id}}>
+                         <option ng-repeat="account in accounts | filter: search | filter: filterDebit" value={{selectedAccount=account.id}}>
                                     {{account.accountType | uppercase}} - {{account.id}}
                          </option>
 

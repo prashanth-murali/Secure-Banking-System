@@ -45,7 +45,7 @@
                     <tbody>
                     <tr ng-repeat="statement in statements | filter: search" class="transaction" ng-model="TransactionId">
 
-                        <td><a href="#">{{statement.transactionId}}</a></td>
+                        <td>{{statement.transactionId}}</td>
                         <td>{{statement.toAccountId}}</td>
                         <td>{{statement.createdDate}}</td>
                         <td>{{statement.amount | currency }}</td>

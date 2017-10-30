@@ -43,7 +43,7 @@
                     <tbody>
                     <tr ng-repeat="access in requests | filter: search |filter:filterRequest" class="transaction" ng-model="TransactionId">
 
-                        <td><a href="#">{{access.id}}</a></td>
+                        <td>{{access.id}}</td>
                         <td>{{access.username}}</td>
                         <td>{{access.name}}</td>
                         <td><button class="btn btn-success"  ng-click="approveRequest(access.id)" onclick="location.reload()" >Approve</button></td>

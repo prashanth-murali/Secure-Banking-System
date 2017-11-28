@@ -1,0 +1,41 @@
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
+        </div>
+
+        <div class="col-sm-9 col-md-10 main">
+
+            <h2>Customer Requests</h2>
+            <br>
+
+            <table class="table">
+                <thead>
+                <tr>
+
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="req in merchReqs | filter: search | filter:filterMerchant" class="transaction" ng-model="TransactionId">
+
+                    <td>{{req.transactionId}}</td>
+                    <td>{{req.createdDate}}</td>
+                    <td>{{req.amount | currency }}</td>
+                    <td><button class="btn btn-success" value={{TransactionId=req.transactionId}} ng-click="approvePayment(TransactionId)" onclick=location.reload();>Approve</button></td>
+                    <td><button class="btn btn-danger" value={{TransactionId=req.transactionId}} ng-click="declinePayment(TransactionId)" onclick=location.reload();>Decline</button></td>
+
+                </tr>
+                </tbody>
+            </table>
+
+        </div> <!-- /main -->
+
+    </div> <!-- /row -->
+
+</div> <!-- /container -->

@@ -1,0 +1,58 @@
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" ng-click="goBack()">Go Back</button>
+        </div>
+        <div class="col-sm-9 col-md-10 main">
+
+
+            <h2>Request Administrator:</h2>
+            <br>
+
+
+            <div>
+                <label>Action:</label><br>
+                <div class="btn-group" role="group">
+                    <button title="To delete account" type="button" class="internal-transfer transfer-option-btn btn btn-default">Delete</button>
+                    <button title="To modify account" type="button" class="external-transfer transfer-option-btn btn btn-default">Modify</button>
+
+                </div>
+            </div>
+            <div class="transfer-account-details">
+                <div id="internal-transfer" class="hidden">
+                    <p>
+                        <label>Account:</label>
+                        <input type="text" class="form-control" placeholder="ex: Regular Employee Account">
+                    </p>
+
+                </div>
+
+                <div id="external-transfer" class="hidden">
+                    <p>
+                        <label>Name:</label>
+                        <input type="text" class="form-control" placeholder="ex: Prashanth">
+                    </p>
+                    <p>
+                        <label>Address:</label>
+                        <input type="text" class="form-control" placeholder="ex: 1111 E University Dr">
+                    </p>
+                    <p>
+                        <label>Phone No.:</label>
+                        <input type="text" class="form-control" placeholder="ex: 4802522119">
+                    </p>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success">Submit</button>
+            </div>
+        </div><!-- /. -->
+
+    </div> <!-- /main -->
+
+</div> <!-- /row -->
+
+</div> <!-- /container -->

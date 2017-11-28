@@ -1,0 +1,40 @@
+
+<div class="container container-main" role="main">
+
+    <div class="row">
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" onclick="window.history.back()">Go Back</button>
+        </div>
+        <div class="col-sm-9 col-md-10 main">
+
+            <div id="fund-transfer">
+
+                <h3>User Details </h3>
+
+                <label>User Id : {{individual.id}} </label><br>
+                <label>Type : {{individual.type}} </label>
+                <br>
+                <label>Name : </label><br>
+                <input type="text" class="form-control" ng-model="individual.name">
+                <br>
+                <label>Address : </label><br>
+                <input type="text" class="form-control" ng-model="individual.address">
+                <br>
+                <label>Phone Number : </label><br>
+                <input type="text" class="form-control" ng-model="individual.phoneNumber">
+                <br>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="update(individual.address,individual.email,individual.id,individual.name,individual.password,individual.phoneNumber,individual.type,individual.username)">Update</button>
+                </div>
+
+
+            </div><!-- /. -->
+
+        </div> <!-- /main -->
+
+    </div> <!-- /row -->
+
+</div> <!-- /container -->
+

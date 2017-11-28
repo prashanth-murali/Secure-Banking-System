@@ -1,0 +1,42 @@
+
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
+        </div>
+        <div class="col-sm-9 col-md-10 main">
+
+            <div class="page-header">
+                <h1>Credit / Debit Funds</h1>
+            </div>
+
+            <h2>Accounts:</h2>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Account Type</th>
+                    <th>Account ID</th>
+                    <th>Balance</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="account in accounts | filter: search | filter:filterDebit" ng-model="AccountId">
+
+                    <td>{{account.accountType | uppercase}}</td>
+                    <td>{{account.id}}</td>
+                    <td>{{account.amount | currency }}</td>
+                    <td><button class="btn btn-success" value={{AccountId=account.id}} ng-click="addMoney(AccountId)" >Add</button></td>
+                    <td><button class="btn btn-danger" value={{AccountId=account.id}}  ng-click="withdrawMoney(AccountId)">Withdraw</button></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div> <!-- /main -->
+
+    </div> <!-- /row -->
+
+</div> <!-- /container -->

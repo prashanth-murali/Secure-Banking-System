@@ -1,0 +1,44 @@
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
+        </div>
+
+        <div class="col-sm-9 col-md-10 main">
+
+            <h2>View Details </h2>
+            <br>
+            <h3>Select a User </h3>
+
+            <div id="fund-transfer">
+                <div class="modal-body">
+
+                    <label>Select Account Id:</label>
+                    <select ng-model="selectedAccount" class="form-control">
+
+                        <option value="" disabled selected>Select a User</option>
+                        <option ng-repeat="user in users" value={{selectedAccount=user.id}}>
+                            {{user.type | uppercase}} - {{user.name}}
+                        </option>
+                    </select>
+
+                    <h3>User Details </h3>
+
+                    <label>User Id : {{individual.id}}</label><br>
+                    <label>Email : {{individual.email}} </label><br>
+                    <label>Name : {{individual.name}} </label><br>
+                    <label>Address : {{individual.address}} </label><br>
+                    <label>Phone Number : {{individual.phoneNumber}} </label><br>
+                    <label>Type : {{individual.type}}</label><br>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="fetchUserById(selectedAccount)">Get User Details</button>
+                 </div>
+
+            </div>
+    </div> <!-- /container -->
+  </div>
+</div>

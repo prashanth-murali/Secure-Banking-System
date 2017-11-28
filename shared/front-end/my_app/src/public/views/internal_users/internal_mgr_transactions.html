@@ -1,0 +1,56 @@
+
+<body role="document">
+
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
+        </div>
+        <div class="col-sm-9 col-md-10 main">
+
+
+            <h2>Add Transactions:</h2>
+            <br>
+
+            <div id="fund-transfer">
+                <div class="modal-body">
+
+                    <div>
+                        <label>Select Nature of Transfer:</label><br>
+                        <select ng-model="transferType" class="form-control">
+                            <option value="" disabled selected>Select an Option</option>
+                            <option>debit</option>
+                            <option>via_email</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="transfer-account-details">
+
+                        <label>Enter Account ID of Sender : </label><br>
+                        <input type="text" ng-model="selectedAccount" class="form-control" placeholder="13bbv3454545nbvb">
+                        <br>
+
+                        <label>Enter Account ID or Email ID of the Receiver : </label><br>
+                        <input type="text" ng-model="toAccountId" class="form-control" placeholder="13bbv3454545nbvb">
+                        <br>
+
+                        <label>Amount to be Transferred:</label>
+                        <input type="text" ng-model="Amount" class="form-control" placeholder="0.00">
+                        <br>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="createTransaction(selectedAccount,toAccountId,transferType)">Transfer Funds</button>
+                </div>
+            </div>
+
+        </div> <!-- /main -->
+
+    </div> <!-- /row -->
+
+</div> <!-- /container -->
+

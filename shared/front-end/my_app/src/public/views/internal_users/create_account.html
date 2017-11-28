@@ -1,0 +1,66 @@
+
+
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" onclick=window.history.back()>Go Back</button>
+        </div>
+
+        <div class="col-sm-9 col-md-10 main">
+        <div class="modal-body">
+
+            <label>Select Account Id:</label>
+                <select ng-model="selectedAccount" class="form-control">
+                    <option value="" disabled selected>Select a User</option>
+                     <option ng-repeat="user in users | filter: search |filter:filterUser" value={{selectedAccount=user.id}}>
+                        {{user.type | uppercase}} - {{user.name}}
+                     </option>
+
+                </select>
+        </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-success" ng-click="fetchUserById(selectedAccount)">Get User Details</button>
+         </div>
+
+            <h2>Create Account - Enter Account Details</h2>
+            <br>
+
+            <div id="fund-transfer">
+                <div class="modal-body">
+                    <p>
+                        <label>User ID:</label>
+                        <input type="text" class="form-control"ng-model="individual.id">
+                    </p>
+
+                    <p>
+                        <label>Amount:</label>
+                        <input type="number" class="form-control" placeholder="ex: 480-111-2338" ng-model="Amount">
+                    </p>
+
+                    <label>Select Account Type</label>
+                    <select ng-model="type" class="form-control">
+
+                        <option value="" disabled selected>Select a Type</option>
+                        <option >credit</option>
+                        <option >checking</option>
+                        <option >savings</option>
+
+                    </select>
+
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-success" ng-click="createAccount(individual.id,Amount,type)">Submit</button>
+                    </div>
+
+                </div><!-- /. -->
+
+            </div> <!-- /main -->
+
+        </div> <!-- /row -->
+
+    </div> <!-- /container -->
+
+</div>

@@ -1,0 +1,37 @@
+
+<div class="container container-main" role="main">
+
+    <div class="row">
+
+        <side-bar-customer></side-bar-customer>
+
+        <div class="col-sm-9 col-md-10 main">
+
+
+            <h2>Accounts:</h2>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Account Type</th>
+                    <th>Account ID</th>
+                    <th>Balance</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="account in accounts | filter: search">
+
+                    <td>{{account.accountType | uppercase}}</td>
+                    <td>{{account.id}}</td>
+                    <td>{{account.amount | currency }}</td>
+
+                </tr>
+                </tbody>
+            </table>
+
+        </div> <!-- /main -->
+
+    </div> <!-- /row -->
+
+</div> <!-- /container -->
